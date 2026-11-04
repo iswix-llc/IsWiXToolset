@@ -1,5 +1,5 @@
 <!-- Copyright (c) .NET Foundation and contributors. All rights reserved. Licensed under the Microsoft Reciprocal License. See LICENSE.TXT file in the project root for full license information. -->
-<Project Sdk="IsWiX.Sdk">
+<Project Sdk="IsWixToolset.Sdk">
   <PropertyGroup>
     <UpgradeCode>{A75B81F4-3335-4B4D-B766-303E136ED374}</UpgradeCode>
     <ProductComponentsRef>true</ProductComponentsRef>
@@ -9,6 +9,6 @@
     <ProjectReference Include="..\..\CustomActionFail\CustomActionFail.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="IsWiX.Msmq.wixext" />
+    <PackageReference Include="IsWixToolset.Msmq.wixext" />
   </ItemGroup>
 </Project>

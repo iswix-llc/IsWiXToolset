@@ -5,7 +5,7 @@
   <ItemGroup>
     <WixExtension Include="$(MSBuildThisFileDirectory)..\$(WixToolsetExtensionPackageFolder)\WixToolset.Netfx.wixext.dll"
        Condition=" Exists('$(MSBuildThisFileDirectory)..\$(WixToolsetExtensionPackageFolder)\WixToolset.Netfx.wixext.dll') " />
-    <UnsupportedWixExtension Include="IsWiX.Netfx.wixext"
+    <UnsupportedWixExtension Include="IsWixToolset.Netfx.wixext"
       Condition=" !Exists('$(MSBuildThisFileDirectory)..\$(WixToolsetExtensionPackageFolder)\WixToolset.Netfx.wixext.dll') " />
   </ItemGroup>
 

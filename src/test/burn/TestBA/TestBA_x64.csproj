@@ -20,6 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="IsWiX.BootstrapperApplicationApi" />
+    <PackageReference Include="IsWixToolset.BootstrapperApplicationApi" />
   </ItemGroup>
 </Project>

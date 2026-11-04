@@ -18,10 +18,10 @@
     <Exec Command="nuget restore netcoresearch\packages.config" />
 
     <RemoveDir Directories="$(RootBuildFolder)NetFx.wixext" />
-    <RemoveDir Directories="$(USERPROFILE)\.nuget\packages\iswix.netfx.wixext" Condition="'$(NUGET_PACKAGES)' == ''" />
-    <RemoveDir Directories="$(NUGET_PACKAGES)\iswix.netfx.wixext" Condition="'$(NUGET_PACKAGES)' != ''" />
+    <RemoveDir Directories="$(USERPROFILE)\.nuget\packages\iswixtoolset.netfx.wixext" Condition="'$(NUGET_PACKAGES)' == ''" />
+    <RemoveDir Directories="$(NUGET_PACKAGES)\iswixtoolset.netfx.wixext" Condition="'$(NUGET_PACKAGES)' != ''" />
 
-    <Delete Files="$(ArtifactsFolder)IsWiX.NetFx.wixext.*.nupkg" />
+    <Delete Files="$(ArtifactsFolder)IsWixToolset.NetFx.wixext.*.nupkg" />
   </Target>
 
   <Target Name="WixTest">

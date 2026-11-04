@@ -13,9 +13,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="IsWiX.Data" />
-    <PackageReference Include="IsWiX.Extensibility" />
-    <PackageReference Include="IsWiX.Versioning" />
+    <PackageReference Include="IsWixToolset.Data" />
+    <PackageReference Include="IsWixToolset.Extensibility" />
+    <PackageReference Include="IsWixToolset.Versioning" />
   </ItemGroup>
 
   <ItemGroup>

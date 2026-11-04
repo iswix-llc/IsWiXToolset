@@ -14,6 +14,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Build.Tasks.Core" />
     <PackageReference Include="WixInternal.BaseBuildTasks.Sources" />
-    <PackageReference Include="IsWiX.Dtf.WindowsInstaller" />
+    <PackageReference Include="IsWixToolset.Dtf.WindowsInstaller" />
   </ItemGroup>
 </Project>

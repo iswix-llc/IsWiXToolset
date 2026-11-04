@@ -9,6 +9,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Build.Tasks.Core" />
     <PackageReference Include="System.Text.Json" />
-    <PackageReference Include="IsWiX.Data" />
+    <PackageReference Include="IsWixToolset.Data" />
   </ItemGroup>
 </Project>

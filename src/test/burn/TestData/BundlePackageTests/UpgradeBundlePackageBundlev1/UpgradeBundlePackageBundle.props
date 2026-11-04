@@ -9,6 +9,6 @@
     <Compile Include="..\..\Templates\Bundle.wxs" Link="Bundle.wxs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="IsWiX.BootstrapperApplications.wixext" />
+    <PackageReference Include="IsWixToolset.BootstrapperApplications.wixext" />
   </ItemGroup>
 </Project>

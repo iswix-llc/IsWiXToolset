@@ -64,10 +64,10 @@
 
   <!--
     IsWiX packaging: nuget.org reserves the WixToolset.* prefix, so publish every WixToolset.* project
-    as IsWiX.*. Assembly names and namespaces are unchanged so extensions built against upstream still load.
+    as IsWixToolset.*. Assembly names and namespaces are unchanged so extensions built against upstream still load.
   -->
   <PropertyGroup>
-    <IsWiXPackagePrefix>IsWiX.</IsWiXPackagePrefix>
+    <IsWiXPackagePrefix>IsWixToolset.</IsWiXPackagePrefix>
     <PackageId Condition=" '$(PackageId)'=='' and $(MSBuildProjectName.StartsWith('WixToolset.')) ">$(IsWiXPackagePrefix)$(MSBuildProjectName.Substring(11))</PackageId>
   </PropertyGroup>
 

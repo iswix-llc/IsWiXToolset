@@ -37,17 +37,17 @@ dotnet test ^
 
 :clean
 @rd /s/q "..\..\build\api" 2> nul
-@del "..\..\build\artifacts\IsWiX.BextUtil.*.nupkg" 2> nul
-@del "..\..\build\artifacts\IsWiX.Data.*.nupkg" 2> nul
-@del "..\..\build\artifacts\IsWiX.Extensibility.*.nupkg" 2> nul
-@del "..\..\build\artifacts\IsWiX.BootstrapperApplicationApi.*.nupkg" 2> nul
-@del "..\..\build\artifacts\IsWiX.BootstrapperExtensionApi.*.nupkg" 2> nul
+@del "..\..\build\artifacts\IsWixToolset.BextUtil.*.nupkg" 2> nul
+@del "..\..\build\artifacts\IsWixToolset.Data.*.nupkg" 2> nul
+@del "..\..\build\artifacts\IsWixToolset.Extensibility.*.nupkg" 2> nul
+@del "..\..\build\artifacts\IsWixToolset.BootstrapperApplicationApi.*.nupkg" 2> nul
+@del "..\..\build\artifacts\IsWixToolset.BootstrapperExtensionApi.*.nupkg" 2> nul
 @del "%_L%\TestResults\api.trx" 2> nul
-@rd /s/q "%USERPROFILE%\.nuget\packages\iswix.bextutil" 2> nul
-@rd /s/q "%USERPROFILE%\.nuget\packages\iswix.data" 2> nul
-@rd /s/q "%USERPROFILE%\.nuget\packages\iswix.extensibility" 2> nul
-@rd /s/q "%USERPROFILE%\.nuget\packages\iswix.bootstrapperapplicationapi" 2> nul
-@rd /s/q "%USERPROFILE%\.nuget\packages\iswix.bootstrapperextensionapi" 2> nul
+@rd /s/q "%USERPROFILE%\.nuget\packages\iswixtoolset.bextutil" 2> nul
+@rd /s/q "%USERPROFILE%\.nuget\packages\iswixtoolset.data" 2> nul
+@rd /s/q "%USERPROFILE%\.nuget\packages\iswixtoolset.extensibility" 2> nul
+@rd /s/q "%USERPROFILE%\.nuget\packages\iswixtoolset.bootstrapperapplicationapi" 2> nul
+@rd /s/q "%USERPROFILE%\.nuget\packages\iswixtoolset.bootstrapperextensionapi" 2> nul
 @exit /b
 
 :end

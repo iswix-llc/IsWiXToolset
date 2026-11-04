@@ -35,7 +35,7 @@
     <TargetName>wixstdfn</TargetName>
     <CharacterSet>MultiByte</CharacterSet>
     <Description>WiX Toolset Standard BootstrapperApplication Functions API</Description>
-    <PackageId>IsWiX.WixStandardBootstrapperApplicationFunctionApi</PackageId>
+    <PackageId>IsWixToolset.WixStandardBootstrapperApplicationFunctionApi</PackageId>
   </PropertyGroup>
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -69,7 +69,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
 
-    <PackageReference Include="IsWiX.BootstrapperApplicationApi" />
+    <PackageReference Include="IsWixToolset.BootstrapperApplicationApi" />
   </ItemGroup>
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

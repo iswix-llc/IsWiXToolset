@@ -1,4 +1,4 @@
-﻿<Project Sdk="IsWiX.Sdk">
+﻿<Project Sdk="IsWixToolset.Sdk">
   <PropertyGroup>
     <BA>WixStdBA</BA>
   </PropertyGroup>

@@ -12,7 +12,7 @@
     <RemoveDir Directories="$(USERPROFILE)\.nuget\packages\iswix.UI.wixext" Condition="'$(NUGET_PACKAGES)' == ''" />
     <RemoveDir Directories="$(NUGET_PACKAGES)\iswix.UI.wixext" Condition="'$(NUGET_PACKAGES)' != ''" />
 
-    <Delete Files="$(ArtifactsFolder)IsWiX.UI.wixext.*.nupkg" />
+    <Delete Files="$(ArtifactsFolder)IsWixToolset.UI.wixext.*.nupkg" />
   </Target>
 
   <Target Name="WixTest">

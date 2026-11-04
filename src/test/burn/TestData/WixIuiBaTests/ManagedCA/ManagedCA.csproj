@@ -11,6 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="IsWiX.Dtf.CustomAction" />
+    <PackageReference Include="IsWixToolset.Dtf.CustomAction" />
   </ItemGroup>
 </Project>

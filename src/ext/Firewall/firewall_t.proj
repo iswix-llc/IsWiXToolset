@@ -9,10 +9,10 @@
 
   <Target Name="WixClean" BeforeTargets="Restore" Condition="'$(SuppressWixClean)' != 'true'">
     <RemoveDir Directories="$(RootBuildFolder)firewall.wixext" />
-    <RemoveDir Directories="$(USERPROFILE)\.nuget\packages\iswix.firewall.wixext" Condition="'$(NUGET_PACKAGES)' == ''" />
-    <RemoveDir Directories="$(NUGET_PACKAGES)\iswix.firewall.wixext" Condition="'$(NUGET_PACKAGES)' != ''" />
+    <RemoveDir Directories="$(USERPROFILE)\.nuget\packages\iswixtoolset.firewall.wixext" Condition="'$(NUGET_PACKAGES)' == ''" />
+    <RemoveDir Directories="$(NUGET_PACKAGES)\iswixtoolset.firewall.wixext" Condition="'$(NUGET_PACKAGES)' != ''" />
 
-    <Delete Files="$(ArtifactsFolder)IsWiX.Firewall.wixext.*.nupkg" />
+    <Delete Files="$(ArtifactsFolder)IsWixToolset.Firewall.wixext.*.nupkg" />
   </Target>
 
   <Target Name="WixTest">

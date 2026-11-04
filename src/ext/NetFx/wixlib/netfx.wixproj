@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Copyright (c) .NET Foundation and contributors. All rights reserved. Licensed under the Microsoft Reciprocal License. See LICENSE.TXT file in the project root for full license information. -->
 
-<Project Sdk="IsWiX.Sdk">
+<Project Sdk="IsWixToolset.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <BindFiles>true</BindFiles>
@@ -20,8 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="IsWiX.BootstrapperApplications.wixext" />
-    <PackageReference Include="IsWiX.Util.wixext" />
+    <PackageReference Include="IsWixToolset.BootstrapperApplications.wixext" />
+    <PackageReference Include="IsWixToolset.Util.wixext" />
   </ItemGroup>
 
   <ItemGroup>

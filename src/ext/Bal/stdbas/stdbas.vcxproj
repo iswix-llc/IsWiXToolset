@@ -76,7 +76,7 @@ rc.exe -fo "$(OutDir)stdbas.res" "$(IntDir)stdbas.messages.rc"</Command>
   </ItemDefinitionGroup>
 
   <ItemGroup>
-    <PackageReference Include="IsWiX.BootstrapperApplicationApi" />
+    <PackageReference Include="IsWixToolset.BootstrapperApplicationApi" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
   </ItemGroup>
 

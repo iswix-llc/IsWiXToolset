@@ -19,6 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="IsWiX.Extensibility" />
+    <PackageReference Include="IsWixToolset.Extensibility" />
   </ItemGroup>
 </Project>

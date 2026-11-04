@@ -62,7 +62,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Setup.Configuration.Native" />
-    <PackageReference Include="IsWiX.WcaUtil" />
+    <PackageReference Include="IsWixToolset.WcaUtil" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
   </ItemGroup>
 

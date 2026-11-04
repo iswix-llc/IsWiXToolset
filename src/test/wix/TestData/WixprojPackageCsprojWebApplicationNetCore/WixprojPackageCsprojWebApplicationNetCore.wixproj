@@ -1,7 +1,7 @@
 <!-- Copyright (c) .NET Foundation and contributors. All rights reserved. Licensed under the Microsoft Reciprocal License. See LICENSE.TXT file in the project root for full license information. -->
-<Project Sdk='IsWiX.Sdk'>
+<Project Sdk='IsWixToolset.Sdk'>
 <!-- <Project> -->
-  <!-- <Import Sdk="IsWiX.Sdk" Project='D:\src\wix4\build\wix\Debug\net8.0\Sdk\Sdk.props' /> -->
+  <!-- <Import Sdk="IsWixToolset.Sdk" Project='D:\src\wix4\build\wix\Debug\net8.0\Sdk\Sdk.props' /> -->
 
   <PropertyGroup>
     <!-- <WixBinDir>D:\src\wix4\build\wix\Debug\net472\</WixBinDir> -->
@@ -13,5 +13,5 @@
     <ProjectReference Include="..\CsprojWebApplicationNetCore\CsprojWebApplicationNetCore.csproj" Publish="true" />
   </ItemGroup>
 
-  <!-- <Import Sdk="IsWiX.Sdk" Project='D:\src\wix4\build\wix\Debug\net8.0\Sdk\Sdk.targets' /> -->
+  <!-- <Import Sdk="IsWixToolset.Sdk" Project='D:\src\wix4\build\wix\Debug\net8.0\Sdk\Sdk.targets' /> -->
 </Project>

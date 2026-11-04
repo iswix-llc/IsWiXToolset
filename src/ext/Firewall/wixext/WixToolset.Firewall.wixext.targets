@@ -5,7 +5,7 @@
   <ItemGroup>
     <WixExtension Include="$(MSBuildThisFileDirectory)..\$(WixToolsetExtensionPackageFolder)\WixToolset.Firewall.wixext.dll"
        Condition=" Exists('$(MSBuildThisFileDirectory)..\$(WixToolsetExtensionPackageFolder)\WixToolset.Firewall.wixext.dll') " />
-    <UnsupportedWixExtension Include="IsWiX.Firewall.wixext"
+    <UnsupportedWixExtension Include="IsWixToolset.Firewall.wixext"
       Condition=" !Exists('$(MSBuildThisFileDirectory)..\$(WixToolsetExtensionPackageFolder)\WixToolset.Firewall.wixext.dll') " />
   </ItemGroup>
 
