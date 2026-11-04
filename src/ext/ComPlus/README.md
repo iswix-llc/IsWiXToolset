@@ -1,9 +1,6 @@
-# WixToolset.ComPlus.wixext - COM+ WiX Toolset Extension
+# IsWiX.ComPlus.wixext - COM+ WiX Toolset Extension
 
 This WiX Extension provides support for configuring COM+.
-
-[Web Site][web] | [Documentation][docs] | [Issue Tracker][issues] | [Discussions][discussions]
-
 
 ## About this build
 
@@ -30,20 +27,3 @@ Then add the extension's namespace:
   ..
 </Wix>
 ```
-
-## Additional resources
-
-* [WiX Website][web]
-* [WiX Documentation][docs]
-* [WiX Issue Tracker][issues]
-* [WiX Discussions][discussions]
-
-
-[web]: https://www.firegiant.com/wixtoolset/
-[docs]: https://docs.firegiant.com/wixtoolset/
-[issues]: https://github.com/wixtoolset/issues/issues
-[discussions]: https://github.com/orgs/wixtoolset/discussions
-[sdk]: https://www.nuget.org/packages/WixToolset.Sdk/
-[osmf]: https://opensourcemaintenancefee.org/
-[license]: https://github.com/wixtoolset/wix/blob/main/LICENSE.TXT
-[eula]: https://github.com/wixtoolset/wix/blob/main/OSMFEULA.txt

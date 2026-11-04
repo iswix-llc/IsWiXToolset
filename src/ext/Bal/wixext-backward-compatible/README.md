@@ -1,10 +1,8 @@
-# WixToolset.Bal.wixext - Bootstrapper Applications WiX Toolset Extension
+# IsWiX.Bal.wixext - Bootstrapper Applications WiX Toolset Extension
 
-This WiX Extension was renamed. Use `WixToolset.BootstrapperApplications.wixext` instead.
+This WiX Extension was renamed. Use `IsWiX.BootstrapperApplications.wixext` instead.
 
-- [WixStandardBootstrapperApplication](https://www.nuget.org/packages/WixToolset.BootstrapperApplications.wixext)
-
-[Web Site][web] | [Documentation][docs] | [Issue Tracker][issues] | [Discussions][discussions]
+- [WixStandardBootstrapperApplication](https://www.nuget.org/packages/IsWiX.BootstrapperApplications.wixext)
 
 ## About this build
 
@@ -34,20 +32,3 @@ Then add the namespace and bootstrapper application of choice:
   </Bundle>
 </Wix>
 ```
-
-## Additional resources
-
-* [WiX Website][web]
-* [WiX Documentation][docs]
-* [WiX Issue Tracker][issues]
-* [WiX Discussions][discussions]
-
-
-[web]: https://www.firegiant.com/wixtoolset/
-[docs]: https://docs.firegiant.com/wixtoolset/
-[issues]: https://github.com/wixtoolset/issues/issues
-[discussions]: https://github.com/orgs/wixtoolset/discussions
-[sdk]: https://www.nuget.org/packages/WixToolset.Sdk/
-[osmf]: https://opensourcemaintenancefee.org/
-[license]: https://github.com/wixtoolset/wix/blob/main/LICENSE.TXT
-[eula]: https://github.com/wixtoolset/wix/blob/main/OSMFEULA.txt

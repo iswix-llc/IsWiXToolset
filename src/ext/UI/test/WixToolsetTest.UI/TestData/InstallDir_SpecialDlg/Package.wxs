@@ -25,7 +25,7 @@
         <UI>
             <Dialog Id="SpecialDlg" Width="370" Height="270" Title="My Special Dialog">
                 <Control Id="Bitmap" Type="Bitmap" X="92" Y="80" Width="185" Height="117" TabSkip="no" Text="WixUI_Bmp_Dialog" />
-                <Control Id="GotoBlog" Type="Hyperlink" Transparent="yes" X="96" Y="121" Width="178" Height="17" Text='Visit &lt;a href="https://www.firegiant.com/blog/"&gt;the FireGiant blog!&lt;/a&gt;' />
+                <Control Id="GotoBlog" Type="Hyperlink" Transparent="yes" X="96" Y="121" Width="178" Height="17" Text='Visit &lt;a href="https://www.google.com"&gt;Google&lt;/a&gt;' />
                 <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.WixUIBack)" />
                 <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Text="!(loc.WixUINext)" />
                 <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.WixUICancel)">
