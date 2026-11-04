@@ -8,6 +8,7 @@ using namespace WixInternal::TestSupport;
 
 namespace DutilTests
 {
+    [Collection("Dutil_Xml")]
     public ref class ApupUtil
     {
     public:
@@ -22,7 +23,7 @@ namespace DutilTests
 
             try
             {
-                XmlInitialize();
+                hr = XmlInitialize();
                 NativeAssert::Succeeded(hr, "Failed to initialize Xml.");
 
                 pin_ptr<const wchar_t> feedFilePath = PtrToStringChars(TestData::Get("TestData", "ApupUtilTests", "FeedBv2.0.xml"));
@@ -42,5 +43,11 @@ namespace DutilTests
                 DutilUninitialize();
             }
         }
+    };
+
+    // XmlInitialize() is not thread-safe, so the test classes that call it must not run in parallel.
+    [CollectionDefinition("Dutil_Xml", DisableParallelization = true)]
+    public ref class Dutil_XmlCollectionDefinition
+    {
     };
 }

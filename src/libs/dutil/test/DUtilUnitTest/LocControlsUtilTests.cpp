@@ -8,6 +8,7 @@ using namespace WixInternal::TestSupport;
 
 namespace DutilTests
 {
+    [Collection("Dutil_Xml")]
     public ref class LocControlsUtil
     {
     public:
