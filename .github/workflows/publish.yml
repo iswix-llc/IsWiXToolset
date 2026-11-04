@@ -1,0 +1,214 @@
+name: Publish (version, build, sign, push to nuget.org)
+
+# Manual release. Run it from the default branch (Actions > Publish > Run workflow).
+#
+# 1. Versioning: this repo is versioned by SomeVer from git tags (vX.Y.Z). The workflow works out the next
+#    version from the latest stable v* tag (or takes an explicit version), tags the commit locally so the
+#    build picks the version up, and only pushes the tag once nuget.org has accepted the packages.
+# 2. Build: src/build_official.cmd (Release), the same entry point CI uses.
+# 3. Sign: the build signs binaries itself (src/Directory.Build.targets) with Azure Artifact Signing
+#    through the `sign` CLI whenever SigningArtifactAccount is set. nuget.org signs the packages themselves.
+# 4. Publish: NuGet trusted publishing (no long-lived API key), then push the tag and create a GitHub release.
+#
+# One-time setup (repo secrets):
+#   AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID  - federated identity allowed to use the signing account.
+#                                                              Its federated credential subject must be
+#                                                              repo:iswix-llc/IsWiXToolset:ref:refs/heads/<default branch>
+#   NUGET_USER                                               - nuget.org profile name that owns the packages, with a
+#                                                              trusted publishing policy for this repo and publish.yml.
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: Which part of the latest stable version to increment
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+        default: patch
+      version:
+        description: Explicit version to release (for example 7.0.1 or 8.0.0-rc.1). Overrides the bump.
+        type: string
+        required: false
+      runtime_tests:
+        description: Also run the slow runtime and integration tests (install and uninstall real packages)
+        type: boolean
+        default: false
+
+permissions:
+  contents: write   # push the release tag and create the GitHub release
+  id-token: write   # Azure and nuget.org federated sign-in
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  NUGET_XMLDOC_MODE: skip
+  SIGNING_ACCOUNT: ISWIX-LLC   # Azure Artifact Signing account; certificate profile "IsWiX" is the build's default
+
+jobs:
+  publish:
+    # Releases only come from the default branch.
+    if: github.ref_name == github.event.repository.default_branch
+    name: Release
+    runs-on: windows-2022   # WiX v7 builds with VS2022 (v143 toolset), same as CI.
+    timeout-minutes: 300
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # SomeVer needs the tags and history to compute the version.
+
+      - name: Work out the version
+        id: version
+        shell: pwsh
+        env:
+          INPUT_BUMP: ${{ inputs.bump }}
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          if ($env:INPUT_VERSION) {
+            $new = $env:INPUT_VERSION.Trim().TrimStart('v')
+            if ($new -notmatch '^\d+\.\d+\.\d+(-[0-9A-Za-z][0-9A-Za-z.-]*)?$') { throw "'$new' is not a valid version." }
+          } else {
+            $latest = git tag --merged HEAD --list 'v[0-9]*' --sort=-v:refname |
+                      Where-Object { $_ -match '^v\d+\.\d+\.\d+$' } | Select-Object -First 1
+            if (-not $latest) { throw 'No stable vX.Y.Z tag is reachable from HEAD. Pass an explicit version.' }
+            $n = $latest.Substring(1).Split('.') | ForEach-Object { [int]$_ }
+            $major, $minor, $patch = $n[0], $n[1], $n[2]
+            switch ($env:INPUT_BUMP) {
+              'major' { $major++; $minor = 0; $patch = 0 }
+              'minor' { $minor++; $patch = 0 }
+              default { $patch++ }
+            }
+            $new = "$major.$minor.$patch"
+            Write-Host "Latest stable tag is $latest."
+          }
+          $tag = "v$new"
+          if (git tag --list $tag) { throw "Tag $tag already exists." }
+          if (git ls-remote --tags origin "refs/tags/$tag") { throw "Tag $tag already exists on origin." }
+          "version=$new" >> $env:GITHUB_OUTPUT
+          "tag=$tag" >> $env:GITHUB_OUTPUT
+          "prerelease=$($new.Contains('-').ToString().ToLower())" >> $env:GITHUB_OUTPUT
+          Write-Host "Releasing $new as $tag"
+
+      # SomeVer reads the version from the tag on HEAD. The tag only leaves this machine after nuget.org accepts the packages.
+      - name: Tag this commit locally
+        shell: pwsh
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git tag -a '${{ steps.version.outputs.tag }}' -m 'Release ${{ steps.version.outputs.version }}'
+          if ($LASTEXITCODE -ne 0) { throw 'Tagging failed.' }
+
+      # The build looks for sign.exe in build\.tools. Needs sign CLI 0.9.1-beta.26330.1 or later (Artifact Signing support).
+      - name: Install the sign CLI
+        shell: pwsh
+        run: dotnet tool install sign --tool-path build/.tools --prerelease
+
+      - name: Sign in to Azure (federated identity)
+        uses: azure/login@v3
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Configure crash dumps
+        shell: cmd
+        run: |
+          reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps" /t REG_EXPAND_SZ /v DumpFolder /d "%CD%\build\logs\crashdumps" /f
+          reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps" /t REG_DWORD /v DumpCount /d 10 /f
+          reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps" /t REG_DWORD /v DumpType /d 1 /f
+
+      # Setting SigningArtifactAccount switches on signing in src/Directory.Build.targets.
+      - name: Build, test and sign (Release)
+        shell: cmd
+        run: ./src/build_official.cmd
+        env:
+          SigningArtifactAccount: ${{ env.SIGNING_ACCOUNT }}
+          RuntimeTestsEnabled: ${{ inputs.runtime_tests }}
+          WixOfficialBuild: false
+
+      - name: Check the packages
+        id: packages
+        shell: pwsh
+        run: |
+          $v = '${{ steps.version.outputs.version }}'
+          # Publish ours only; the WixInternal.* test-support packages stay local.
+          $pkgs = Get-ChildItem build/artifacts -Filter *.nupkg |
+                  Where-Object { $_.Name -match '^(IsWixToolset\.|iswix\.)' }
+          if (-not $pkgs) { throw 'The build produced no IsWixToolset.* or iswix packages.' }
+          $bad = $pkgs | Where-Object { $_.Name -notlike "*.$v.nupkg" }
+          if ($bad) { throw "Packages without version ${v}: $($bad.Name -join ', ')" }
+          $pkgs | ForEach-Object { Write-Host $_.Name }
+
+          # Spot-check that the binaries really are signed before anything is published.
+          $tmp = Join-Path $env:RUNNER_TEMP 'sigcheck'
+          $core = $pkgs | Where-Object { $_.Name -match '^IsWixToolset\.Core\.\d' } | Select-Object -First 1
+          if (-not $core) { throw 'The IsWixToolset.Core package was not built.' }
+          Expand-Archive $core.FullName $tmp -Force
+          $dll = Get-ChildItem $tmp -Recurse -Filter WixToolset.Core.dll | Select-Object -First 1
+          if (-not $dll) { throw 'WixToolset.Core.dll not found in the Core package.' }
+          $sig = Get-AuthenticodeSignature $dll.FullName
+          Write-Host "$($dll.Name): $($sig.Status), $($sig.SignerCertificate.Subject)"
+          if ($sig.Status -ne 'Valid') { throw "WixToolset.Core.dll is not validly signed ($($sig.Status))." }
+
+      - name: Save the packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: packages-${{ steps.version.outputs.version }}
+          path: build/artifacts/*.nupkg
+
+      - name: Get a short-lived NuGet key (trusted publishing)
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
+      # Symbol packages (.snupkg) beside a .nupkg are pushed with it.
+      - name: Publish to nuget.org
+        shell: pwsh
+        env:
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
+        run: |
+          $pkgs = Get-ChildItem build/artifacts -Filter *.nupkg |
+                  Where-Object { $_.Name -match '^(IsWixToolset\.|iswix\.)' }
+          foreach ($p in $pkgs) {
+            dotnet nuget push $p.FullName --api-key $env:NUGET_API_KEY --source https://api.nuget.org/v3/index.json --skip-duplicate
+            if ($LASTEXITCODE -ne 0) { throw "Pushing $($p.Name) failed." }
+          }
+
+      - name: Push the release tag
+        shell: pwsh
+        run: |
+          git push origin 'refs/tags/${{ steps.version.outputs.tag }}'
+          if ($LASTEXITCODE -ne 0) { throw 'Pushing the tag failed. The packages are already on nuget.org; push the tag by hand.' }
+
+      - name: Create the GitHub release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $args = @('release', 'create', '${{ steps.version.outputs.tag }}', '--generate-notes', '--title', 'IsWixToolset ${{ steps.version.outputs.version }}')
+          if ('${{ steps.version.outputs.prerelease }}' -eq 'true') { $args += '--prerelease' }
+          $args += (Get-ChildItem build/artifacts -Filter *.nupkg | Where-Object { $_.Name -match '^(IsWixToolset\.|iswix\.)' } | ForEach-Object FullName)
+          gh @args
+
+      - name: Collect logs
+        if: ${{ !cancelled() }}
+        shell: cmd
+        run: 7z a "build\logs\publish_%GITHUB_RUN_ID%.zip" "%TEMP%\*.log"
+
+      # Safe to upload: the logs hold no secrets (credentials come from federated sign-in, not files).
+      - name: Save logs
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs_${{ github.run_id }}
+          path: build/logs/
