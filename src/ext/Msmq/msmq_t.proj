@@ -9,8 +9,8 @@
 
   <Target Name="WixClean" BeforeTargets="Restore" Condition="'$(SuppressWixClean)' != 'true'">
     <RemoveDir Directories="$(RootBuildFolder)Msmq.wixext" />
-    <RemoveDir Directories="$(USERPROFILE)\.nuget\packages\iswix.Msmq.wixext" Condition="'$(NUGET_PACKAGES)' == ''" />
-    <RemoveDir Directories="$(NUGET_PACKAGES)\iswix.Msmq.wixext" Condition="'$(NUGET_PACKAGES)' != ''" />
+    <RemoveDir Directories="$(USERPROFILE)\.nuget\packages\iswixtoolset.Msmq.wixext" Condition="'$(NUGET_PACKAGES)' == ''" />
+    <RemoveDir Directories="$(NUGET_PACKAGES)\iswixtoolset.Msmq.wixext" Condition="'$(NUGET_PACKAGES)' != ''" />
 
     <Delete Files="$(ArtifactsFolder)IsWixToolset.Msmq.wixext.*.nupkg" />
   </Target>

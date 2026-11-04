@@ -13,6 +13,7 @@ namespace WixToolsetTest.Msmq
     using WixInternal.MSTestSupport;
     using WixInternal.Core.MSTestPackage;
     using WixToolset.Msmq;
+    using WixToolset.Util;
 
     [TestClass]
     public class MsmqExtensionFixture
@@ -21,7 +22,7 @@ namespace WixToolsetTest.Msmq
         public void CanBuildUsingMessageQueue()
         {
             var folder = TestData.Get(@"TestData\UsingMessageQueue");
-            var build = new Builder(folder, new[] { typeof(MsmqExtensionFactory) }, new[] { folder });
+            var build = new Builder(folder, new[] { typeof(MsmqExtensionFactory), typeof(UtilExtensionFactory) }, new[] { folder });
 
             var results = build.BuildAndQuery(BuildWithUtil, "Wix4MessageQueue", "CustomAction", "Wix4MessageQueueUserPermission", "Wix4MessageQueueGroupPermission", "Wix4Group", "Wix4User");
             WixAssert.CompareLineByLine(new[]
@@ -45,7 +46,7 @@ namespace WixToolsetTest.Msmq
         public void CanRoundtripMessageQueue()
         {
             var folder = TestData.Get(@"TestData\UsingMessageQueue");
-            var build = new Builder(folder, new[] { typeof(MsmqExtensionFactory) }, new[] { folder });
+            var build = new Builder(folder, new[] { typeof(MsmqExtensionFactory), typeof(UtilExtensionFactory) }, new[] { folder });
             var output = Path.Combine(folder, "MessageQueueDecompile.xml");
 
             build.BuildAndDecompileAndBuild(BuildWithUtil, DecompileWithUtil, output);
@@ -64,17 +65,12 @@ namespace WixToolsetTest.Msmq
             }, actual.Select(a => $"{a.Name}:{a.Id}").ToArray());
         }
 
+        // The Util extension is built in this repo, so the Builder loads it by path alongside the Msmq extension
+        // rather than downloading a published package.
         private static void BuildWithUtil(string[] args)
         {
-            var extensionResult = WixRunner.Execute(warningsAsErrors: true, new[]
-                {
-                    "extension", "add",
-                    "IsWixToolset.Util.wixext",
-                });
-
             args = args.Concat(new[]
             {
-                "-ext", "IsWixToolset.Util.wixext",
                 "-arch", "arm64"
             }).ToArray();
 
@@ -84,11 +80,6 @@ namespace WixToolsetTest.Msmq
 
         private static void DecompileWithUtil(string[] args)
         {
-            args = args.Concat(new[]
-            {
-                "-ext", "IsWixToolset.Util.wixext",
-            }).ToArray();
-
             var result = WixRunner.Execute(args);
             result.AssertSuccess();
         }
