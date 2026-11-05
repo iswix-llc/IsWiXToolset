@@ -23,6 +23,6 @@
 
   <ItemGroup>
     <PackageReference Include="WixInternal.TestSupport" />
-    <PackageReference Include="IsWixToolset.Dtf.WindowsInstaller.Package" />
+    <PackageReference Include="IsWiX.WixToolSet.Dtf.WindowsInstaller.Package" />
   </ItemGroup>
 </Project>

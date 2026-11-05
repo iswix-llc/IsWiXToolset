@@ -3,8 +3,8 @@
     <OutputType>Bundle</OutputType>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="IsWixToolset.BootstrapperApplications.wixext" />
-    <PackageReference Include="IsWixToolset.NetFx.wixext" />
+    <PackageReference Include="IsWiX.WixToolSet.BootstrapperApplications.wixext" />
+    <PackageReference Include="IsWiX.WixToolSet.NetFx.wixext" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\TestBA\TestBAWixlib\testbawixlib.wixproj" />

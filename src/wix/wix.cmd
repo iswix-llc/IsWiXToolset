@@ -55,23 +55,23 @@ msbuild pack_t.proj -p:Configuration=%_C% -tl -nologo -m -warnaserror -bl:%_L%\w
 
 :clean
 @rd /s/q "..\..\build\wix" 2> nul
-:: The tool package is "iswix"; match only iswix.<version>.nupkg so the other IsWixToolset.* packages survive.
+:: The tool package is "iswix"; match only iswix.<version>.nupkg so the other IsWiX.WixToolSet.* packages survive.
 @for /f "delims=" %%f in ('dir /b "..\..\build\artifacts\iswix.*.nupkg" 2^>nul ^| findstr /r /i "^iswix\.[0-9]"') do @del "..\..\build\artifacts\%%f"
-@del "..\..\build\artifacts\IsWixToolset.BuildTasks.*.nupkg" 2> nul
-@del "..\..\build\artifacts\IsWixToolset.Converters.*.nupkg" 2> nul
-@del "..\..\build\artifacts\IsWixToolset.Core.*.nupkg" 2> nul
-@del "..\..\build\artifacts\IsWixToolset.Sdk.*.nupkg" 2> nul
+@del "..\..\build\artifacts\IsWiX.WixToolSet.BuildTasks.*.nupkg" 2> nul
+@del "..\..\build\artifacts\IsWiX.WixToolSet.Converters.*.nupkg" 2> nul
+@del "..\..\build\artifacts\IsWiX.WixToolSet.Core.*.nupkg" 2> nul
+@del "..\..\build\artifacts\IsWiX.WixToolSet.Sdk.*.nupkg" 2> nul
 @del "%_L%\TestResults\wix.trx" 2> nul
 @rd /s/q "%USERPROFILE%\.nuget\packages\iswix" 2> nul
-@rd /s/q "%USERPROFILE%\.nuget\packages\iswixtoolset.buildtasks" 2> nul
-@rd /s/q "%USERPROFILE%\.nuget\packages\iswixtoolset.converters" 2> nul
-@rd /s/q "%USERPROFILE%\.nuget\packages\iswixtoolset.converters.symbolizer" 2> nul
-@rd /s/q "%USERPROFILE%\.nuget\packages\iswixtoolset.core" 2> nul
-@rd /s/q "%USERPROFILE%\.nuget\packages\iswixtoolset.core.burn" 2> nul
-@rd /s/q "%USERPROFILE%\.nuget\packages\iswixtoolset.core.native" 2> nul
-@rd /s/q "%USERPROFILE%\.nuget\packages\iswixtoolset.core.windowsinstaller" 2> nul
+@rd /s/q "%USERPROFILE%\.nuget\packages\iswix.wixtoolset.buildtasks" 2> nul
+@rd /s/q "%USERPROFILE%\.nuget\packages\iswix.wixtoolset.converters" 2> nul
+@rd /s/q "%USERPROFILE%\.nuget\packages\iswix.wixtoolset.converters.symbolizer" 2> nul
+@rd /s/q "%USERPROFILE%\.nuget\packages\iswix.wixtoolset.core" 2> nul
+@rd /s/q "%USERPROFILE%\.nuget\packages\iswix.wixtoolset.core.burn" 2> nul
+@rd /s/q "%USERPROFILE%\.nuget\packages\iswix.wixtoolset.core.native" 2> nul
+@rd /s/q "%USERPROFILE%\.nuget\packages\iswix.wixtoolset.core.windowsinstaller" 2> nul
 @rd /s/q "%USERPROFILE%\.nuget\packages\wixinternal.core.testpackage" 2> nul
-@rd /s/q "%USERPROFILE%\.nuget\packages\iswixtoolset.sdk" 2> nul
+@rd /s/q "%USERPROFILE%\.nuget\packages\iswix.wixtoolset.sdk" 2> nul
 @exit /b
 
 :end

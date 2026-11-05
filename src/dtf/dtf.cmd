@@ -23,15 +23,15 @@ msbuild -Restore -t:Pack dtf.slnx -p:Configuration=%_C% -tl -nologo -m -warnaser
 
 :clean
 @rd /s/q "..\..\build\dtf" 2> nul
-@del "..\..\build\artifacts\IsWixToolset.Dtf.*.nupkg" 2> nul
-@rd /s/q "%USERPROFILE%\.nuget\packages\iswixtoolset.dtf.compression" 2> nul
-@rd /s/q "%USERPROFILE%\.nuget\packages\iswixtoolset.dtf.compression.cab" 2> nul
-@rd /s/q "%USERPROFILE%\.nuget\packages\iswixtoolset.dtf.compression.zip" 2> nul
-@rd /s/q "%USERPROFILE%\.nuget\packages\iswixtoolset.dtf.customaction" 2> nul
-@rd /s/q "%USERPROFILE%\.nuget\packages\iswixtoolset.dtf.resources" 2> nul
-@rd /s/q "%USERPROFILE%\.nuget\packages\iswixtoolset.dtf.windowsinstaller" 2> nul
-@rd /s/q "%USERPROFILE%\.nuget\packages\iswixtoolset.dtf.windowsinstaller.linq" 2> nul
-@rd /s/q "%USERPROFILE%\.nuget\packages\iswixtoolset.dtf.windowsinstaller.package" 2> nul
+@del "..\..\build\artifacts\IsWiX.WixToolSet.Dtf.*.nupkg" 2> nul
+@rd /s/q "%USERPROFILE%\.nuget\packages\iswix.wixtoolset.dtf.compression" 2> nul
+@rd /s/q "%USERPROFILE%\.nuget\packages\iswix.wixtoolset.dtf.compression.cab" 2> nul
+@rd /s/q "%USERPROFILE%\.nuget\packages\iswix.wixtoolset.dtf.compression.zip" 2> nul
+@rd /s/q "%USERPROFILE%\.nuget\packages\iswix.wixtoolset.dtf.customaction" 2> nul
+@rd /s/q "%USERPROFILE%\.nuget\packages\iswix.wixtoolset.dtf.resources" 2> nul
+@rd /s/q "%USERPROFILE%\.nuget\packages\iswix.wixtoolset.dtf.windowsinstaller" 2> nul
+@rd /s/q "%USERPROFILE%\.nuget\packages\iswix.wixtoolset.dtf.windowsinstaller.linq" 2> nul
+@rd /s/q "%USERPROFILE%\.nuget\packages\iswix.wixtoolset.dtf.windowsinstaller.package" 2> nul
 @exit /b
 
 :end

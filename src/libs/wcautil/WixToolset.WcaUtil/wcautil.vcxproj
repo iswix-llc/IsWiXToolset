@@ -36,7 +36,7 @@
     <MultiTargetLibrary>true</MultiTargetLibrary>
     <CharacterSet>MultiByte</CharacterSet>
     <Description>WiX Toolset Custom Action native utility library</Description>
-    <PackageId>IsWixToolset.WcaUtil</PackageId>
+    <PackageId>IsWiX.WixToolSet.WcaUtil</PackageId>
   </PropertyGroup>
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

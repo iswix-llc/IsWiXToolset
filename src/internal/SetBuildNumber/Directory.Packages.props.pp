@@ -4,46 +4,46 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageVersion Include="IsWixToolset.Dtf.Compression" Version="{packageversion}" />
-    <PackageVersion Include="IsWixToolset.Dtf.Compression.Cab" Version="{packageversion}" />
-    <PackageVersion Include="IsWixToolset.Dtf.CustomAction" Version="{packageversion}" />
-    <PackageVersion Include="IsWixToolset.Dtf.Resources" Version="{packageversion}" />
-    <PackageVersion Include="IsWixToolset.Dtf.WindowsInstaller" Version="{packageversion}" />
-    <PackageVersion Include="IsWixToolset.Dtf.WindowsInstaller.Package" Version="{packageversion}" />
+    <PackageVersion Include="IsWiX.WixToolSet.Dtf.Compression" Version="{packageversion}" />
+    <PackageVersion Include="IsWiX.WixToolSet.Dtf.Compression.Cab" Version="{packageversion}" />
+    <PackageVersion Include="IsWiX.WixToolSet.Dtf.CustomAction" Version="{packageversion}" />
+    <PackageVersion Include="IsWiX.WixToolSet.Dtf.Resources" Version="{packageversion}" />
+    <PackageVersion Include="IsWiX.WixToolSet.Dtf.WindowsInstaller" Version="{packageversion}" />
+    <PackageVersion Include="IsWiX.WixToolSet.Dtf.WindowsInstaller.Package" Version="{packageversion}" />
 
     <PackageVersion Include="WixInternal.TestSupport" Version="{packageversion}" />
     <PackageVersion Include="WixInternal.MSTestSupport" Version="{packageversion}" />
     <PackageVersion Include="WixInternal.TestSupport.Native" Version="{packageversion}" />
     <PackageVersion Include="WixInternal.BaseBuildTasks.Sources" Version="{packageversion}" />
 
-    <PackageVersion Include="IsWixToolset.DUtil" Version="{packageversion}" />
-    <PackageVersion Include="IsWixToolset.WcaUtil" Version="{packageversion}" />
+    <PackageVersion Include="IsWiX.WixToolSet.DUtil" Version="{packageversion}" />
+    <PackageVersion Include="IsWiX.WixToolSet.WcaUtil" Version="{packageversion}" />
 
-    <PackageVersion Include="IsWixToolset.BootstrapperApplicationApi" Version="{packageversion}" />
-    <PackageVersion Include="IsWixToolset.BootstrapperExtensionApi" Version="{packageversion}" />
-    <PackageVersion Include="IsWixToolset.WixStandardBootstrapperApplicationFunctionApi" Version="{packageversion}" />
+    <PackageVersion Include="IsWiX.WixToolSet.BootstrapperApplicationApi" Version="{packageversion}" />
+    <PackageVersion Include="IsWiX.WixToolSet.BootstrapperExtensionApi" Version="{packageversion}" />
+    <PackageVersion Include="IsWiX.WixToolSet.WixStandardBootstrapperApplicationFunctionApi" Version="{packageversion}" />
 
-    <PackageVersion Include="IsWixToolset.Data" Version="{packageversion}" />
-    <PackageVersion Include="IsWixToolset.Extensibility" Version="{packageversion}" />
-    <PackageVersion Include="IsWixToolset.Versioning" Version="{packageversion}" />
+    <PackageVersion Include="IsWiX.WixToolSet.Data" Version="{packageversion}" />
+    <PackageVersion Include="IsWiX.WixToolSet.Extensibility" Version="{packageversion}" />
+    <PackageVersion Include="IsWiX.WixToolSet.Versioning" Version="{packageversion}" />
 
-    <PackageVersion Include="IsWixToolset.Burn" Version="{packageversion}" />
+    <PackageVersion Include="IsWiX.WixToolSet.Burn" Version="{packageversion}" />
 
-    <PackageVersion Include="IsWixToolset.Core" Version="{packageversion}" />
-    <PackageVersion Include="IsWixToolset.Core.Burn" Version="{packageversion}" />
-    <PackageVersion Include="IsWixToolset.Core.WindowsInstaller" Version="{packageversion}" />
+    <PackageVersion Include="IsWiX.WixToolSet.Core" Version="{packageversion}" />
+    <PackageVersion Include="IsWiX.WixToolSet.Core.Burn" Version="{packageversion}" />
+    <PackageVersion Include="IsWiX.WixToolSet.Core.WindowsInstaller" Version="{packageversion}" />
     <PackageVersion Include="WixInternal.Core.TestPackage" Version="{packageversion}" />
     <PackageVersion Include="WixInternal.Core.MSTestPackage" Version="{packageversion}" />
 
-    <PackageVersion Include="IsWixToolset.Bal.wixext" Version="{packageversion}" />
-    <PackageVersion Include="IsWixToolset.BootstrapperApplications.wixext" Version="{packageversion}" />
-    <PackageVersion Include="IsWixToolset.ComPlus.wixext" Version="{packageversion}" />
-    <PackageVersion Include="IsWixToolset.Dependency.wixext" Version="{packageversion}" />
-    <PackageVersion Include="IsWixToolset.NetFx.wixext" Version="{packageversion}" />
-    <PackageVersion Include="IsWixToolset.UI.wixext" Version="{packageversion}" />
-    <PackageVersion Include="IsWixToolset.Util.wixext" Version="{packageversion}" />
-    <PackageVersion Include="IsWixToolset.Firewall.wixext" Version="{packageversion}" />
-    <PackageVersion Include="IsWixToolset.Msmq.wixext" Version="{packageversion}" />
+    <PackageVersion Include="IsWiX.WixToolSet.Bal.wixext" Version="{packageversion}" />
+    <PackageVersion Include="IsWiX.WixToolSet.BootstrapperApplications.wixext" Version="{packageversion}" />
+    <PackageVersion Include="IsWiX.WixToolSet.ComPlus.wixext" Version="{packageversion}" />
+    <PackageVersion Include="IsWiX.WixToolSet.Dependency.wixext" Version="{packageversion}" />
+    <PackageVersion Include="IsWiX.WixToolSet.NetFx.wixext" Version="{packageversion}" />
+    <PackageVersion Include="IsWiX.WixToolSet.UI.wixext" Version="{packageversion}" />
+    <PackageVersion Include="IsWiX.WixToolSet.Util.wixext" Version="{packageversion}" />
+    <PackageVersion Include="IsWiX.WixToolSet.Firewall.wixext" Version="{packageversion}" />
+    <PackageVersion Include="IsWiX.WixToolSet.Msmq.wixext" Version="{packageversion}" />
   </ItemGroup>
 
   <ItemGroup>

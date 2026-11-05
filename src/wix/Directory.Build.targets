@@ -25,14 +25,14 @@
 
     <!--
       This PackageReference is required so the RuntimeTargetsCopyLocalItems have a package (any package would
-      do, IsWixToolset.Data is as good as any) to "attach" themselves to.
+      do, IsWiX.WixToolSet.Data is as good as any) to "attach" themselves to.
     -->
-    <PackageReference Include="IsWixToolset.Data" />
+    <PackageReference Include="IsWiX.WixToolSet.Data" />
 
     <RuntimeTargetsCopyLocalItems Include="@(NativeLibrary)" 
                                   AssetType="native"
                                   DestinationSubDirectory="runtimes\%(RuntimeIdentifier)\native\" 
-                                  NuGetPackageId="IsWixToolset.Data"
+                                  NuGetPackageId="IsWiX.WixToolSet.Data"
                                   RuntimeIdentifier="%(RuntimeIdentifier)"
                                   />
     <None Include="@(RuntimeTargetsCopyLocalItems)" 

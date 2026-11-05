@@ -1,4 +1,4 @@
-﻿<Project Sdk="IsWixToolset.Sdk">
+﻿<Project Sdk="IsWiX.WixToolSet.Sdk">
   <PropertyGroup>
     <BA>WixStdBA</BA>
     <DefineConstants>$(DefineConstants);Version=1.0.0.0</DefineConstants>

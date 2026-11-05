@@ -306,7 +306,7 @@ namespace WixToolset.Core.ExtensionCache
             return false;
         }
 
-        // IsWiX: packages are published as IsWixToolset.* (nuget.org reserves WixToolset.*), but the extension
+        // IsWiX: packages are published as IsWiX.WixToolSet.* (nuget.org reserves WixToolset.*), but the extension
         // assemblies keep their upstream WixToolset.* names, so check both file names.
         private static IEnumerable<string> GetExtensionAssemblyNames(string extensionId)
         {

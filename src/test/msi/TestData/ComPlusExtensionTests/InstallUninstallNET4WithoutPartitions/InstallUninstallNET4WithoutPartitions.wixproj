@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Copyright (c) .NET Foundation and contributors. All rights reserved. Licensed under the Microsoft Reciprocal License. See LICENSE.TXT file in the project root for full license information. -->
-<Project Sdk="IsWixToolset.Sdk">
+<Project Sdk="IsWiX.WixToolSet.Sdk">
   <PropertyGroup>
     <UpgradeCode>{A3E0B539-63F9-4B43-9E34-F33AE1C6E06D}</UpgradeCode>
     <ProductComponentsRef>true</ProductComponentsRef>
@@ -11,7 +11,7 @@
     <ProjectReference Include="..\Components\TestComponentNET4\TestComponentNET4.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="IsWixToolset.Util.wixext" />
-    <PackageReference Include="IsWixToolset.ComPlus.wixext" />
+    <PackageReference Include="IsWiX.WixToolSet.Util.wixext" />
+    <PackageReference Include="IsWiX.WixToolSet.ComPlus.wixext" />
   </ItemGroup>
 </Project>

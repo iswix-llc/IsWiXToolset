@@ -1,5 +1,5 @@
 <!-- Copyright (c) .NET Foundation and contributors. All rights reserved. Licensed under the Microsoft Reciprocal License. See LICENSE.TXT file in the project root for full license information. -->
-<Project Sdk="IsWixToolset.Sdk">
+<Project Sdk="IsWiX.WixToolSet.Sdk">
   <PropertyGroup>
     <OutputType>Bundle</OutputType>
     <UpgradeCode>{9BB4F6D3-4EE3-40BF-879F-90E78440EAE8}</UpgradeCode>
@@ -11,7 +11,7 @@
     <ProjectReference Include="..\..\TestBA\TestBAWixlib\testbawixlib.wixproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="IsWixToolset.BootstrapperApplications.wixext" />
-    <PackageReference Include="IsWixToolset.NetFx.wixext" />
+    <PackageReference Include="IsWiX.WixToolSet.BootstrapperApplications.wixext" />
+    <PackageReference Include="IsWiX.WixToolSet.NetFx.wixext" />
   </ItemGroup>
 </Project>

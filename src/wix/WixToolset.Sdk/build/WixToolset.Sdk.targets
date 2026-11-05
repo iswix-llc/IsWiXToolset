@@ -4,6 +4,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" InitialTargets="_CannotPackageReferenceWixToolsetSdk" >
   <Target Name="_CannotPackageReferenceWixToolsetSdk"
           Condition=" '$(WixSdkPropsImported)' == 'true' ">
-    <Error Text="The IsWixToolset.Sdk is an MSBuild project SDK and cannot be referenced using a PackageReference. See the MSBuild documentation how to use SDKs https://learn.microsoft.com/en-us/visualstudio/msbuild/how-to-use-project-sdk" />
+    <Error Text="The IsWiX.WixToolSet.Sdk is an MSBuild project SDK and cannot be referenced using a PackageReference. See the MSBuild documentation how to use SDKs https://learn.microsoft.com/en-us/visualstudio/msbuild/how-to-use-project-sdk" />
   </Target>
 </Project>

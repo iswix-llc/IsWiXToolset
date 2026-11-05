@@ -306,12 +306,12 @@ namespace WixToolsetTest.CoreIntegration
 
                     var result = WixRunner.Execute(new[]
                     {
-                        "extension", "add", "IsWixToolset.UI.wixext",
+                        "extension", "add", "IsWiX.WixToolSet.UI.wixext",
                     });
 
                     result.AssertSuccess();
 
-                    var cacheFolder = Path.Combine(folder, ".wix", "extensions", "IsWixToolset.UI.wixext");
+                    var cacheFolder = Path.Combine(folder, ".wix", "extensions", "IsWiX.WixToolSet.UI.wixext");
                     Assert.True(Directory.Exists(cacheFolder), $"Expected folder '{cacheFolder}' to exist");
 
                     result = WixRunner.Execute(new[]
@@ -325,12 +325,12 @@ namespace WixToolsetTest.CoreIntegration
                     var executingAssembly = Assembly.GetExecutingAssembly();
                     var fileVersion = FileVersionInfo.GetVersionInfo(executingAssembly.Location);
 
-                    Assert.StartsWith($"IsWixToolset.UI.wixext {fileVersion.FileMajorPart}", output);
+                    Assert.StartsWith($"IsWiX.WixToolSet.UI.wixext {fileVersion.FileMajorPart}", output);
                     Assert.DoesNotContain("damaged", output);
 
                     result = WixRunner.Execute(new[]
                     {
-                        "extension", "remove", "IsWixToolset.UI.wixext"
+                        "extension", "remove", "IsWiX.WixToolSet.UI.wixext"
                     });
 
                     result.AssertSuccess();

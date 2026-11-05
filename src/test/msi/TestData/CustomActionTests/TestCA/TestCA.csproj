@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="IsWixToolset.Dtf.CustomAction" />
-    <PackageReference Include="IsWixToolset.Dtf.WindowsInstaller" />
+    <PackageReference Include="IsWiX.WixToolSet.Dtf.CustomAction" />
+    <PackageReference Include="IsWiX.WixToolSet.Dtf.WindowsInstaller" />
   </ItemGroup>
 </Project>

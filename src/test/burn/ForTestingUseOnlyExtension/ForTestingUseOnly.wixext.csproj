@@ -9,6 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="IsWixToolset.Extensibility" PrivateAssets="all" />
+    <PackageReference Include="IsWiX.WixToolSet.Extensibility" PrivateAssets="all" />
   </ItemGroup>
 </Project>

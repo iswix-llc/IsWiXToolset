@@ -39,7 +39,7 @@
     <!-- NBGV properties -->
     <AssemblyLanguage>1033</AssemblyLanguage>
     <AssemblyProduct>Burn</AssemblyProduct>
-    <PackageId>IsWixToolset.Burn</PackageId>
+    <PackageId>IsWiX.WixToolSet.Burn</PackageId>
     <SignOutput>false</SignOutput>
   </PropertyGroup>
 
@@ -91,7 +91,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="IsWixToolset.DUtil" />
+    <PackageReference Include="IsWiX.WixToolSet.DUtil" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
   </ItemGroup>
 

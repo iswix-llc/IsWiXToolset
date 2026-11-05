@@ -34,9 +34,9 @@ dotnet test ^
 
 :clean
 @rd /s/q "..\..\build\burn" 2> nul
-@del "..\..\build\artifacts\IsWixToolset.Burn.*.nupkg" 2> nul
+@del "..\..\build\artifacts\IsWiX.WixToolSet.Burn.*.nupkg" 2> nul
 @del "%_L%\TestResults\burn.trx" 2> nul
-@rd /s/q "%USERPROFILE%\.nuget\packages\iswixtoolset.burn" 2> nul
+@rd /s/q "%USERPROFILE%\.nuget\packages\iswix.wixtoolset.burn" 2> nul
 @exit /b
 
 :end

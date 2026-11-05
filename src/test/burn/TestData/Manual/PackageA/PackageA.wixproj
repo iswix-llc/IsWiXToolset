@@ -1,5 +1,5 @@
 <!-- Copyright (c) .NET Foundation and contributors. All rights reserved. Licensed under the Microsoft Reciprocal License. See LICENSE.TXT file in the project root for full license information. -->
-<Project Sdk="IsWixToolset.Sdk">
+<Project Sdk="IsWiX.WixToolSet.Sdk">
   <PropertyGroup>
     <UpgradeCode>{0D803A6E-8090-4174-8DAC-810ECC2B1BBF}</UpgradeCode>
     <ProductComponentsRef>true</ProductComponentsRef>
@@ -8,6 +8,6 @@
     <Compile Include="..\..\Templates\Package.wxs" Link="Package.wxs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="IsWixToolset.Util.wixext" />
+    <PackageReference Include="IsWiX.WixToolSet.Util.wixext" />
   </ItemGroup>
 </Project>

@@ -22,8 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="IsWixToolset.Data" />
-    <PackageReference Include="IsWixToolset.Extensibility" />
+    <PackageReference Include="IsWiX.WixToolSet.Data" />
+    <PackageReference Include="IsWiX.WixToolSet.Extensibility" />
   </ItemGroup>
 
   <ItemGroup>

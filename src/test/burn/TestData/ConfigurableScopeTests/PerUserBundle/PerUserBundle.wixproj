@@ -1,9 +1,9 @@
-﻿<Project Sdk="IsWixToolset.Sdk">
+﻿<Project Sdk="IsWiX.WixToolSet.Sdk">
   <PropertyGroup>
     <OutputType>Bundle</OutputType>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="IsWixToolset.BootstrapperApplications.wixext" />
+    <PackageReference Include="IsWiX.WixToolSet.BootstrapperApplications.wixext" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PerUserPkg\PerUserPkg.wixproj" />

@@ -1,5 +1,5 @@
 <!-- Copyright (c) .NET Foundation and contributors. All rights reserved. Licensed under the Microsoft Reciprocal License. See LICENSE.TXT file in the project root for full license information. -->
-<Project Sdk="IsWixToolset.Sdk">
+<Project Sdk="IsWiX.WixToolSet.Sdk">
   <Import Project="BundleB.props" />
   <ItemGroup>
     <ProjectReference Include="..\PackageBv1\PackageBv1.wixproj" />
@@ -9,8 +9,8 @@
     <Feeds Include="*.xml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="IsWixToolset.BootstrapperApplications.wixext" />
-    <PackageReference Include="IsWixToolset.NetFx.wixext" />
+    <PackageReference Include="IsWiX.WixToolSet.BootstrapperApplications.wixext" />
+    <PackageReference Include="IsWiX.WixToolSet.NetFx.wixext" />
   </ItemGroup>
   <Target Name="CopyFeeds" AfterTargets="AfterBuild">
     <Copy SourceFiles="@(Feeds)" DestinationFolder="$(OutputPath)" />

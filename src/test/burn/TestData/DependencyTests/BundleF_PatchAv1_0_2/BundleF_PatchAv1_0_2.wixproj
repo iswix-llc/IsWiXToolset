@@ -1,5 +1,5 @@
 <!-- Copyright (c) .NET Foundation and contributors. All rights reserved. Licensed under the Microsoft Reciprocal License. See LICENSE.TXT file in the project root for full license information. -->
-<Project Sdk="IsWixToolset.Sdk">
+<Project Sdk="IsWiX.WixToolSet.Sdk">
   <Import Project="..\BundleF_PatchAv1_0_1\BundleF_PatchA.props" />
   <PropertyGroup>
     <TestVersion>1.0.2.0</TestVersion>
@@ -10,8 +10,8 @@
     <ProjectReference Include="..\..\TestBA\TestBAWixlib\testbawixlib.wixproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="IsWixToolset.BootstrapperApplications.wixext" />
-    <PackageReference Include="IsWixToolset.NetFx.wixext" />
-    <PackageReference Include="IsWixToolset.Util.wixext" />
+    <PackageReference Include="IsWiX.WixToolSet.BootstrapperApplications.wixext" />
+    <PackageReference Include="IsWiX.WixToolSet.NetFx.wixext" />
+    <PackageReference Include="IsWiX.WixToolSet.Util.wixext" />
   </ItemGroup>
 </Project>

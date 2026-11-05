@@ -24,8 +24,8 @@
     <PackageReference Include="System.DirectoryServices.AccountManagement" />
     <PackageReference Include="System.Management" />
     <PackageReference Include="WixInternal.TestSupport" />
-    <PackageReference Include="IsWixToolset.Data" />
-    <PackageReference Include="IsWixToolset.BootstrapperApplicationApi" />
+    <PackageReference Include="IsWiX.WixToolSet.Data" />
+    <PackageReference Include="IsWiX.WixToolSet.BootstrapperApplicationApi" />
   </ItemGroup>
 
   <ItemGroup>

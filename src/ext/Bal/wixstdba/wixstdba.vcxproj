@@ -82,7 +82,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="IsWixToolset.BootstrapperApplicationApi" />
+    <PackageReference Include="IsWiX.WixToolSet.BootstrapperApplicationApi" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
   </ItemGroup>
 

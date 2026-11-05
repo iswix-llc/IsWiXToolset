@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="IsWixToolset.Sdk">
+<Project Sdk="IsWiX.WixToolSet.Sdk">
   <PropertyGroup>
     <Platform>x64</Platform>
     <OutputName>wix-cli-$(Platform)</OutputName>
@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="IsWixToolset.UI.wixext" />
+    <PackageReference Include="IsWiX.WixToolSet.UI.wixext" />
   </ItemGroup>
 
   <UsingTask TaskName="GenerateMetadata" AssemblyFile="$(BaseOutputPath)$(Configuration)\net472\MetadataTask.dll" />

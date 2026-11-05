@@ -1,2 +1,2 @@
-<Project Sdk="IsWixToolset.Sdk/4.0.0">
+<Project Sdk="IsWiX.WixToolSet.Sdk/4.0.0">
 </Project>

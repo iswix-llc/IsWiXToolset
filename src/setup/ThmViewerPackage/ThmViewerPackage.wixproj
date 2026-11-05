@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="IsWixToolset.Sdk">
+<Project Sdk="IsWiX.WixToolSet.Sdk">
   <ItemGroup>
     <LinkerBindInputPaths Include="$(RootBuildFolder)tools\$(Configuration)\x86" />
   </ItemGroup>

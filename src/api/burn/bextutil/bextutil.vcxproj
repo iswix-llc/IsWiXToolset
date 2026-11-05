@@ -35,7 +35,7 @@
     <TargetName>bextutil</TargetName>
     <CharacterSet>MultiByte</CharacterSet>
     <Description>WiX Toolset Bundle Extension API</Description>
-    <PackageId>IsWixToolset.BootstrapperExtensionApi</PackageId>
+    <PackageId>IsWiX.WixToolSet.BootstrapperExtensionApi</PackageId>
   </PropertyGroup>
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -72,7 +72,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
 
-    <PackageReference Include="IsWixToolset.DUtil" />
+    <PackageReference Include="IsWiX.WixToolSet.DUtil" />
   </ItemGroup>
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

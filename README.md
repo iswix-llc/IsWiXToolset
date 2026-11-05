@@ -10,7 +10,7 @@ You do not have to take our word for it. These packages are built to be checked:
 - **Built from source, in the open.** The packages are compiled from that source in GitHub Actions rather than repackaged from someone else's binaries.
 - **Comparable to upstream.** Assembly names and namespaces are unchanged, and the full history is public, so you can compare this fork with [wixtoolset/wix](https://github.com/wixtoolset/wix).
 
-IsWiX.Toolset is a build of the [WiX Toolset](https://wixtoolset.org/) compiled from source and published as `IsWixToolset.*` packages. It is a downstream fork of [wixtoolset/wix](https://github.com/wixtoolset/wix) and is **not** meant to replace it.
+IsWiX.Toolset is a build of the [WiX Toolset](https://wixtoolset.org/) compiled from source and published as `IsWiX.WixToolSet.*` packages. It is a downstream fork of [wixtoolset/wix](https://github.com/wixtoolset/wix) and is **not** meant to replace it.
 
 ## Why this fork exists
 
@@ -20,7 +20,7 @@ IsWiX.Toolset is a build of the [WiX Toolset](https://wixtoolset.org/) compiled 
 
 ## What this is, and is not
 
-- It is a build of the WiX Toolset from source. Package IDs use the `IsWixToolset.` prefix; assembly names and namespaces are unchanged.
+- It is a build of the WiX Toolset from source. Package IDs use the `IsWiX.WixToolSet.` prefix; assembly names and namespaces are unchanged.
 - It is not an official WiX Toolset release, and it is not affiliated with or endorsed by the WiX Toolset project.
 - It is not a place for active development. We do not intend to do active development in this repository.
 

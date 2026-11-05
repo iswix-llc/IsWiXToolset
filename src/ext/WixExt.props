@@ -15,6 +15,6 @@
     <Content Include="$(MSBuildProjectName).targets" PackagePath="build/$(PackageId).targets" />
     <Content Include="$(TargetPath)" PackagePath="$(WixExtensionPackageFolder)" />
 
-    <PackageReference Include="IsWixToolset.Extensibility" PrivateAssets="all" />
+    <PackageReference Include="IsWiX.WixToolSet.Extensibility" PrivateAssets="all" />
   </ItemGroup>
 </Project>

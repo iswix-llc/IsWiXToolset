@@ -3,7 +3,7 @@
     "MSTest.Sdk": "4.0.1",
     "Microsoft.Build.Traversal": "4.1.82",
     "Microsoft.Build.NoTargets": "3.7.134",
-    "IsWixToolset.Sdk": "{packageversion}"
+    "IsWiX.WixToolSet.Sdk": "{packageversion}"
   },
   "sdk": {
     "version": "9.0.300",

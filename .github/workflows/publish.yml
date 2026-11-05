@@ -142,16 +142,16 @@ jobs:
           $v = '${{ steps.version.outputs.version }}'
           # Publish ours only; the WixInternal.* test-support packages stay local.
           $pkgs = Get-ChildItem build/artifacts -Filter *.nupkg |
-                  Where-Object { $_.Name -match '^(IsWixToolset\.|iswix\.)' }
-          if (-not $pkgs) { throw 'The build produced no IsWixToolset.* or iswix packages.' }
+                  Where-Object { $_.Name -match '^(IsWiX\.WixToolSet\.|iswix\.\d)' }
+          if (-not $pkgs) { throw 'The build produced no IsWiX.WixToolSet.* or iswix packages.' }
           $bad = $pkgs | Where-Object { $_.Name -notlike "*.$v.nupkg" }
           if ($bad) { throw "Packages without version ${v}: $($bad.Name -join ', ')" }
           $pkgs | ForEach-Object { Write-Host $_.Name }
 
           # Spot-check that the binaries really are signed before anything is published.
           $tmp = Join-Path $env:RUNNER_TEMP 'sigcheck'
-          $core = $pkgs | Where-Object { $_.Name -match '^IsWixToolset\.Core\.\d' } | Select-Object -First 1
-          if (-not $core) { throw 'The IsWixToolset.Core package was not built.' }
+          $core = $pkgs | Where-Object { $_.Name -match '^IsWiX\.WixToolSet\.Core\.\d' } | Select-Object -First 1
+          if (-not $core) { throw 'The IsWiX.WixToolSet.Core package was not built.' }
           Expand-Archive $core.FullName $tmp -Force
           $dll = Get-ChildItem $tmp -Recurse -Filter WixToolset.Core.dll | Select-Object -First 1
           if (-not $dll) { throw 'WixToolset.Core.dll not found in the Core package.' }
@@ -178,7 +178,7 @@ jobs:
           NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
         run: |
           $pkgs = Get-ChildItem build/artifacts -Filter *.nupkg |
-                  Where-Object { $_.Name -match '^(IsWixToolset\.|iswix\.)' }
+                  Where-Object { $_.Name -match '^(IsWiX\.WixToolSet\.|iswix\.\d)' }
           foreach ($p in $pkgs) {
             dotnet nuget push $p.FullName --api-key $env:NUGET_API_KEY --source https://api.nuget.org/v3/index.json --skip-duplicate
             if ($LASTEXITCODE -ne 0) { throw "Pushing $($p.Name) failed." }
@@ -195,9 +195,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $args = @('release', 'create', '${{ steps.version.outputs.tag }}', '--generate-notes', '--title', 'IsWixToolset ${{ steps.version.outputs.version }}')
+          $args = @('release', 'create', '${{ steps.version.outputs.tag }}', '--generate-notes', '--title', 'IsWiX.WixToolSet ${{ steps.version.outputs.version }}')
           if ('${{ steps.version.outputs.prerelease }}' -eq 'true') { $args += '--prerelease' }
-          $args += (Get-ChildItem build/artifacts -Filter *.nupkg | Where-Object { $_.Name -match '^(IsWixToolset\.|iswix\.)' } | ForEach-Object FullName)
+          $args += (Get-ChildItem build/artifacts -Filter *.nupkg | Where-Object { $_.Name -match '^(IsWiX\.WixToolSet\.|iswix\.\d)' } | ForEach-Object FullName)
           gh @args
 
       - name: Collect logs
