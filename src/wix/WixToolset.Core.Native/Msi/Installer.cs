@@ -6,6 +6,7 @@ namespace WixToolset.Core.Native.Msi
     using System.Diagnostics;
     using System.Runtime.InteropServices;
     using System.Text;
+    using WixToolset.Core.Native.Managed;
 
     /// <summary>
     /// A callback function that the installer calls for progress notification and error messages.
@@ -31,6 +32,11 @@ namespace WixToolset.Core.Native.Msi
         /// <returns>String XML.</returns>
         public static string ExtractPatchXml(string path)
         {
+            if (ManagedBackend.Enabled)
+            {
+                return ManagedBackend.Run(() => ManagedPatchXml.Extract(path));
+            }
+
             var buffer = new StringBuilder(65535);
             var size = buffer.Capacity;
 
@@ -59,6 +65,25 @@ namespace WixToolset.Core.Native.Msi
         /// <param name="hash">Int array that receives the returned file hash information.</param>
         public static void GetFileHash(string filePath, int options, out int[] hash)
         {
+            if (ManagedBackend.Enabled)
+            {
+                // The MsiFileHash table stores the MD5 of the file contents as four little-endian integers.
+                byte[] md5;
+                using (var stream = System.IO.File.OpenRead(filePath))
+                using (var algorithm = System.Security.Cryptography.MD5.Create())
+                {
+                    md5 = algorithm.ComputeHash(stream);
+                }
+
+                hash = new int[4];
+                for (var i = 0; i < 4; ++i)
+                {
+                    hash[i] = BitConverter.ToInt32(md5, i * 4);
+                }
+
+                return;
+            }
+
             var hashInterop = new MSIFILEHASHINFO
             {
                 FileHashInfoSize = 20
@@ -92,6 +117,21 @@ namespace WixToolset.Core.Native.Msi
         /// <param name="language">Returns the file language. Set to 0 for version information only.</param>
         public static void GetFileVersion(string filePath, out string version, out string language)
         {
+            if (ManagedBackend.Enabled)
+            {
+                // Files without a version resource are not an error, matching MsiGetFileVersion.
+                try
+                {
+                    PeVersionReader.TryRead(filePath, out version, out language);
+                }
+                catch (OverflowException e)
+                {
+                    throw ManagedBackend.Wrap(87, e, "GetFileVersion " + filePath);
+                }
+
+                return;
+            }
+
             var versionLength = 20;
             var languageLength = 20;
             var versionBuffer = new StringBuilder(versionLength);

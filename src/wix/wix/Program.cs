@@ -29,7 +29,7 @@ namespace WixToolset.Tools
         [MTAThread]
         public static async Task<int> Main(string[] args)
         {
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && Environment.GetEnvironmentVariable("WIX_ALLOW_NONWINDOWS") != "1")
             {
                 Console.WriteLine("wix.exe : warning WIX0000: The WiX Toolset only supports Windows. If you would like to help bring WiX to other platforms, join us at https://wixtoolset.org. All behavior after this point is undefined.");
             }

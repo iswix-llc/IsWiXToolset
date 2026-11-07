@@ -153,7 +153,8 @@ namespace WixToolset.Core.ExtensibilityServices
 
         public string GetCanonicalRelativePath(SourceLineNumber sourceLineNumbers, string elementName, string attributeName, string relativePath)
         {
-            const string root = @"C:\";
+            // A drive-letter root only makes sense on Windows; elsewhere GetFullPath would resolve it against the working directory.
+            var root = Path.DirectorySeparatorChar == '\\' ? @"C:\" : "/";
             if (!Path.IsPathRooted(relativePath))
             {
                 var normalizedPath = Path.GetFullPath(root + relativePath);

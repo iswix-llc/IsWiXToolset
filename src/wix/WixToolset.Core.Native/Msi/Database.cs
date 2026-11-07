@@ -5,6 +5,8 @@ namespace WixToolset.Core.Native.Msi
     using System;
     using System.IO;
     using System.Threading;
+    using WixToolset.Core.Native.Managed;
+    using Lib = IsWiX.WindowsInstaller;
 
     /// <summary>
     /// Wrapper class for managing MSI API database handles.
@@ -12,6 +14,14 @@ namespace WixToolset.Core.Native.Msi
     public sealed class Database : MsiHandle
     {
         private const int STG_E_LOCKVIOLATION = unchecked((int)0x80030021);
+
+        // Non-null when running on the managed (IsWiX.WindowsInstaller) engine instead of msi.dll.
+        internal Lib.Database Inner { get; private set; }
+
+        private Database(Lib.Database inner)
+        {
+            this.Inner = inner;
+        }
 
         /// <summary>
         /// Constructor that opens an MSI database.
@@ -41,6 +51,12 @@ namespace WixToolset.Core.Native.Msi
         /// <param name="asPatch">Indicates whether the database should be opened as a patch file.</param>
         public static Database Create(string path, bool asPatch = false)
         {
+            if (ManagedBackend.Enabled)
+            {
+                var createMode = asPatch ? Lib.DatabaseOpenMode.CreateDirect | Lib.DatabaseOpenMode.PatchFile : Lib.DatabaseOpenMode.CreateDirect;
+                return new Database(ManagedBackend.Run(() => new Lib.Database(path, createMode)));
+            }
+
             var fileCreated = false;
             var mode = OpenDatabase.CreateDirect;
 
@@ -74,6 +90,17 @@ namespace WixToolset.Core.Native.Msi
         /// <param name="asPatch">Indicates whether the database should be opened as a patch file.</param>
         public static Database Open(string path, bool transact = false, bool asPatch = false)
         {
+            if (ManagedBackend.Enabled)
+            {
+                var openMode = transact ? Lib.DatabaseOpenMode.Transact : Lib.DatabaseOpenMode.Direct;
+                if (asPatch)
+                {
+                    openMode |= Lib.DatabaseOpenMode.PatchFile;
+                }
+
+                return new Database(ManagedBackend.Run(() => new Lib.Database(path, openMode)));
+            }
+
             var mode = transact ? OpenDatabase.Transact : OpenDatabase.Direct;
 
             if (asPatch)
@@ -94,6 +121,12 @@ namespace WixToolset.Core.Native.Msi
         /// <param name="asPatch">Indicates whether the database should be opened as a patch file.</param>
         public static Database OpenAsReadOnly(string path, bool asPatch = false)
         {
+            if (ManagedBackend.Enabled)
+            {
+                var readMode = asPatch ? Lib.DatabaseOpenMode.ReadOnly | Lib.DatabaseOpenMode.PatchFile : Lib.DatabaseOpenMode.ReadOnly;
+                return new Database(ManagedBackend.Run(() => new Lib.Database(path, readMode)));
+            }
+
             var mode = OpenDatabase.ReadOnly;
 
             if (asPatch)
@@ -113,6 +146,12 @@ namespace WixToolset.Core.Native.Msi
         /// <param name="transformFile">Path to transform to apply.</param>
         public void ApplyTransform(string transformFile)
         {
+            if (this.Inner != null)
+            {
+                ManagedBackend.Run(() => this.Inner.ApplyTransform(transformFile));
+                return;
+            }
+
             var shortTransformFile = PathUtil.GetShortPath(transformFile);
 
             // get the curret validation bits
@@ -140,6 +179,12 @@ namespace WixToolset.Core.Native.Msi
         /// <param name="errorConditions">Specifies the error conditions that are to be suppressed.</param>
         public void ApplyTransform(string transformFile, TransformErrorConditions errorConditions)
         {
+            if (this.Inner != null)
+            {
+                ManagedBackend.Run(() => this.Inner.ApplyTransform(transformFile, (Lib.TransformErrors)(int)errorConditions));
+                return;
+            }
+
             var shortTransformFile = PathUtil.GetShortPath(transformFile);
 
             var error = MsiInterop.MsiDatabaseApplyTransform(this.Handle, shortTransformFile, errorConditions);
@@ -154,6 +199,12 @@ namespace WixToolset.Core.Native.Msi
         /// </summary>
         public void Commit()
         {
+            if (this.Inner != null)
+            {
+                ManagedBackend.Run(() => this.Inner.Commit());
+                return;
+            }
+
             // Retry this call 3 times to deal with an MSI internal locking problem.
             const int retryWait = 300;
             const int retryLimit = 3;
@@ -196,6 +247,12 @@ namespace WixToolset.Core.Native.Msi
         /// shows which properties should be validated to verify that this transform can be applied to the database.</param>
         public void CreateTransformSummaryInfo(Database referenceDatabase, string transformFile, TransformErrorConditions errorConditions, TransformValidations validations)
         {
+            if (this.Inner != null)
+            {
+                ManagedBackend.Run(() => this.Inner.CreateTransformSummaryInfo(referenceDatabase.Inner, transformFile, (Lib.TransformErrors)(int)errorConditions, (Lib.TransformValidations)(int)validations));
+                return;
+            }
+
             var shortTransformFile = PathUtil.GetShortPath(transformFile);
 
             var error = MsiInterop.MsiCreateTransformSummaryInfo(this.Handle, referenceDatabase.Handle, shortTransformFile, errorConditions, validations);
@@ -213,6 +270,32 @@ namespace WixToolset.Core.Native.Msi
         /// <exception cref="MsiException">Another error occured while importing the IDT file.</exception>
         public void Import(string idtPath)
         {
+            if (this.Inner != null)
+            {
+                try
+                {
+                    this.Inner.Import(Path.GetFullPath(idtPath));
+                }
+                catch (Lib.InstallerException e) when (e.ErrorCode == 1627) // ERROR_FUNCTION_FAILED
+                {
+                    throw new WixInvalidIdtException(idtPath);
+                }
+                catch (Lib.InstallerException e)
+                {
+                    throw ManagedBackend.Translate(e);
+                }
+                catch (NotImplementedException e)
+                {
+                    throw ManagedBackend.NotImplemented(e, nameof(Import) + " " + idtPath);
+                }
+                catch (ArgumentException e)
+                {
+                    throw ManagedBackend.Wrap(87, e, nameof(Import) + " " + idtPath);
+                }
+
+                return;
+            }
+
             var folderPath = Path.GetFullPath(Path.GetDirectoryName(idtPath));
             var fileName = Path.GetFileName(idtPath);
 
@@ -237,6 +320,13 @@ namespace WixToolset.Core.Native.Msi
         /// <param name="fileName">Specifies the name of the exported table archive file.</param>
         public void Export(string tableName, string folderPath, string fileName)
         {
+            if (this.Inner != null)
+            {
+                var exportFolder = String.IsNullOrEmpty(folderPath) ? Environment.CurrentDirectory : folderPath;
+                ManagedBackend.Run(() => this.Inner.Export(tableName, Path.Combine(exportFolder, fileName)));
+                return;
+            }
+
             if (String.IsNullOrEmpty(folderPath))
             {
                 folderPath = Environment.CurrentDirectory;
@@ -260,6 +350,11 @@ namespace WixToolset.Core.Native.Msi
         /// there are no differences between the two databases.</returns>
         public bool GenerateTransform(Database referenceDatabase, string transformFile)
         {
+            if (this.Inner != null)
+            {
+                return ManagedBackend.Run(() => this.Inner.GenerateTransform(referenceDatabase.Inner, transformFile));
+            }
+
             var fileCreated = false;
 
             try
@@ -293,6 +388,23 @@ namespace WixToolset.Core.Native.Msi
         /// <returns>True if there were merge conflicts, otherwise false.</returns>
         public bool Merge(Database mergeDatabase, string tableName)
         {
+            if (this.Inner != null)
+            {
+                try
+                {
+                    this.Inner.Merge(mergeDatabase.Inner, tableName);
+                    return false;
+                }
+                catch (Lib.MergeException)
+                {
+                    return true; // merge conflicts
+                }
+                catch (Lib.InstallerException e)
+                {
+                    throw ManagedBackend.Translate(e);
+                }
+            }
+
             var error = MsiInterop.MsiDatabaseMerge(this.Handle, mergeDatabase.Handle, tableName);
             if (error == 1627)
             {
@@ -336,6 +448,11 @@ namespace WixToolset.Core.Native.Msi
         /// <returns>Returns true if the table exists, false if it does not.</returns>
         public bool TableExists(string tableName)
         {
+            if (this.Inner != null)
+            {
+                return ManagedBackend.Run(() => this.Inner.IsTablePersistent(tableName));
+            }
+
             var result = MsiInterop.MsiDatabaseIsTablePersistent(this.Handle, tableName);
             return MsiInterop.MSICONDITIONTRUE == result;
         }
@@ -350,6 +467,21 @@ namespace WixToolset.Core.Native.Msi
         /// primary key columns for a specified table.</returns>
         public Record PrimaryKeys(string tableName)
         {
+            if (this.Inner != null)
+            {
+                return ManagedBackend.Run(() =>
+                {
+                    var keys = this.Inner.Tables[tableName].PrimaryKeys;
+                    var record = new Lib.Record(keys.Count);
+                    for (var i = 0; i < keys.Count; ++i)
+                    {
+                        record.SetString(i + 1, keys[i]);
+                    }
+
+                    return new Record(record);
+                });
+            }
+
             var error = MsiInterop.MsiDatabaseGetPrimaryKeys(this.Handle, tableName, out var recordHandle);
             if (error != 0)
             {
@@ -357,6 +489,18 @@ namespace WixToolset.Core.Native.Msi
             }
 
             return new Record(recordHandle);
+        }
+
+        /// <inheritdoc/>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && this.Inner != null)
+            {
+                this.Inner.Dispose();
+                this.Inner = null;
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

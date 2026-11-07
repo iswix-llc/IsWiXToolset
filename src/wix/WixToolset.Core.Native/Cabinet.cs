@@ -50,6 +50,11 @@ namespace WixToolset.Core.Native
                 }
             }
 
+            if (Managed.ManagedCabinet.Enabled)
+            {
+                return Managed.ManagedCabinet.Create(this.Path, files, compressionLevel, maxSize);
+            }
+
             var wixnative = new WixNativeExe("smartcab", this.Path, Convert.ToInt32(compressionLevel), files.Count(), maxSize, maxThresh);
 
             foreach (var file in files)
@@ -68,6 +73,11 @@ namespace WixToolset.Core.Native
         /// <returns>>List of CabinetFileInfo</returns>
         public List<CabinetFileInfo> Enumerate()
         {
+            if (Managed.ManagedCabinet.Enabled)
+            {
+                return Managed.ManagedCabinet.Enumerate(this.Path);
+            }
+
             var wixnative = new WixNativeExe("enumcab", this.Path);
             var lines = wixnative.Run();
 
@@ -98,6 +108,11 @@ namespace WixToolset.Core.Native
         /// <param name="outputFolder">Directory to extract files to.</param>
         public IEnumerable<string> Extract(string outputFolder)
         {
+            if (Managed.ManagedCabinet.Enabled)
+            {
+                return Managed.ManagedCabinet.Extract(this.Path, outputFolder);
+            }
+
             if (!outputFolder.EndsWith("\\", StringComparison.Ordinal))
             {
                 outputFolder += "\\";

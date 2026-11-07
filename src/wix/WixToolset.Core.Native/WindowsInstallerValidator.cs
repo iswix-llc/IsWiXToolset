@@ -59,6 +59,12 @@ namespace WixToolset.Core.Native
         /// </summary>
         public void Execute()
         {
+            // ICE validation runs the Windows Installer engine (CustomActions in a CUB), which the managed engine does not provide.
+            if (Managed.ManagedBackend.Enabled)
+            {
+                return;
+            }
+
             using (var mutex = new Mutex(false, "WixValidator"))
             {
                 try
