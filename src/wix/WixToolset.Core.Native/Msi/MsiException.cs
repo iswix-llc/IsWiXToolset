@@ -11,6 +11,19 @@ namespace WixToolset.Core.Native.Msi
     [Serializable]
     public sealed class MsiException : Win32Exception
     {
+        private readonly string managedMessage;
+
+        /// <summary>
+        /// Used by the managed (non msi.dll) engine; never touches msi.dll.
+        /// </summary>
+        internal MsiException(int error, string managedMessage) : base(error)
+        {
+            this.MsiError = 0;
+            this.ErrorInfo = new string[0];
+            this.Error = error;
+            this.managedMessage = managedMessage;
+        }
+
         /// <summary>
         /// Instantiate a new MsiException with a given error.
         /// </summary>
@@ -63,6 +76,11 @@ namespace WixToolset.Core.Native.Msi
         {
             get
             {
+                if (this.managedMessage != null)
+                {
+                    return this.managedMessage;
+                }
+
                 if (0 == this.MsiError)
                 {
                     return base.Message;

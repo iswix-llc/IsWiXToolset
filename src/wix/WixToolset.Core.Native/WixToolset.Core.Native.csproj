@@ -16,13 +16,11 @@
     <None Include="targets\WixToolset.Core.Native.targets" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(NCrunch)'=='' ">
+  <ItemGroup Condition=" '$(NCrunch)'=='' And $([MSBuild]::IsOSPlatform('Windows')) ">
     <ProjectReference Include="..\wixnative\wixnative.vcxproj" ReferenceOutputAssembly="false" PrivateAssets="All" Properties="Platform=ARM64" />
     <ProjectReference Include="..\wixnative\wixnative.vcxproj" ReferenceOutputAssembly="false" PrivateAssets="All" Properties="Platform=x86" />
     <ProjectReference Include="..\wixnative\wixnative.vcxproj" ReferenceOutputAssembly="false" PrivateAssets="All" Properties="Platform=x64" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="IsWiX.WixToolSet.Data" />
-  </ItemGroup>
+
 </Project>

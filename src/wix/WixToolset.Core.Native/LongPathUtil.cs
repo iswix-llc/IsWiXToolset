@@ -10,6 +10,7 @@ namespace WixToolset.Core.Native
     {
         private const int MaxPath = 260;
         private const string LongPathPrefix = @"\\?\";
+        private static readonly bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
         public static bool CreateOrGetShortPath(string path, out string shortPath)
         {
@@ -33,6 +34,11 @@ namespace WixToolset.Core.Native
 
         public static string GetPrefixedLongPath(string path)
         {
+            if (!IsWindows)
+            {
+                return path;
+            }
+
             if (path.Length > MaxPath && !path.StartsWith(LongPathPrefix))
             {
                 path = LongPathPrefix + path;
@@ -43,6 +49,11 @@ namespace WixToolset.Core.Native
 
         public static string GetShortPath(string longPath)
         {
+            if (!IsWindows)
+            {
+                return longPath;
+            }
+
             var path = GetPrefixedLongPath(longPath);
 
             var buffer = new StringBuilder(MaxPath); // start with MAX_PATH.

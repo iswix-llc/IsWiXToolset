@@ -18,6 +18,12 @@ namespace WixToolset.Core.Native
         /// <param name="cabTime">MS-DOS time</param>
         public static void DateTimeToCabDateAndTime(DateTime dateTime, out ushort cabDate, out ushort cabTime)
         {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                Managed.ManagedCabinet.ToDosDateTime(dateTime.ToLocalTime(), out cabDate, out cabTime);
+                return;
+            }
+
             // dateTime.ToLocalTime() does not match FileTimeToLocalFileTime() for some reason.
             // so we need to call FileTimeToLocalFileTime() from kernel32.dll.
             var filetime = dateTime.ToFileTime();

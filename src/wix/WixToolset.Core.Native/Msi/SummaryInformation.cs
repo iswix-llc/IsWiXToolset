@@ -5,6 +5,8 @@ namespace WixToolset.Core.Native.Msi
     using System;
     using System.Globalization;
     using System.Text;
+    using WixToolset.Core.Native.Managed;
+    using Lib = IsWiX.WindowsInstaller;
     using FILETIME = System.Runtime.InteropServices.ComTypes.FILETIME;
 
     /// <summary>
@@ -189,12 +191,21 @@ namespace WixToolset.Core.Native.Msi
             Version31 = 5,
         }
 
+        private Lib.SummaryInfo inner;
+        private bool ownsInner;
+
         /// <summary>
         /// Instantiate a new SummaryInformation class from an open database.
         /// </summary>
         /// <param name="db">Database to retrieve summary information from.</param>
         public SummaryInformation(Database db)
         {
+            if (null != db && db.Inner != null)
+            {
+                this.inner = ManagedBackend.Run(() => db.Inner.SummaryInfo);
+                return;
+            }
+
             if (null == db)
             {
                 throw new ArgumentNullException(nameof(db));
@@ -215,6 +226,18 @@ namespace WixToolset.Core.Native.Msi
         /// <param name="databaseFile">The database file.</param>
         public SummaryInformation(string databaseFile)
         {
+            if (ManagedBackend.Enabled)
+            {
+                if (null == databaseFile)
+                {
+                    throw new ArgumentNullException(nameof(databaseFile));
+                }
+
+                this.inner = ManagedBackend.Run(() => new Lib.SummaryInfo(databaseFile, false));
+                this.ownsInner = true;
+                return;
+            }
+
             if (null == databaseFile)
             {
                 throw new ArgumentNullException(nameof(databaseFile));
@@ -278,6 +301,11 @@ namespace WixToolset.Core.Native.Msi
         /// <returns>The summary information property.</returns>
         public string GetProperty(int index)
         {
+            if (this.inner != null)
+            {
+                return ManagedBackend.Run(() => GetManagedString(this.inner, index));
+            }
+
             this.GetSummaryInformationValue(index, out var dataType, out var intValue, out var stringValue, out var timeValue);
 
             switch ((VT)dataType)
@@ -309,6 +337,11 @@ namespace WixToolset.Core.Native.Msi
         /// <returns>The summary information property.</returns>
         public long GetNumericProperty(int index)
         {
+            if (this.inner != null)
+            {
+                return ManagedBackend.Run(() => GetManagedNumber(this.inner, index));
+            }
+
             this.GetSummaryInformationValue(index, out var dataType, out var intValue, out var stringValue, out var timeValue);
 
             switch ((VT)dataType)
@@ -354,6 +387,77 @@ namespace WixToolset.Core.Native.Msi
         /// <summary>
         /// Variant types in the summary information table.
         /// </summary>
+        private static string FormatTime(DateTime time)
+        {
+            return time == DateTime.MinValue ? String.Empty : time.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture);
+        }
+
+        private static long ToFileTime(DateTime time)
+        {
+            return time == DateTime.MinValue ? 0 : time.ToFileTime();
+        }
+
+        private static string GetManagedString(Lib.SummaryInfo info, int index)
+        {
+            switch (index)
+            {
+                case 1: return Convert.ToString(info.CodePage, CultureInfo.InvariantCulture);
+                case 2: return info.Title ?? String.Empty;
+                case 3: return info.Subject ?? String.Empty;
+                case 4: return info.Author ?? String.Empty;
+                case 5: return info.Keywords ?? String.Empty;
+                case 6: return info.Comments ?? String.Empty;
+                case 7: return info.Template ?? String.Empty;
+                case 8: return info.LastSavedBy ?? String.Empty;
+                case 9: return info.RevisionNumber ?? String.Empty;
+                case 10:
+                case 17: return String.Empty;
+                case 11: return FormatTime(info.LastPrintTime);
+                case 12: return FormatTime(info.CreateTime);
+                case 13: return FormatTime(info.LastSaveTime);
+                case 14: return Convert.ToString(info.PageCount, CultureInfo.InvariantCulture);
+                case 15: return Convert.ToString(info.WordCount, CultureInfo.InvariantCulture);
+                case 16: return Convert.ToString(info.CharacterCount, CultureInfo.InvariantCulture);
+                case 18: return info.CreatingApp ?? String.Empty;
+                case 19: return Convert.ToString(info.Security, CultureInfo.InvariantCulture);
+                default: throw new InvalidOperationException();
+            }
+        }
+
+        private static long GetManagedNumber(Lib.SummaryInfo info, int index)
+        {
+            switch (index)
+            {
+                case 1: return info.CodePage;
+                case 11: return ToFileTime(info.LastPrintTime);
+                case 12: return ToFileTime(info.CreateTime);
+                case 13: return ToFileTime(info.LastSaveTime);
+                case 14: return info.PageCount;
+                case 15: return info.WordCount;
+                case 16: return info.CharacterCount;
+                case 19: return info.Security;
+                default:
+                    var text = GetManagedString(info, index);
+                    return String.IsNullOrEmpty(text) ? 0 : Int64.Parse(text, CultureInfo.InvariantCulture);
+            }
+        }
+
+        /// <inheritdoc/>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && this.inner != null)
+            {
+                if (this.ownsInner)
+                {
+                    this.inner.Dispose();
+                }
+
+                this.inner = null;
+            }
+
+            base.Dispose(disposing);
+        }
+
         private enum VT : uint
         {
             /// <summary>Variant has not been assigned.</summary>

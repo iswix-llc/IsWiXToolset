@@ -13,7 +13,9 @@
     <projectUrl>$projectUrl$</projectUrl>
     <repository type="$repositorytype$" url="$repositoryurl$" commit="$repositorycommit$" />
     <dependencies>
-      <group targetFramework=".NETStandard2.0" />
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="IsWiX.WindowsInstaller" version="1.0.0" />
+      </group>
     </dependencies>
   </metadata>
 
