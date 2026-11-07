@@ -3,20 +3,40 @@
 namespace WixToolset.Core.Native.Msi
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
+    using System.IO;
     using System.Text;
+    using WixToolset.Core.Native.Managed;
+    using Lib = IsWiX.WindowsInstaller;
 
     /// <summary>
     /// Wrapper class around msi.dll interop for a record.
     /// </summary>
     public sealed class Record : MsiHandle
     {
+        private Dictionary<int, Stream> readStreams;
+
+        internal Record(Lib.Record inner)
+        {
+            this.Inner = inner;
+        }
+
+        // Non-null when running on the managed (IsWiX.WindowsInstaller) engine instead of msi.dll.
+        internal Lib.Record Inner { get; private set; }
+
         /// <summary>
         /// Creates a record with the specified number of fields.
         /// </summary>
         /// <param name="fieldCount">Number of fields in record.</param>
         public Record(int fieldCount)
         {
+            if (ManagedBackend.Enabled)
+            {
+                this.Inner = new Lib.Record(fieldCount);
+                return;
+            }
+
             this.Handle = MsiInterop.MsiCreateRecord(fieldCount);
             if (IntPtr.Zero == this.Handle)
             {
@@ -50,6 +70,11 @@ namespace WixToolset.Core.Native.Msi
         /// <returns>true if the value is null, false otherwise.</returns>
         public bool IsNull(int field)
         {
+            if (this.Inner != null)
+            {
+                return ManagedBackend.Run(() => this.Inner.IsNull(field));
+            }
+
             var error = MsiInterop.MsiRecordIsNull(this.Handle, field);
 
             switch (error)
@@ -70,6 +95,12 @@ namespace WixToolset.Core.Native.Msi
         /// <returns>Integer value</returns>
         public int GetInteger(int field)
         {
+            if (this.Inner != null)
+            {
+                // msi.dll returns MSI_NULL_INTEGER for null fields.
+                return ManagedBackend.Run(() => this.Inner.IsNull(field) ? Int32.MinValue : this.Inner.GetInteger(field));
+            }
+
             return MsiInterop.MsiRecordGetInteger(this.Handle, field);
         }
 
@@ -80,6 +111,12 @@ namespace WixToolset.Core.Native.Msi
         /// <param name="value">Value to set into record.</param>
         public void SetInteger(int field, int value)
         {
+            if (this.Inner != null)
+            {
+                ManagedBackend.Run(() => this.Inner.SetInteger(field, value));
+                return;
+            }
+
             var error = MsiInterop.MsiRecordSetInteger(this.Handle, field, value);
             if (0 != error)
             {
@@ -94,6 +131,12 @@ namespace WixToolset.Core.Native.Msi
         /// <returns>String value</returns>
         public string GetString(int field)
         {
+            if (this.Inner != null)
+            {
+                var value = ManagedBackend.Run(() => this.Inner.GetString(field));
+                return String.IsNullOrEmpty(value) ? null : value;
+            }
+
             var bufferSize = 256;
             var buffer = new StringBuilder(bufferSize);
             var error = MsiInterop.MsiRecordGetString(this.Handle, field, buffer, ref bufferSize);
@@ -118,6 +161,12 @@ namespace WixToolset.Core.Native.Msi
         /// <param name="value">Value to set into record</param>
         public void SetString(int field, string value)
         {
+            if (this.Inner != null)
+            {
+                ManagedBackend.Run(() => this.Inner.SetString(field, value));
+                return;
+            }
+
             var error = MsiInterop.MsiRecordSetString(this.Handle, field, value);
             if (0 != error)
             {
@@ -134,6 +183,24 @@ namespace WixToolset.Core.Native.Msi
         /// <returns>Stream read into string.</returns>
         public int GetStream(int field, byte[] buffer, int requestedBufferSize)
         {
+            if (this.Inner != null)
+            {
+                // msi.dll keeps a read position per stream field; emulate that.
+                if (this.readStreams == null)
+                {
+                    this.readStreams = new Dictionary<int, Stream>();
+                }
+
+                if (!this.readStreams.TryGetValue(field, out var stream))
+                {
+                    stream = ManagedBackend.Run(() => this.Inner.GetStream(field));
+                    this.readStreams[field] = stream;
+                }
+
+                var count = requestedBufferSize > 0 ? Math.Min(requestedBufferSize, buffer.Length) : buffer.Length;
+                return stream == null ? 0 : stream.Read(buffer, 0, count);
+            }
+
             var bufferSize = buffer.Length;
             if (requestedBufferSize > 0)
             {
@@ -156,6 +223,12 @@ namespace WixToolset.Core.Native.Msi
         /// <param name="path">Path to file to read into stream.</param>
         public void SetStream(int field, string path)
         {
+            if (this.Inner != null)
+            {
+                ManagedBackend.Run(() => this.Inner.SetStream(field, path));
+                return;
+            }
+
             var error = MsiInterop.MsiRecordSetStream(this.Handle, field, path);
             if (0 != error)
             {
@@ -169,6 +242,11 @@ namespace WixToolset.Core.Native.Msi
         /// <returns>Count of fields in record.</returns>
         public int GetFieldCount()
         {
+            if (this.Inner != null)
+            {
+                return this.Inner.FieldCount;
+            }
+
             var size = MsiInterop.MsiRecordGetFieldCount(this.Handle);
             if (0 > size)
             {
@@ -176,6 +254,31 @@ namespace WixToolset.Core.Native.Msi
             }
 
             return size;
+        }
+
+        /// <inheritdoc/>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (this.readStreams != null)
+                {
+                    foreach (var stream in this.readStreams.Values)
+                    {
+                        stream?.Dispose();
+                    }
+
+                    this.readStreams = null;
+                }
+
+                if (this.Inner != null)
+                {
+                    this.Inner.Dispose();
+                    this.Inner = null;
+                }
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

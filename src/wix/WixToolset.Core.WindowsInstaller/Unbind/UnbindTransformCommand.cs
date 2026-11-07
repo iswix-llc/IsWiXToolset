@@ -292,6 +292,8 @@ namespace WixToolset.Core.WindowsInstaller.Unbind
                     // table definitions
                     throw new WixException(WindowsInstallerBackendErrors.TransformSchemaMismatch());
                 }
+
+                throw;
             }
 
             return msiDatabase;

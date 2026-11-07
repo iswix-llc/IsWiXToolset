@@ -6,12 +6,17 @@ namespace WixToolset.Core.Native.Msi
     using System.Collections;
     using System.Collections.Generic;
     using System.Globalization;
+    using WixToolset.Core.Native.Managed;
+    using Lib = IsWiX.WindowsInstaller;
 
     /// <summary>
     /// Wrapper class for MSI API views.
     /// </summary>
     public sealed class View : MsiHandle
     {
+        private Lib.View inner;
+        private string managedQuery;
+
         /// <summary>
         /// Constructor that creates a view given a database handle and a query.
         /// </summary>
@@ -27,6 +32,13 @@ namespace WixToolset.Core.Native.Msi
             if (null == query)
             {
                 throw new ArgumentNullException(nameof(query));
+            }
+
+            if (db.Inner != null)
+            {
+                this.inner = ManagedBackend.Run(() => db.Inner.OpenView(query), "OpenView [" + query + "]");
+                this.managedQuery = query;
+                return;
             }
 
             var error = MsiInterop.MsiDatabaseOpenView(db.Handle, query, out var handle);
@@ -58,6 +70,12 @@ namespace WixToolset.Core.Native.Msi
         /// <param name="record">Record containing parameters to be substituded into the view.</param>
         public void Execute(Record record)
         {
+            if (this.inner != null)
+            {
+                ManagedBackend.Run(() => this.inner.Execute(record?.Inner));
+                return;
+            }
+
             var error = MsiInterop.MsiViewExecute(this.Handle, null == record ? IntPtr.Zero : record.Handle);
             if (0 != error)
             {
@@ -71,6 +89,12 @@ namespace WixToolset.Core.Native.Msi
         /// <returns>Returns the fetched record; otherwise null.</returns>
         public Record Fetch()
         {
+            if (this.inner != null)
+            {
+                var fetched = ManagedBackend.Run(() => this.inner.Fetch());
+                return fetched == null ? null : new Record(fetched);
+            }
+
             var error = MsiInterop.MsiViewFetch(this.Handle, out var recordHandle);
             if (259 == error)
             {
@@ -91,6 +115,12 @@ namespace WixToolset.Core.Native.Msi
         /// <param name="record">Record to be modified.</param>
         public void Modify(ModifyView type, Record record)
         {
+            if (this.inner != null)
+            {
+                ManagedBackend.Run(() => this.inner.Modify((Lib.ViewModifyMode)Convert.ToInt32(type, CultureInfo.InvariantCulture), record.Inner), "Modify " + type + " on [" + this.managedQuery + "]");
+                return;
+            }
+
             var error = MsiInterop.MsiViewModify(this.Handle, Convert.ToInt32(type, CultureInfo.InvariantCulture), record.Handle);
             if (0 != error)
             {
@@ -123,6 +153,21 @@ namespace WixToolset.Core.Native.Msi
         /// <returns>The record containing information about the column.</returns>
         public Record GetColumnInfo(int columnType)
         {
+            if (this.inner != null)
+            {
+                return ManagedBackend.Run(() =>
+                {
+                    var columns = this.inner.Columns;
+                    var record = new Lib.Record(columns.Count);
+                    for (var i = 0; i < columns.Count; ++i)
+                    {
+                        record.SetString(i + 1, columnType == MsiInterop.MSICOLINFONAMES ? columns[i].Name : columns[i].ColumnDefinitionString);
+                    }
+
+                    return new Record(record);
+                });
+            }
+
 
             var error = MsiInterop.MsiViewGetColumnInfo(this.Handle, columnType, out var recordHandle);
             if (0 != error)
@@ -131,6 +176,18 @@ namespace WixToolset.Core.Native.Msi
             }
 
             return new Record(recordHandle);
+        }
+
+        /// <inheritdoc/>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && this.inner != null)
+            {
+                this.inner.Dispose();
+                this.inner = null;
+            }
+
+            base.Dispose(disposing);
         }
 
         private class ViewEnumerable : IEnumerable<Record>
