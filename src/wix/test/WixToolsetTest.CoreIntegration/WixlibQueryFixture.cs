@@ -13,9 +13,10 @@ namespace WixToolsetTest.CoreIntegration
     public class WixlibQueryFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void UpgradeProducesReferenceToRemoveExistingProducts()
         {
-            var folder = TestData.Get(@"TestData\Upgrade");
+            var folder = TestData.Get("TestData", "Upgrade");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -44,9 +45,10 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void TypeLibLanguageAsStringReturnsZero()
         {
-            var folder = TestData.Get(@"TestData\TypeLib");
+            var folder = TestData.Get("TestData", "TypeLib");
 
             using (var fs = new DisposableFileSystem())
             {

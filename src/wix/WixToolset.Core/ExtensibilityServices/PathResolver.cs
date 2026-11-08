@@ -44,7 +44,8 @@ namespace WixToolset.Core.ExtensibilityServices
 
                         if (null != resolvedDirectory.Name)
                         {
-                            resolvedDirectory.Path = Path.Combine(parentPath, name);
+                            // Canonical paths feed component GUID generation, so always use Windows separators.
+                            resolvedDirectory.Path = String.IsNullOrEmpty(parentPath) ? name : String.Concat(parentPath, "\\", name);
                         }
                         else
                         {
@@ -108,7 +109,7 @@ namespace WixToolset.Core.ExtensibilityServices
             }
 
             // Strip off "SourceDir" if it's still on there.
-            if (fileSourcePath.StartsWith("SourceDir\\", StringComparison.Ordinal))
+            if (fileSourcePath.StartsWith("SourceDir\\", StringComparison.Ordinal) || fileSourcePath.StartsWith("SourceDir/", StringComparison.Ordinal))
             {
                 fileSourcePath = fileSourcePath.Substring(10);
             }

@@ -13,6 +13,7 @@ namespace WixToolsetTest.CoreIntegration
     public class GuidCompatibilityFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void VerifyModernX86GuidCompatibility()
         {
             var folder = TestData.Get("TestData", "GuidCompatibility");
@@ -49,6 +50,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void VerifyModernX64GuidCompatibility()
         {
             var folder = TestData.Get("TestData", "GuidCompatibility");
@@ -86,6 +88,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void VerifyModernArm64GuidCompatibility()
         {
             var folder = TestData.Get("TestData", "GuidCompatibility");
@@ -123,6 +126,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void VerifyWix3X86GuidCompatibility()
         {
             var folder = TestData.Get("TestData", "GuidCompatibility");
@@ -160,6 +164,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void VerifyWix3X64GuidCompatibility()
         {
             var folder = TestData.Get("TestData", "GuidCompatibility");
@@ -198,6 +203,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void VerifyWix3Arm64GuidCompatibility()
         {
             var folder = TestData.Get("TestData", "GuidCompatibility");

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?include inc\Common.wxi ?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+    <!-- An include path authored with a Windows separator must resolve on every platform. -->
+    <Package Name="MsiPackage" Version="1.0.0.0" Manufacturer="Example Corporation" UpgradeCode="6d2c7b0a-7f35-4b2e-8d0e-3a8a2f3a9d11">
+        <File Id="Included" Directory="INSTALLFOLDER" Source="files\test.txt" Name="$(IncludedFileName)" />
+    </Package>
+</Wix>

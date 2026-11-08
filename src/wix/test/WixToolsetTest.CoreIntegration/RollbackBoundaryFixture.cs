@@ -21,7 +21,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var exePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var exePath = Path.Combine(baseFolder, "bin", "test.exe");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -41,6 +41,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotHaveRollbackBoundaryAndChainPackageWithSameId()
         {
             var folder = TestData.Get(@"TestData");
@@ -49,7 +50,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var exePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var exePath = Path.Combine(baseFolder, "bin", "test.exe");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -83,7 +84,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var exePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var exePath = Path.Combine(baseFolder, "bin", "test.exe");
                 var baFolderPath = Path.Combine(baseFolder, "ba");
                 var extractFolderPath = Path.Combine(baseFolder, "extract");
 

@@ -12,6 +12,7 @@ namespace WixToolsetTest.CoreIntegration
     public class MediaFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildMultiMedia()
         {
             var folder = TestData.Get(@"TestData");
@@ -20,7 +21,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var msiPath = Path.Combine(baseFolder, @"bin\test.msi");
+                var msiPath = Path.Combine(baseFolder, "bin", "test.msi");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -33,7 +34,7 @@ namespace WixToolsetTest.CoreIntegration
 
                 result.AssertSuccess();
 
-                var intermediate = Intermediate.Load(Path.Combine(baseFolder, @"bin\test.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(baseFolder, "bin", "test.wixpdb"));
                 var section = intermediate.Sections.Single();
 
                 var mediaSymbols = section.Symbols.OfType<WixToolset.Data.Symbols.MediaSymbol>().OrderBy(m => m.DiskId).ToList();

@@ -63,7 +63,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var bundlePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var bundlePath = Path.Combine(baseFolder, "bin", "test.exe");
                 var baFolderPath = Path.Combine(baseFolder, "ba");
                 var extractFolderPath = Path.Combine(baseFolder, "extract");
 
@@ -108,7 +108,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var bundlePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var bundlePath = Path.Combine(baseFolder, "bin", "test.exe");
                 var baFolderPath = Path.Combine(baseFolder, "ba");
                 var extractFolderPath = Path.Combine(baseFolder, "extract");
 
@@ -154,7 +154,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var bundlePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var bundlePath = Path.Combine(baseFolder, "bin", "test.exe");
                 var baFolderPath = Path.Combine(baseFolder, "ba");
                 var extractFolderPath = Path.Combine(baseFolder, "extract");
 
@@ -166,7 +166,7 @@ namespace WixToolsetTest.CoreIntegration
                     "-bindpath", Path.Combine(folder, ".Data"),
                     "-bindpath", Path.Combine(folder, "SimpleBundle", "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(baseFolder, @"bin\test.exe")
+                    "-o", Path.Combine(baseFolder, "bin", "test.exe")
                 });
 
                 result.AssertSuccess();
@@ -201,7 +201,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var bundlePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var bundlePath = Path.Combine(baseFolder, "bin", "test.exe");
                 var baFolderPath = Path.Combine(baseFolder, "ba");
                 var extractFolderPath = Path.Combine(baseFolder, "extract");
 
@@ -242,7 +242,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var bundlePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var bundlePath = Path.Combine(baseFolder, "bin", "test.exe");
                 var baFolderPath = Path.Combine(baseFolder, "ba");
                 var extractFolderPath = Path.Combine(baseFolder, "extract");
 
@@ -288,7 +288,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var bundlePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var bundlePath = Path.Combine(baseFolder, "bin", "test.exe");
                 var baFolderPath = Path.Combine(baseFolder, "ba");
                 var extractFolderPath = Path.Combine(baseFolder, "extract");
 
@@ -352,7 +352,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var bundlePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var bundlePath = Path.Combine(baseFolder, "bin", "test.exe");
                 var baFolderPath = Path.Combine(baseFolder, "ba");
                 var extractFolderPath = Path.Combine(baseFolder, "extract");
 
@@ -396,7 +396,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var bundlePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var bundlePath = Path.Combine(baseFolder, "bin", "test.exe");
                 var baFolderPath = Path.Combine(baseFolder, "ba");
                 var extractFolderPath = Path.Combine(baseFolder, "extract");
 

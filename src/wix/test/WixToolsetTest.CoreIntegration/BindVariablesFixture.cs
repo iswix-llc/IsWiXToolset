@@ -20,7 +20,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var exePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var exePath = Path.Combine(baseFolder, "bin", "test.exe");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -74,6 +74,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildWithDefaultValue()
         {
             var folder = TestData.Get(@"TestData", "BindVariables");
@@ -99,6 +100,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildWixlibWithBinariesFromMissingNamedBindPaths()
         {
             var folder = TestData.Get(@"TestData", "WixlibWithBinaries");

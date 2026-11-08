@@ -58,6 +58,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildWithExampleExtension()
         {
             var folder = TestData.Get("TestData", "ExampleExtension");
@@ -75,20 +76,20 @@ namespace WixToolsetTest.CoreIntegration
                     "-ext", ExtensionPaths.ExampleExtensionPath,
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(intermediateFolder, @"bin\extest.msi")
+                    "-o", Path.Combine(intermediateFolder, "bin", "extest.msi")
                 });
 
                 result.AssertSuccess();
 
-                Assert.True(File.Exists(Path.Combine(intermediateFolder, @"bin\extest.msi")));
-                Assert.True(File.Exists(Path.Combine(intermediateFolder, @"bin\extest.wixpdb")));
-                Assert.True(File.Exists(Path.Combine(intermediateFolder, @"bin\PFiles\MsiPackage\example.txt")));
+                Assert.True(File.Exists(Path.Combine(intermediateFolder, "bin", "extest.msi")));
+                Assert.True(File.Exists(Path.Combine(intermediateFolder, "bin", "extest.wixpdb")));
+                Assert.True(File.Exists(Path.Combine(intermediateFolder, "bin", "PFiles", "MsiPackage", "example.txt")));
 
-                var intermediate = Intermediate.Load(Path.Combine(intermediateFolder, @"bin\extest.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(intermediateFolder, "bin", "extest.wixpdb"));
                 var section = intermediate.Sections.Single();
 
                 var fileSymbol = section.Symbols.OfType<FileSymbol>().Single();
-                WixAssert.StringEqual(Path.Combine(folder, @"data\example.txt"), fileSymbol[FileSymbolFields.Source].AsPath().Path);
+                WixAssert.StringEqual(Path.Combine(folder, "data", "example.txt"), fileSymbol[FileSymbolFields.Source].AsPath().Path);
                 WixAssert.StringEqual(@"example.txt", fileSymbol[FileSymbolFields.Source].PreviousValue.AsPath().Path);
 
                 var example = section.Symbols.Where(t => t.Definition.Type == SymbolDefinitionType.MustBeFromAnExtension).Single();
@@ -99,6 +100,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildWithExampleExtensionWithFilePossibleKeyPath()
         {
             var folder = TestData.Get("TestData", "ExampleExtensionUsingPossibleKeyPath");
@@ -129,6 +131,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildWithExampleExtensionWithRegistryPossibleKeyPath()
         {
             var folder = TestData.Get("TestData", "ExampleExtensionUsingPossibleKeyPath");
@@ -159,6 +162,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildWithExampleExtensionLocalizedDefault()
         {
             var folder = TestData.Get("TestData", "ExampleExtensionLocalized");
@@ -188,6 +192,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildWithExampleExtensionLocalizedNonDefault()
         {
             var folder = TestData.Get("TestData", "ExampleExtensionLocalized");
@@ -218,9 +223,10 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanParseCommandLineWithExtension()
         {
-            var folder = TestData.Get(@"TestData\ExampleExtension");
+            var folder = TestData.Get("TestData", "ExampleExtension");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -236,12 +242,12 @@ namespace WixToolsetTest.CoreIntegration
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
                     "-example", "test",
-                    "-o", Path.Combine(intermediateFolder, @"bin\extest.msi")
+                    "-o", Path.Combine(intermediateFolder, "bin", "extest.msi")
                 });
 
                 result.AssertSuccess();
 
-                var intermediate = Intermediate.Load(Path.Combine(intermediateFolder, @"bin\extest.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(intermediateFolder, "bin", "extest.wixpdb"));
                 var section = intermediate.Sections.Single();
 
                 var property = section.Symbols.OfType<PropertySymbol>().Where(p => p.Id.Id == "ExampleProperty").Single();
@@ -251,6 +257,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildWithMissingExtension()
         {
             var folder = TestData.Get("TestData", "ExampleExtension");
@@ -272,6 +279,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildWithMissingVersionedExtension()
         {
             var folder = TestData.Get("TestData", "ExampleExtension");
@@ -344,6 +352,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void TryingToAddAV4ExtensionFails()
         {
             var currentFolder = Environment.CurrentDirectory;
@@ -383,6 +392,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ReportsErrorWhenExtensionSwitchHasNoValue()
         {
             var result = WixRunner.Execute(new[]
@@ -398,6 +408,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanLoadExtensionWithAbsolutePathStartingWithSlash()
         {
             // On Linux and macOS an absolute path starts with '/', which must not be mistaken for a switch.

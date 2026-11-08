@@ -14,6 +14,7 @@ namespace WixToolsetTest.CoreIntegration
     public class DirectoryFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanGetDefaultPerMachineInstallFolder()
         {
             var folder = TestData.Get("TestData", "SingleFile");
@@ -52,6 +53,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanGetDefaultPerUserInstallFolder()
         {
             var folder = TestData.Get("TestData", "AllUsers");
@@ -88,6 +90,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanGet32bitProgramFiles6432Folder()
         {
             var folder = TestData.Get(@"TestData");
@@ -125,6 +128,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanGet64bitProgramFiles6432Folder()
         {
             var folder = TestData.Get(@"TestData");
@@ -133,7 +137,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var msiPath = Path.Combine(baseFolder, @"bin\test.msi");
+                var msiPath = Path.Combine(baseFolder, "bin", "test.msi");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -148,7 +152,7 @@ namespace WixToolsetTest.CoreIntegration
 
                 result.AssertSuccess();
 
-                var intermediate = Intermediate.Load(Path.Combine(baseFolder, @"bin\test.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(baseFolder, "bin", "test.wixpdb"));
                 var section = intermediate.Sections.Single();
 
                 var dirSymbols = section.Symbols.OfType<WixToolset.Data.Symbols.DirectorySymbol>().ToList();
@@ -163,6 +167,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanGetAnonymousDirectories()
         {
             var folder = TestData.Get("TestData");
@@ -202,6 +207,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanGetDefaultName()
         {
             var folder = TestData.Get(@"TestData");
@@ -254,6 +260,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanGetDuplicateDir()
         {
             var folder = TestData.Get(@"TestData");
@@ -262,7 +269,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var msiPath = Path.Combine(baseFolder, @"bin\test.msi");
+                var msiPath = Path.Combine(baseFolder, "bin", "test.msi");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -277,7 +284,7 @@ namespace WixToolsetTest.CoreIntegration
 
                 result.AssertSuccess();
 
-                var intermediate = Intermediate.Load(Path.Combine(baseFolder, @"bin\test.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(baseFolder, "bin", "test.wixpdb"));
                 var section = intermediate.Sections.Single();
 
                 var dirSymbols = section.Symbols.OfType<WixToolset.Data.Symbols.DirectorySymbol>().ToList();
@@ -294,6 +301,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanGetWithMultiNestedSubdirectory()
         {
             var folder = TestData.Get(@"TestData");
@@ -302,7 +310,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var msiPath = Path.Combine(baseFolder, @"bin\test.msi");
+                var msiPath = Path.Combine(baseFolder, "bin", "test.msi");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -317,7 +325,7 @@ namespace WixToolsetTest.CoreIntegration
 
                 result.AssertSuccess();
 
-                var intermediate = Intermediate.Load(Path.Combine(baseFolder, @"bin\test.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(baseFolder, "bin", "test.wixpdb"));
                 var section = intermediate.Sections.Single();
 
                 var dirSymbols = section.Symbols.OfType<WixToolset.Data.Symbols.DirectorySymbol>().ToList();
@@ -328,7 +336,7 @@ namespace WixToolsetTest.CoreIntegration
                     "TARGETDIR::SourceDir"
                 }, dirSymbols.OrderBy(d => d.Id.Id).Select(d => d.Id.Id + ":" + d.ParentDirectoryRef + ":" + d.Name).ToArray());
 
-                var data = WindowsInstallerData.Load(Path.Combine(baseFolder, @"bin\test.wixpdb"));
+                var data = WindowsInstallerData.Load(Path.Combine(baseFolder, "bin", "test.wixpdb"));
                 var directoryRows = data.Tables["Directory"].Rows;
                 WixAssert.CompareLineByLine(new[]
                 {
@@ -342,6 +350,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanGetDuplicateTargetSourceName()
         {
             var folder = TestData.Get(@"TestData");
@@ -350,7 +359,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var msiPath = Path.Combine(baseFolder, @"bin\test.msi");
+                var msiPath = Path.Combine(baseFolder, "bin", "test.msi");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -365,7 +374,7 @@ namespace WixToolsetTest.CoreIntegration
 
                 result.AssertSuccess();
 
-                var intermediate = Intermediate.Load(Path.Combine(baseFolder, @"bin\test.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(baseFolder, "bin", "test.wixpdb"));
                 var section = intermediate.Sections.Single();
 
                 var dirSymbols = section.Symbols.OfType<WixToolset.Data.Symbols.DirectorySymbol>().ToList();
@@ -376,7 +385,7 @@ namespace WixToolsetTest.CoreIntegration
                     "TARGETDIR\t\tSourceDir"
                 }, dirSymbols.OrderBy(d => d.Id.Id).Select(d => String.Join('\t', d.Id.Id, d.ParentDirectoryRef, d.Name)).ToArray());
 
-                var data = WindowsInstallerData.Load(Path.Combine(baseFolder, @"bin\test.wixpdb"));
+                var data = WindowsInstallerData.Load(Path.Combine(baseFolder, "bin", "test.wixpdb"));
                 var directoryRows = data.Tables["Directory"].Rows;
                 WixAssert.CompareLineByLine(new[]
                 {
@@ -388,6 +397,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanFindRedundantSubdirectoryInSecondSection()
         {
             var folder = TestData.Get(@"TestData");
@@ -435,6 +445,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void GetsWarningForRedundantTargetDir()
         {
             var folder = TestData.Get(@"TestData");

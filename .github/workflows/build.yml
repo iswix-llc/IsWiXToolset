@@ -58,6 +58,32 @@ jobs:
         env:
           RuntimeTestsEnabled: true
 
+      # The Linux job below runs the cross-platform integration tests against this build's output.
+      - name: Save test binaries for the Linux job
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-test-inputs
+          path: build/wix/Release/test/WixToolsetTest.CoreIntegration/net8.0/
+          retention-days: 1
+          if-no-files-found: error
+
+      # Second pass over the cross-platform tests with the managed MSI and cabinet backends (the ones used on
+      # Linux and macOS). The tests then read the packages back with the real msi.dll, so this also proves the
+      # managed output is accepted by Windows Installer.
+      - name: Test cross-platform tests with managed backends
+        if: ${{ !cancelled() }}
+        shell: cmd
+        env:
+          WIX_MANAGED_MSI: 1
+          WIX_MANAGED_CAB: 1
+        run: >
+          dotnet test build\wix\Release\test\WixToolsetTest.CoreIntegration\net8.0\WixToolsetTest.CoreIntegration.dll
+          --filter "Platform=CrossPlatform"
+          --results-directory build\logs\managed-results
+          --logger "trx;LogFileName=windows-managed-crossplatform.trx"
+          --logger "console;verbosity=normal"
+
       - name: Validate test results
         shell: cmd
         run: 7z a build\testresults.zip @src\testresultfilelist.txt
@@ -91,3 +117,38 @@ jobs:
         with:
           name: logs_${{ github.run_id }}
           path: build/logs/
+
+  test-linux:
+    # Runs the tests tagged Platform=CrossPlatform on Linux, using the managed MSI and cabinet backends
+    # (no msi.dll). The binaries come from the Windows job because the native projects need MSVC.
+    name: Test on Linux
+    needs: build
+    if: ${{ !cancelled() && needs.build.result != 'skipped' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Install .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Download test binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-test-inputs
+          path: linux-tests
+
+      - name: Run cross-platform tests
+        run: >
+          dotnet test linux-tests/WixToolsetTest.CoreIntegration.dll
+          --filter "Platform=CrossPlatform"
+          --results-directory linux-results
+          --logger "trx;LogFileName=linux-crossplatform.trx"
+          --logger "console;verbosity=normal"
+
+      - name: Save Linux test results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-test-results
+          path: linux-results/

@@ -16,9 +16,10 @@ namespace WixToolsetTest.CoreIntegration
     public class PreprocessorFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PreprocessDirectly()
         {
-            var folder = TestData.Get(@"TestData\IncludePath");
+            var folder = TestData.Get("TestData", "IncludePath");
             var sourcePath = Path.Combine(folder, "Package.wxs");
             var includeFolder = Path.Combine(folder, "data");
             var includeFile = Path.Combine(includeFolder, "Package.wxi");
@@ -42,9 +43,10 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void IncludeSourceLineNumbersPreserved()
         {
-            var folder = TestData.Get(@"TestData\IncludePath");
+            var folder = TestData.Get("TestData", "IncludePath");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -60,12 +62,12 @@ namespace WixToolsetTest.CoreIntegration
                     "-includepath", Path.Combine(folder, "data"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(baseFolder, @"bin\test.msi")
+                    "-o", Path.Combine(baseFolder, "bin", "test.msi")
                 });
 
                 result.AssertSuccess();
 
-                using (var output = WixOutput.Read(Path.Combine(baseFolder, @"bin\test.wixpdb")))
+                using (var output = WixOutput.Read(Path.Combine(baseFolder, "bin", "test.wixpdb")))
                 {
                     var intermediate = Intermediate.Load(output);
                     var component = intermediate.Sections.Single().Symbols.OfType<ComponentSymbol>().Single();
@@ -99,6 +101,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void VariableRedefinitionIsAWarning()
         {
             var folder = TestData.Get(@"TestData", "Variables");
@@ -116,7 +119,7 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "Package.en-us.wxl"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(baseFolder, @"bin\test.msi")
+                    "-o", Path.Combine(baseFolder, "bin", "test.msi")
                 });
 
                 result.AssertSuccess();
@@ -134,9 +137,10 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ForEachLoopsWork()
         {
-            var folder = TestData.Get(@"TestData\ForEach");
+            var folder = TestData.Get("TestData", "ForEach");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -151,7 +155,7 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "Package.en-us.wxl"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(baseFolder, @"bin\test.msi")
+                    "-o", Path.Combine(baseFolder, "bin", "test.msi")
                 });
 
                 result.AssertSuccess();
@@ -159,9 +163,10 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void NonterminatedPreprocessorInstructionShowsSourceLineNumber()
         {
-            var folder = TestData.Get(@"TestData\BadIf");
+            var folder = TestData.Get("TestData", "BadIf");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -176,7 +181,7 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "Package.en-us.wxl"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(baseFolder, @"bin\test.msi")
+                    "-o", Path.Combine(baseFolder, "bin", "test.msi")
                 });
 
                 Assert.Equal(147, result.ExitCode);

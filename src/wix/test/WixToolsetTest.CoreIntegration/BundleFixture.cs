@@ -29,7 +29,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var exePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var exePath = Path.Combine(baseFolder, "bin", "test.exe");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -51,7 +51,7 @@ namespace WixToolsetTest.CoreIntegration
         [Fact]
         public void CanBuildMultiFileBundle()
         {
-            var folder = TestData.Get(@"TestData\SimpleBundle");
+            var folder = TestData.Get("TestData", "SimpleBundle");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -86,8 +86,8 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var exePath = Path.Combine(baseFolder, @"bin\test.exe");
-                var pdbPath = Path.Combine(baseFolder, @"bin\test.wixpdb");
+                var exePath = Path.Combine(baseFolder, "bin", "test.exe");
+                var pdbPath = Path.Combine(baseFolder, "bin", "test.wixpdb");
                 var baFolderPath = Path.Combine(baseFolder, "ba");
                 var extractFolderPath = Path.Combine(baseFolder, "extract");
 
@@ -225,14 +225,14 @@ namespace WixToolsetTest.CoreIntegration
         [Fact]
         public void CanBuildX64Bundle()
         {
-            var folder = TestData.Get(@"TestData\SimpleBundle");
+            var folder = TestData.Get("TestData", "SimpleBundle");
 
             using (var fs = new DisposableFileSystem())
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var exePath = Path.Combine(baseFolder, @"bin\test.exe");
-                var pdbPath = Path.Combine(baseFolder, @"bin\test.wixpdb");
+                var exePath = Path.Combine(baseFolder, "bin", "test.exe");
+                var pdbPath = Path.Combine(baseFolder, "bin", "test.wixpdb");
                 var baFolderPath = Path.Combine(baseFolder, "ba");
                 var attachedFolderPath = Path.Combine(baseFolder, "attached");
                 var extractFolderPath = Path.Combine(baseFolder, "extract");
@@ -306,7 +306,7 @@ namespace WixToolsetTest.CoreIntegration
         [Fact]
         public void CanBuildSimpleBundleUsingExtensionBA()
         {
-            var folder = TestData.Get(@"TestData\SimpleBundle");
+            var folder = TestData.Get("TestData", "SimpleBundle");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -322,13 +322,13 @@ namespace WixToolsetTest.CoreIntegration
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
                     "-acceptEula", "wix" + SomeVerInfo.Major,
-                    "-o", Path.Combine(baseFolder, @"bin\test.exe")
+                    "-o", Path.Combine(baseFolder, "bin", "test.exe")
                 });
 
                 result.AssertSuccess();
 
-                Assert.True(File.Exists(Path.Combine(baseFolder, @"bin\test.exe")));
-                Assert.True(File.Exists(Path.Combine(baseFolder, @"bin\test.wixpdb")));
+                Assert.True(File.Exists(Path.Combine(baseFolder, "bin", "test.exe")));
+                Assert.True(File.Exists(Path.Combine(baseFolder, "bin", "test.wixpdb")));
             }
         }
 
@@ -342,8 +342,8 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var exePath = Path.Combine(baseFolder, @"bin\test.exe");
-                var pdbPath = Path.Combine(baseFolder, @"bin\test.wixpdb");
+                var exePath = Path.Combine(baseFolder, "bin", "test.exe");
+                var pdbPath = Path.Combine(baseFolder, "bin", "test.wixpdb");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -379,7 +379,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var exePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var exePath = Path.Combine(baseFolder, "bin", "test.exe");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -408,8 +408,8 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var exePath = Path.Combine(baseFolder, @"bin\test.exe");
-                var pdbPath = Path.Combine(baseFolder, @"bin\test.wixpdb");
+                var exePath = Path.Combine(baseFolder, "bin", "test.exe");
+                var pdbPath = Path.Combine(baseFolder, "bin", "test.wixpdb");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -442,6 +442,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildBundleMissingMsiSource()
         {
             var folder = TestData.Get(@"TestData");
@@ -458,7 +459,7 @@ namespace WixToolsetTest.CoreIntegration
                     "-bindpath", Path.Combine(folder, ".Data"),
                     "-intermediateFolder", intermediateFolder,
                     "-acceptEula", "wix" + SomeVerInfo.Major,
-                    "-o", Path.Combine(baseFolder, @"bin\test.exe")
+                    "-o", Path.Combine(baseFolder, "bin", "test.exe")
                 });
 
                 var message = result.Messages.Where(m => m.Level == MessageLevel.Error).Select(m => m.ToString().Replace(folder, "<testdata>")).ToArray();
@@ -470,6 +471,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildBundleMissingMsuSource()
         {
             var folder = TestData.Get(@"TestData");
@@ -486,7 +488,7 @@ namespace WixToolsetTest.CoreIntegration
                     "-bindpath", Path.Combine(folder, ".Data"),
                     "-intermediateFolder", intermediateFolder,
                     "-acceptEula", "wix" + SomeVerInfo.Major,
-                    "-o", Path.Combine(baseFolder, @"bin\test.exe")
+                    "-o", Path.Combine(baseFolder, "bin", "test.exe")
                 });
 
                 var message = result.Messages.Where(m => m.Level == MessageLevel.Error).Select(m => m.ToString().Replace(folder, "<testdata>")).ToArray();
@@ -515,7 +517,7 @@ namespace WixToolsetTest.CoreIntegration
                     "-bindpath", Path.Combine(folder, "SimpleBundle", "data"),
                     "-intermediateFolder", intermediateFolder,
                     "-acceptEula", "wix" + SomeVerInfo.Major,
-                    "-o", Path.Combine(baseFolder, @"bin\test.exe")
+                    "-o", Path.Combine(baseFolder, "bin", "test.exe")
                 });
 
                 var message = result.Messages.Where(m => m.Level == MessageLevel.Error).Select(m => m.ToString().Replace(folder, "<testdata>")).ToArray();
@@ -527,6 +529,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildBundleWithInvalidUpgradeCode()
         {
             var folder = TestData.Get(@"TestData");
@@ -566,7 +569,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder() + Path.DirectorySeparatorChar;
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var exePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var exePath = Path.Combine(baseFolder, "bin", "test.exe");
                 var trackingFile = Path.Combine(intermediateFolder, "trackingFile.txt");
 
                 var result = WixRunner.Execute(new[]
@@ -602,6 +605,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildWithDuplicateCacheIds()
         {
             var folder = TestData.Get(@"TestData");
@@ -610,7 +614,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var exePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var exePath = Path.Combine(baseFolder, "bin", "test.exe");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -703,6 +707,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildWithOrphanPayload()
         {
             var folder = TestData.Get(@"TestData");
@@ -711,7 +716,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var exePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var exePath = Path.Combine(baseFolder, "bin", "test.exe");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -731,6 +736,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildWithPackageInMultipleContainers()
         {
             var folder = TestData.Get(@"TestData");
@@ -739,7 +745,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var exePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var exePath = Path.Combine(baseFolder, "bin", "test.exe");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -789,6 +795,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildWithUnscheduledPackage()
         {
             var folder = TestData.Get(@"TestData");
@@ -797,7 +804,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var exePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var exePath = Path.Combine(baseFolder, "bin", "test.exe");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -816,6 +823,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildWithUnscheduledRollbackBoundary()
         {
             var folder = TestData.Get(@"TestData");
@@ -824,7 +832,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var exePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var exePath = Path.Combine(baseFolder, "bin", "test.exe");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -843,6 +851,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildWithMissingBootstrapperApplication()
         {
             var folder = TestData.Get(@"TestData");
@@ -875,7 +884,7 @@ namespace WixToolsetTest.CoreIntegration
         [Fact]
         public void CanBuildBundleWithMsiPackageWithoutComponents()
         {
-            var folder = TestData.Get(@"TestData\BundleWithComponentlessPackage");
+            var folder = TestData.Get("TestData", "BundleWithComponentlessPackage");
 
             using (var fs = new DisposableFileSystem())
             {

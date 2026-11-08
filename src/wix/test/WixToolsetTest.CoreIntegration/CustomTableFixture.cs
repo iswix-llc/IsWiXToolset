@@ -19,7 +19,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var msiPath = Path.Combine(baseFolder, @"bin\test.msi");
+                var msiPath = Path.Combine(baseFolder, "bin", "test.msi");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -53,7 +53,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var msiPath = Path.Combine(baseFolder, @"bin\test.msi");
+                var msiPath = Path.Combine(baseFolder, "bin", "test.msi");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -88,7 +88,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var msiPath = Path.Combine(baseFolder, @"bin\test.msi");
+                var msiPath = Path.Combine(baseFolder, "bin", "test.msi");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -122,8 +122,8 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var wixlibPath = Path.Combine(baseFolder, @"bin\test.wixlib");
-                var msiPath = Path.Combine(baseFolder, @"bin\test.msi");
+                var wixlibPath = Path.Combine(baseFolder, "bin", "test.wixlib");
+                var msiPath = Path.Combine(baseFolder, "bin", "test.msi");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -168,7 +168,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var msiPath = Path.Combine(baseFolder, @"bin\test.msi");
+                var msiPath = Path.Combine(baseFolder, "bin", "test.msi");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -199,7 +199,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var msiPath = Path.Combine(baseFolder, @"bin\test.msi");
+                var msiPath = Path.Combine(baseFolder, "bin", "test.msi");
                 var decompiledWxsPath = Path.Combine(baseFolder, @"decompiled.wxs");
 
                 var result = WixRunner.Execute(new[]

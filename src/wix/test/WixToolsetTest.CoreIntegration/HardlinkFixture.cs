@@ -19,6 +19,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanLayoutUncompressedFilesWithoutHardlinks()
         {
             var sourceModified = BuildAndModifyLaidOutFile(suppressHardlinks: true);
@@ -28,7 +29,7 @@ namespace WixToolsetTest.CoreIntegration
 
         private static bool BuildAndModifyLaidOutFile(bool suppressHardlinks)
         {
-            var folder = TestData.Get(@"TestData\SingleFile");
+            var folder = TestData.Get("TestData", "SingleFile");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -39,7 +40,7 @@ namespace WixToolsetTest.CoreIntegration
                 var dataFolder = Path.Combine(baseFolder, "data");
                 var sourcePath = Path.Combine(dataFolder, "test.txt");
                 Directory.CreateDirectory(dataFolder);
-                File.Copy(Path.Combine(folder, @"data\test.txt"), sourcePath);
+                File.Copy(Path.Combine(folder, "data", "test.txt"), sourcePath);
                 var originalSource = File.ReadAllText(sourcePath);
 
                 var args = new List<string>
@@ -50,7 +51,7 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "Package.en-us.wxl"),
                     "-bindpath", dataFolder,
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(baseFolder, @"bin\test.msi")
+                    "-o", Path.Combine(baseFolder, "bin", "test.msi")
                 };
 
                 if (suppressHardlinks)
@@ -61,7 +62,7 @@ namespace WixToolsetTest.CoreIntegration
                 var result = WixRunner.Execute(args.ToArray());
                 result.AssertSuccess();
 
-                var laidOutPath = Path.Combine(baseFolder, @"bin\PFiles\Example Corporation MsiPackage\test.txt");
+                var laidOutPath = Path.Combine(baseFolder, "bin", "PFiles", "Example Corporation MsiPackage", "test.txt");
                 Assert.True(File.Exists(laidOutPath));
 
                 File.WriteAllText(laidOutPath, "modified after layout");

@@ -16,9 +16,10 @@ namespace WixToolsetTest.CoreIntegration
     public class MsiCabinetFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildSingleFileCompressed()
         {
-            var folder = TestData.Get(@"TestData\SingleFileCompressed");
+            var folder = TestData.Get("TestData", "SingleFileCompressed");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -32,28 +33,29 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "Package.en-us.wxl"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(intermediateFolder, @"bin\test.msi")
+                    "-o", Path.Combine(intermediateFolder, "bin", "test.msi")
                 });
 
                 result.AssertSuccess();
 
-                Assert.True(File.Exists(Path.Combine(intermediateFolder, @"bin\test.msi")));
-                Assert.True(File.Exists(Path.Combine(intermediateFolder, @"bin\example.cab")));
-                Assert.True(File.Exists(Path.Combine(intermediateFolder, @"bin\test.wixpdb")));
+                Assert.True(File.Exists(Path.Combine(intermediateFolder, "bin", "test.msi")));
+                Assert.True(File.Exists(Path.Combine(intermediateFolder, "bin", "example.cab")));
+                Assert.True(File.Exists(Path.Combine(intermediateFolder, "bin", "test.wixpdb")));
 
-                var intermediate = Intermediate.Load(Path.Combine(intermediateFolder, @"bin\test.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(intermediateFolder, "bin", "test.wixpdb"));
                 var section = intermediate.Sections.Single();
 
                 var fileSymbol = section.Symbols.OfType<FileSymbol>().Single();
-                WixAssert.StringEqual(Path.Combine(folder, @"data\test.txt"), fileSymbol[FileSymbolFields.Source].AsPath().Path);
+                WixAssert.StringEqual(Path.Combine(folder, "data", "test.txt"), fileSymbol[FileSymbolFields.Source].AsPath().Path);
                 WixAssert.StringEqual(@"test.txt", fileSymbol[FileSymbolFields.Source].PreviousValue.AsPath().Path);
             }
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildSingleFileCompressedWithMediaTemplate()
         {
-            var folder = TestData.Get(@"TestData\SingleFileCompressed");
+            var folder = TestData.Get("TestData", "SingleFileCompressed");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -68,21 +70,22 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "Package.en-us.wxl"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(intermediateFolder, @"bin\test.msi")
+                    "-o", Path.Combine(intermediateFolder, "bin", "test.msi")
                 });
 
                 result.AssertSuccess();
 
-                Assert.True(File.Exists(Path.Combine(intermediateFolder, @"bin\test.msi")));
-                Assert.True(File.Exists(Path.Combine(intermediateFolder, @"bin\cab1.cab")));
-                Assert.True(File.Exists(Path.Combine(intermediateFolder, @"bin\test.wixpdb")));
+                Assert.True(File.Exists(Path.Combine(intermediateFolder, "bin", "test.msi")));
+                Assert.True(File.Exists(Path.Combine(intermediateFolder, "bin", "cab1.cab")));
+                Assert.True(File.Exists(Path.Combine(intermediateFolder, "bin", "test.wixpdb")));
             }
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildSingleFileCompressedWithMediaTemplateWithLowCompression()
         {
-            var folder = TestData.Get(@"TestData\SingleFileCompressed");
+            var folder = TestData.Get("TestData", "SingleFileCompressed");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -97,21 +100,21 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "Package.en-us.wxl"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(intermediateFolder, @"bin\test.msi")
+                    "-o", Path.Combine(intermediateFolder, "bin", "test.msi")
                 });
 
                 result.AssertSuccess();
 
-                Assert.True(File.Exists(Path.Combine(intermediateFolder, @"bin\test.msi")));
-                Assert.True(File.Exists(Path.Combine(intermediateFolder, @"bin\low1.cab")));
-                Assert.True(File.Exists(Path.Combine(intermediateFolder, @"bin\test.wixpdb")));
+                Assert.True(File.Exists(Path.Combine(intermediateFolder, "bin", "test.msi")));
+                Assert.True(File.Exists(Path.Combine(intermediateFolder, "bin", "low1.cab")));
+                Assert.True(File.Exists(Path.Combine(intermediateFolder, "bin", "test.wixpdb")));
             }
         }
 
         [Fact]
         public void CanBuildMultipleFilesCompressed()
         {
-            var folder = TestData.Get(@"TestData\MultiFileCompressed");
+            var folder = TestData.Get("TestData", "MultiFileCompressed");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -126,7 +129,7 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "Package.en-us.wxl"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(intermediateFolder, @"bin\test.msi")
+                    "-o", Path.Combine(intermediateFolder, "bin", "test.msi")
                 });
 
                 result.AssertSuccess();
@@ -254,6 +257,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildNoFilesCompressed()
         {
             var folder = TestData.Get(@"TestData", "NoFileCompressed");
@@ -268,7 +272,7 @@ namespace WixToolsetTest.CoreIntegration
                     Path.Combine(folder, "Package.wxs"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(intermediateFolder, @"bin\test.msi")
+                    "-o", Path.Combine(intermediateFolder, "bin", "test.msi")
                 ], out var messages, warningsAsErrors: false);
 
                 Assert.Equal(0, result);
@@ -281,7 +285,7 @@ namespace WixToolsetTest.CoreIntegration
                 Assert.True(File.Exists(Path.Combine(intermediateFolder, "bin", "example.cab")));
                 Assert.True(File.Exists(Path.Combine(intermediateFolder, "bin", "test.wixpdb")));
 
-                var intermediate = Intermediate.Load(Path.Combine(intermediateFolder, @"bin\test.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(intermediateFolder, "bin", "test.wixpdb"));
                 var section = intermediate.Sections.Single();
 
                 Assert.Empty(section.Symbols.OfType<FileSymbol>());

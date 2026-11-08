@@ -146,7 +146,7 @@ namespace WixToolset.Core.WindowsInstaller.Bind
                         // calculate the key file's canonical target path
                         var directoryPath = this.PathResolver.GetCanonicalDirectoryPath(this.TargetPathsByDirectoryId, this.ComponentIdGenSeeds, componentSymbol.DirectoryRef, this.Platform);
                         var fileName = this.BackendHelper.GetMsiFileName(fileSymbol.Name, false, true).ToLowerInvariant();
-                        path = Path.Combine(directoryPath, fileName);
+                        path = String.IsNullOrEmpty(directoryPath) ? fileName : String.Concat(directoryPath, "\\", fileName);
 
                         // find paths that are not canonicalized
                         if (path.StartsWith(@"PersonalFolder\my pictures", StringComparison.Ordinal) ||

@@ -13,6 +13,7 @@ namespace WixToolsetTest.CoreIntegration
     public class ParseFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void GeneratesCorrectCustomActionIdentifiers()
         {
             var serviceProvider = WixToolsetServiceProviderFactory.CreateServiceProvider();

@@ -20,7 +20,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var msiPath = Path.Combine(baseFolder, @"bin\test.msi");
+                var msiPath = Path.Combine(baseFolder, "bin", "test.msi");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -53,7 +53,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var msiPath = Path.Combine(baseFolder, @"bin\test.msi");
+                var msiPath = Path.Combine(baseFolder, "bin", "test.msi");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -77,6 +77,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void DuplicateRegistryValueIdsAreDetectedSmoothly()
         {
             var folder = TestData.Get(@"TestData");
@@ -85,7 +86,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var msiPath = Path.Combine(baseFolder, @"bin\test.msi");
+                var msiPath = Path.Combine(baseFolder, "bin", "test.msi");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -118,7 +119,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var msiPath = Path.Combine(baseFolder, @"bin\test.msi");
+                var msiPath = Path.Combine(baseFolder, "bin", "test.msi");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -150,7 +151,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var msiPath = Path.Combine(baseFolder, @"bin\test.msi");
+                var msiPath = Path.Combine(baseFolder, "bin", "test.msi");
 
                 var result = WixRunner.Execute(new[]
                 {

@@ -17,7 +17,7 @@ namespace WixToolsetTest.CoreIntegration
         [Fact]
         public void CanBuildSimpleBundleUsingWixlib()
         {
-            var folder = TestData.Get(@"TestData\SimpleBundle");
+            var folder = TestData.Get("TestData", "SimpleBundle");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -42,17 +42,18 @@ namespace WixToolsetTest.CoreIntegration
                     "-lib", Path.Combine(intermediateFolder, @"test.wixlib"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(baseFolder, @"bin\test.exe")
+                    "-o", Path.Combine(baseFolder, "bin", "test.exe")
                 });
 
                 result.AssertSuccess();
 
-                Assert.True(File.Exists(Path.Combine(baseFolder, @"bin\test.exe")));
-                Assert.True(File.Exists(Path.Combine(baseFolder, @"bin\test.wixpdb")));
+                Assert.True(File.Exists(Path.Combine(baseFolder, "bin", "test.exe")));
+                Assert.True(File.Exists(Path.Combine(baseFolder, "bin", "test.wixpdb")));
             }
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildMultiarchWixlib()
         {
             var folder = TestData.Get(@"TestData", "WixlibMultiarch");
@@ -96,9 +97,10 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildWixlibWithBinariesFromNamedBindPaths()
         {
-            var folder = TestData.Get(@"TestData\WixlibWithBinaries");
+            var folder = TestData.Get("TestData", "WixlibWithBinaries");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -132,9 +134,10 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildSingleFileUsingWixlib()
         {
-            var folder = TestData.Get(@"TestData\SingleFile");
+            var folder = TestData.Get("TestData", "SingleFile");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -167,12 +170,12 @@ namespace WixToolsetTest.CoreIntegration
                     "-lib", Path.Combine(intermediateFolder, @"test.wixlib"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(baseFolder, @"bin\test.msi")
+                    "-o", Path.Combine(baseFolder, "bin", "test.msi")
                 });
 
                 result.AssertSuccess();
 
-                var intermediate = Intermediate.Load(Path.Combine(baseFolder, @"bin\test.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(baseFolder, "bin", "test.wixpdb"));
 
                 Assert.False(intermediate.HasLevel(IntermediateLevels.Compiled));
                 Assert.False(intermediate.HasLevel(IntermediateLevels.Combined));
@@ -182,15 +185,16 @@ namespace WixToolsetTest.CoreIntegration
                 var section = intermediate.Sections.Single();
 
                 var wixFile = section.Symbols.OfType<FileSymbol>().First();
-                WixAssert.StringEqual(Path.Combine(folder, @"data\test.txt"), wixFile[FileSymbolFields.Source].AsPath().Path);
+                WixAssert.StringEqual(Path.Combine(folder, "data", "test.txt"), wixFile[FileSymbolFields.Source].AsPath().Path);
                 WixAssert.StringEqual(@"test.txt", wixFile[FileSymbolFields.Source].PreviousValue.AsPath().Path);
             }
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanOverridePathWixVariable()
         {
-            var folder = TestData.Get(@"TestData\WixVariableOverride");
+            var folder = TestData.Get("TestData", "WixVariableOverride");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -225,12 +229,12 @@ namespace WixToolsetTest.CoreIntegration
                     "-lib", Path.Combine(intermediateFolder, @"test.wixlib"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(baseFolder, @"bin\test.msi")
+                    "-o", Path.Combine(baseFolder, "bin", "test.msi")
                 });
 
                 result.AssertSuccess();
 
-                var intermediate = Intermediate.Load(Path.Combine(baseFolder, @"bin\test.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(baseFolder, "bin", "test.wixpdb"));
 
                 Assert.False(intermediate.HasLevel(IntermediateLevels.Compiled));
                 Assert.False(intermediate.HasLevel(IntermediateLevels.Combined));
@@ -240,14 +244,15 @@ namespace WixToolsetTest.CoreIntegration
                 var section = intermediate.Sections.Single();
 
                 var wixFile = section.Symbols.OfType<BinarySymbol>().First();
-                WixAssert.StringEqual(Path.Combine(folder, @"data\test2.txt"), wixFile.Data.Path);
+                WixAssert.StringEqual(Path.Combine(folder, "data", "test2.txt"), wixFile.Data.Path);
             }
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildWithExtensionUsingWixlib()
         {
-            var folder = TestData.Get(@"TestData\ExampleExtension");
+            var folder = TestData.Get("TestData", "ExampleExtension");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -274,16 +279,16 @@ namespace WixToolsetTest.CoreIntegration
                     "-ext", ExtensionPaths.ExampleExtensionPath,
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(intermediateFolder, @"bin\test.msi")
+                    "-o", Path.Combine(intermediateFolder, "bin", "test.msi")
                 });
 
                 result.AssertSuccess();
 
-                var intermediate = Intermediate.Load(Path.Combine(intermediateFolder, @"bin\test.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(intermediateFolder, "bin", "test.wixpdb"));
                 var section = intermediate.Sections.Single();
 
                 var fileSymbol = section.Symbols.OfType<FileSymbol>().Single();
-                WixAssert.StringEqual(Path.Combine(folder, @"data\example.txt"), fileSymbol[FileSymbolFields.Source].AsPath().Path);
+                WixAssert.StringEqual(Path.Combine(folder, "data", "example.txt"), fileSymbol[FileSymbolFields.Source].AsPath().Path);
                 WixAssert.StringEqual(@"example.txt", fileSymbol[FileSymbolFields.Source].PreviousValue.AsPath().Path);
 
                 var example = section.Symbols.Where(t => t.Definition.Type == SymbolDefinitionType.MustBeFromAnExtension).Single();
@@ -293,9 +298,10 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildWithExtensionUsingMultipleWixlibs()
         {
-            var folder = TestData.Get(@"TestData\ComplexExampleExtension");
+            var folder = TestData.Get("TestData", "ComplexExampleExtension");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -334,18 +340,18 @@ namespace WixToolsetTest.CoreIntegration
                     "-ext", ExtensionPaths.ExampleExtensionPath,
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(intermediateFolder, @"bin\test.msi")
+                    "-o", Path.Combine(intermediateFolder, "bin", "test.msi")
                 });
 
                 result.AssertSuccess();
 
-                var intermediate = Intermediate.Load(Path.Combine(intermediateFolder, @"bin\test.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(intermediateFolder, "bin", "test.wixpdb"));
                 var section = intermediate.Sections.Single();
 
                 var fileSymbols = section.Symbols.OfType<FileSymbol>().OrderBy(t => Path.GetFileName(t.Source.Path)).ToArray();
-                WixAssert.StringEqual(Path.Combine(folder, @"data\example.txt"), fileSymbols[0][FileSymbolFields.Source].AsPath().Path);
+                WixAssert.StringEqual(Path.Combine(folder, "data", "example.txt"), fileSymbols[0][FileSymbolFields.Source].AsPath().Path);
                 WixAssert.StringEqual(@"example.txt", fileSymbols[0][FileSymbolFields.Source].PreviousValue.AsPath().Path);
-                WixAssert.StringEqual(Path.Combine(folder, @"data\other.txt"), fileSymbols[1][FileSymbolFields.Source].AsPath().Path);
+                WixAssert.StringEqual(Path.Combine(folder, "data", "other.txt"), fileSymbols[1][FileSymbolFields.Source].AsPath().Path);
                 WixAssert.StringEqual(@"other.txt", fileSymbols[1][FileSymbolFields.Source].PreviousValue.AsPath().Path);
 
                 var examples = section.Symbols.Where(t => t.Definition.Type == SymbolDefinitionType.MustBeFromAnExtension).ToArray();

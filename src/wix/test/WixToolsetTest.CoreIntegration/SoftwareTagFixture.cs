@@ -19,7 +19,7 @@ namespace WixToolsetTest.CoreIntegration
         [Fact]
         public void CanBuildPackageWithTag()
         {
-            var folder = TestData.Get(@"TestData\ProductTag");
+            var folder = TestData.Get("TestData", "ProductTag");
             var build = new Builder(folder, new Type[] { }, new[] { folder });
 
             var results = build.BuildAndQuery(Build, "File", "SoftwareIdentificationTag");
@@ -65,15 +65,15 @@ namespace WixToolsetTest.CoreIntegration
                     "-bindpath", Path.Combine(testDataFolder, "BundleTag"),
                     "-bindpath", Path.Combine(baseFolder, "package"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(baseFolder, @"bin\test.exe")
+                    "-o", Path.Combine(baseFolder, "bin", "test.exe")
                 });
 
                 result.AssertSuccess();
 
-                Assert.True(File.Exists(Path.Combine(baseFolder, @"bin\test.exe")));
-                Assert.True(File.Exists(Path.Combine(baseFolder, @"bin\test.wixpdb")));
+                Assert.True(File.Exists(Path.Combine(baseFolder, "bin", "test.exe")));
+                Assert.True(File.Exists(Path.Combine(baseFolder, "bin", "test.wixpdb")));
 
-                using (var ouput = WixOutput.Read(Path.Combine(baseFolder, @"bin\test.wixpdb")))
+                using (var ouput = WixOutput.Read(Path.Combine(baseFolder, "bin", "test.wixpdb")))
                 {
                     var badata = ouput.GetDataStream("wix-burndata.xml");
                     var doc = XDocument.Load(badata);
@@ -112,15 +112,15 @@ namespace WixToolsetTest.CoreIntegration
                     Path.Combine(testDataFolder, "BundleTag", "BundleWithTag.wxs"),
                     "-bindpath", Path.Combine(testDataFolder, "SimpleBundle", "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(baseFolder, @"bin\test.exe")
+                    "-o", Path.Combine(baseFolder, "bin", "test.exe")
                 });
 
                 result.AssertSuccess();
 
-                Assert.True(File.Exists(Path.Combine(baseFolder, @"bin\test.exe")));
-                Assert.True(File.Exists(Path.Combine(baseFolder, @"bin\test.wixpdb")));
+                Assert.True(File.Exists(Path.Combine(baseFolder, "bin", "test.exe")));
+                Assert.True(File.Exists(Path.Combine(baseFolder, "bin", "test.wixpdb")));
 
-                using (var ouput = WixOutput.Read(Path.Combine(baseFolder, @"bin\test.wixpdb")))
+                using (var ouput = WixOutput.Read(Path.Combine(baseFolder, "bin", "test.wixpdb")))
                 {
                     var badata = ouput.GetDataStream("wix-burndata.xml");
                     var doc = XDocument.Load(badata);

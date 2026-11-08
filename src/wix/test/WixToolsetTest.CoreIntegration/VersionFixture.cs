@@ -132,6 +132,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildMsiWithExtendedVersion()
         {
             var folder = TestData.Get(@"TestData");
@@ -161,6 +162,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildMsiWithInvalidMajorVersion()
         {
             var folder = TestData.Get(@"TestData");
@@ -169,7 +171,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var msiPath = Path.Combine(baseFolder, @"bin\test1.msi");
+                var msiPath = Path.Combine(baseFolder, "bin", "test1.msi");
 
                 var result = WixRunner.Execute(warningsAsErrors: false, new[]
                 {
@@ -191,6 +193,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildMsiWithInvalidBindVariableVersion()
         {
             var folder = TestData.Get(@"TestData");
@@ -199,7 +202,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var msiPath = Path.Combine(baseFolder, @"bin\test1.msi");
+                var msiPath = Path.Combine(baseFolder, "bin", "test1.msi");
 
                 var result = WixRunner.Execute(warningsAsErrors: false, new[]
                 {
@@ -229,9 +232,9 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var msiPath = Path.Combine(baseFolder, @"bin\test1.msi");
-                var msi2Path = Path.Combine(baseFolder, @"bin\test2.msi");
-                var bundlePath = Path.Combine(baseFolder, @"bin\bundle.exe");
+                var msiPath = Path.Combine(baseFolder, "bin", "test1.msi");
+                var msi2Path = Path.Combine(baseFolder, "bin", "test2.msi");
+                var bundlePath = Path.Combine(baseFolder, "bin", "bundle.exe");
 
                 var result = WixRunner.Execute(new[]
                 {

@@ -129,6 +129,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void NakedFilesUnderPackageWithAuthoredFeatureAreOrphaned()
         {
             var messages = BuildAndQueryComponentAndFileTables("PackageWithoutDefaultFeature.wxs", isPackage: true, 267);
@@ -140,6 +141,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void IllegalAttributesWhenNonNakedFailTheBuild()
         {
             var messages = BuildAndQueryComponentAndFileTables("BadAttributes.wxs", isPackage: true, 62);

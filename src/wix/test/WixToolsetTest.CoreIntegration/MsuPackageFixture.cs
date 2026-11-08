@@ -93,6 +93,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildBundleWithMsuPackageUsingCertificateVerificationWithoutCacheId()
         {
             var dotDatafolder = TestData.Get(@"TestData", ".Data");
@@ -123,6 +124,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ErrorWhenSpecifyingPermanent()
         {
             var folder = TestData.Get(@"TestData", "MsuPackage");

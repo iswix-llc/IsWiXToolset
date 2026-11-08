@@ -16,9 +16,10 @@ namespace WixToolsetTest.CoreIntegration
     public class PayloadFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanParseValidName()
         {
-            var folder = TestData.Get(@"TestData\Payload");
+            var folder = TestData.Get("TestData", "Payload");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -53,9 +54,10 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanCanonicalizeName()
         {
-            var folder = TestData.Get(@"TestData\Payload");
+            var folder = TestData.Get("TestData", "Payload");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -90,9 +92,10 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void RejectsAbsoluteName()
         {
-            var folder = TestData.Get(@"TestData\Payload");
+            var folder = TestData.Get("TestData", "Payload");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -118,6 +121,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void RejectsPayloadSharedBetweenPackageAndBA()
         {
             var folder = TestData.Get(@"TestData");
@@ -156,7 +160,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var bundlePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var bundlePath = Path.Combine(baseFolder, "bin", "test.exe");
                 var baFolderPath = Path.Combine(baseFolder, "ba");
                 var extractFolderPath = Path.Combine(baseFolder, "extract");
 
@@ -210,7 +214,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var bundlePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var bundlePath = Path.Combine(baseFolder, "bin", "test.exe");
                 var baFolderPath = Path.Combine(baseFolder, "ba");
                 var extractFolderPath = Path.Combine(baseFolder, "extract");
 
@@ -253,6 +257,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildRemotePayloadInBootstrapperApplication()
         {
             var folder = TestData.Get(@"TestData");

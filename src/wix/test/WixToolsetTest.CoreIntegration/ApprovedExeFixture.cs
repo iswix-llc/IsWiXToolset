@@ -10,6 +10,7 @@ namespace WixToolsetTest.CoreIntegration
     public class ApprovedExeFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildWithApprovedExe()
         {
             var folder = TestData.Get(@"TestData");
@@ -18,7 +19,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var exePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var exePath = Path.Combine(baseFolder, "bin", "test.exe");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -36,6 +37,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildWithApprovedExe64()
         {
             var folder = TestData.Get(@"TestData");
@@ -44,7 +46,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var exePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var exePath = Path.Combine(baseFolder, "bin", "test.exe");
 
                 var result = WixRunner.Execute(new[]
                 {

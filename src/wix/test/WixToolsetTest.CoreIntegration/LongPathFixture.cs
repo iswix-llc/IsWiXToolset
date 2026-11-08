@@ -13,6 +13,7 @@ namespace WixToolsetTest.CoreIntegration
     public class LongPathFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void TestLongPathSupport()
         {
             var testDataFolder = TestData.Get(@"TestData", "SingleFile");
@@ -59,7 +60,7 @@ namespace WixToolsetTest.CoreIntegration
                 var section = intermediate.Sections.Single();
 
                 var fileSymbol = section.Symbols.OfType<FileSymbol>().First();
-                WixAssert.StringEqual(Path.Combine(folder, @"data\test.txt"), fileSymbol[FileSymbolFields.Source].AsPath().Path);
+                WixAssert.StringEqual(Path.Combine(folder, "data", "test.txt"), fileSymbol[FileSymbolFields.Source].AsPath().Path);
                 WixAssert.StringEqual(@"test.txt", fileSymbol[FileSymbolFields.Source].PreviousValue.AsPath().Path);
             }
         }

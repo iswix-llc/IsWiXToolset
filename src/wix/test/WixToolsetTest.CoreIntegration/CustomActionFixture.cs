@@ -12,6 +12,7 @@ namespace WixToolsetTest.CoreIntegration
     public class CustomActionFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildSetProperty()
         {
             var folder = TestData.Get("TestData", "SetProperty");
@@ -29,7 +30,7 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "Package.en-us.wxl"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(baseFolder, @"bin\test.msi")
+                    "-o", Path.Combine(baseFolder, "bin", "test.msi")
                 });
 
                 result.AssertSuccess();
@@ -44,6 +45,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildWhenSetPropertyReferencesMissingAction()
         {
             var folder = TestData.Get("TestData", "SetProperty");
@@ -59,7 +61,7 @@ namespace WixToolsetTest.CoreIntegration
                     Path.Combine(folder, "CannotBuildWhenSetPropertyReferencesMissingAction.wxs"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(baseFolder, @"bin\test.msi")
+                    "-o", Path.Combine(baseFolder, "bin", "test.msi")
                 });
 
                 var messages = result.Messages.Select(m => m.ToString()).ToArray();
@@ -71,6 +73,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanDetectCustomActionCycle()
         {
             var folder = TestData.Get(@"TestData");
@@ -79,7 +82,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var msiPath = Path.Combine(baseFolder, @"bin\test.msi");
+                var msiPath = Path.Combine(baseFolder, "bin", "test.msi");
 
                 var result = WixRunner.Execute(new[]
                     {
@@ -98,6 +101,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void WarnsOnVBScriptCustomAction()
         {
             var folder = TestData.Get(@"TestData");
@@ -106,7 +110,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var msiPath = Path.Combine(baseFolder, @"bin\test.msi");
+                var msiPath = Path.Combine(baseFolder, "bin", "test.msi");
 
                 var result = WixRunner.Execute(new[]
                     {
@@ -126,6 +130,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanDetectCustomActionCycleWithTail()
         {
             var folder = TestData.Get(@"TestData");
@@ -134,7 +139,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var msiPath = Path.Combine(baseFolder, @"bin\test.msi");
+                var msiPath = Path.Combine(baseFolder, "bin", "test.msi");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -233,7 +238,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var msiPath = Path.Combine(baseFolder, @"bin\test.msi");
+                var msiPath = Path.Combine(baseFolder, "bin", "test.msi");
 
                 var result = WixRunner.Execute(new[]
                 {

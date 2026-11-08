@@ -15,6 +15,7 @@ namespace WixToolsetTest.CoreIntegration
     public class HarvestFilesFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void MustIncludeSomeFiles()
         {
             Build("BadAuthoring.wxs", (_, result) =>
@@ -28,6 +29,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ZeroFilesHarvestedIsAWarning()
         {
             Build("ZeroFiles.wxs", (_, sourceFolder, baseFolder, result) =>
@@ -81,6 +83,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void DuplicateFilesSomethingSomething()
         {
             Build("DuplicateFiles.wxs", (_, result) =>
@@ -97,6 +100,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void HarvestedFilesUnderPackageWithAuthoredFeatureAreOrphaned()
         {
             Build("PackageWithoutDefaultFeature.wxs", (_, result) =>
@@ -385,6 +389,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanGetVerboseHarvestingDetails()
         {
             Build("Feature.wxs", (_, result) =>
@@ -466,8 +471,8 @@ namespace WixToolsetTest.CoreIntegration
                     "build",
                     Path.Combine(sourceFolder, file),
                     "-intermediateFolder", intermediateFolder,
-                    "-bindpath", @$"ToBeHarvested={sourceFolder}\files1",
-                    "-bindpath", @$"ToBeHarvested={sourceFolder}\files2",
+                    "-bindpath", "ToBeHarvested=" + Path.Combine(sourceFolder, "files1"),
+                    "-bindpath", "ToBeHarvested=" + Path.Combine(sourceFolder, "files2"),
                     "-o", msiPath,
                 };
 

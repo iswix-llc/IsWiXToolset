@@ -15,9 +15,10 @@ namespace WixToolsetTest.CoreIntegration
     public class WixiplFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildSingleFile()
         {
-            var folder = TestData.Get(@"TestData\SingleFile");
+            var folder = TestData.Get("TestData", "SingleFile");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -49,12 +50,12 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "Package.en-us.wxl"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(baseFolder, @"bin\test.msi")
+                    "-o", Path.Combine(baseFolder, "bin", "test.msi")
                 });
 
                 result.AssertSuccess();
 
-                intermediate = Intermediate.Load(Path.Combine(baseFolder, @"bin\test.wixpdb"));
+                intermediate = Intermediate.Load(Path.Combine(baseFolder, "bin", "test.wixpdb"));
 
                 Assert.False(intermediate.HasLevel(IntermediateLevels.Compiled));
                 Assert.True(intermediate.HasLevel(IntermediateLevels.Linked));
@@ -63,15 +64,16 @@ namespace WixToolsetTest.CoreIntegration
                 var section = intermediate.Sections.Single();
 
                 var fileSymbol = section.Symbols.OfType<FileSymbol>().First();
-                WixAssert.StringEqual(Path.Combine(folder, @"data\test.txt"), fileSymbol[FileSymbolFields.Source].AsPath().Path);
+                WixAssert.StringEqual(Path.Combine(folder, "data", "test.txt"), fileSymbol[FileSymbolFields.Source].AsPath().Path);
                 WixAssert.StringEqual(@"test.txt", fileSymbol[FileSymbolFields.Source].PreviousValue.AsPath().Path);
             }
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildWithSourceFileAndWixipl()
         {
-            var folder = TestData.Get(@"TestData\SingleFile");
+            var folder = TestData.Get("TestData", "SingleFile");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -97,7 +99,7 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "Package.en-us.wxl"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(baseFolder, @"bin\test.msi")
+                    "-o", Path.Combine(baseFolder, "bin", "test.msi")
                 });
                 Assert.Equal(392, result.ExitCode); // CoreErrors.WixiplSourceFileIsExclusive
             }
@@ -106,7 +108,7 @@ namespace WixToolsetTest.CoreIntegration
         [Fact]
         public void CanBuildMsiUsingExtensionLibrary()
         {
-            var folder = TestData.Get(@"TestData\Wixipl");
+            var folder = TestData.Get("TestData", "Wixipl");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -122,24 +124,24 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "Package.en-us.wxl"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(baseFolder, @"bin\test.msi"),
+                    "-o", Path.Combine(baseFolder, "bin", "test.msi"),
                 });
 
                 result.AssertSuccess();
 
-                var intermediate = Intermediate.Load(Path.Combine(baseFolder, @"bin\test.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(baseFolder, "bin", "test.wixpdb"));
                 var section = intermediate.Sections.Single();
 
                 {
                     var fileSymbol = section.Symbols.OfType<FileSymbol>().Single();
-                    WixAssert.StringEqual(Path.Combine(folder, @"data\test.txt"), fileSymbol[FileSymbolFields.Source].AsPath().Path);
+                    WixAssert.StringEqual(Path.Combine(folder, "data", "test.txt"), fileSymbol[FileSymbolFields.Source].AsPath().Path);
                     WixAssert.StringEqual(@"test.txt", fileSymbol[FileSymbolFields.Source].PreviousValue.AsPath().Path);
                 }
 
                 {
                     var binary = section.Symbols.OfType<BinarySymbol>().Single();
                     var path = binary[BinarySymbolFields.Data].AsPath().Path;
-                    Assert.StartsWith(Path.Combine(baseFolder, @"obj\Example.Extension"), path);
+                    Assert.StartsWith(Path.Combine(baseFolder, "obj", "Example.Extension"), path);
                     Assert.EndsWith(@"wix-ir\example.txt", path);
                     WixAssert.StringEqual(@"BinFromWir", binary.Id.Id);
                 }
@@ -149,7 +151,7 @@ namespace WixToolsetTest.CoreIntegration
         [Fact]
         public void CanBuildWixiplUsingExtensionLibrary()
         {
-            var folder = TestData.Get(@"TestData\Wixipl");
+            var folder = TestData.Get("TestData", "Wixipl");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -176,24 +178,24 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "Package.en-us.wxl"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(baseFolder, @"bin\test.msi"),
+                    "-o", Path.Combine(baseFolder, "bin", "test.msi"),
                 });
 
                 result.AssertSuccess();
 
-                var intermediate = Intermediate.Load(Path.Combine(baseFolder, @"bin\test.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(baseFolder, "bin", "test.wixpdb"));
                 var section = intermediate.Sections.Single();
 
                 {
                     var fileSymbol = section.Symbols.OfType<FileSymbol>().Single();
-                    WixAssert.StringEqual(Path.Combine(folder, @"data\test.txt"), fileSymbol[FileSymbolFields.Source].AsPath().Path);
+                    WixAssert.StringEqual(Path.Combine(folder, "data", "test.txt"), fileSymbol[FileSymbolFields.Source].AsPath().Path);
                     WixAssert.StringEqual(@"test.txt", fileSymbol[FileSymbolFields.Source].PreviousValue.AsPath().Path);
                 }
 
                 {
                     var binary = section.Symbols.OfType<BinarySymbol>().Single();
                     var path = binary[BinarySymbolFields.Data].AsPath().Path;
-                    Assert.StartsWith(Path.Combine(baseFolder, @"obj\test"), path);
+                    Assert.StartsWith(Path.Combine(baseFolder, "obj", "test"), path);
                     Assert.EndsWith(@"wix-ir\example.txt", path);
                     WixAssert.StringEqual(@"BinFromWir", binary.Id.Id);
                 }
