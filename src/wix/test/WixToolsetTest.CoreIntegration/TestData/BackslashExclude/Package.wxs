@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+    <!-- Harvests a folder with Windows separators and excludes a file that is also authored explicitly. -->
+    <Package Name="MsiPackage" Version="1.0.0.0" Manufacturer="Example Corporation" UpgradeCode="1c6a5b1e-0e43-4f0c-9d7a-6a5a3f3d0a52">
+        <File Id="Explicit" Directory="INSTALLFOLDER" Source="files\a.txt" />
+
+        <Files Directory="INSTALLFOLDER" Include="files\**">
+            <Exclude Files="files\a.txt" />
+        </Files>
+    </Package>
+</Wix>

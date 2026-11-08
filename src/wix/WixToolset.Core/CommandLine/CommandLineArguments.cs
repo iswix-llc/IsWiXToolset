@@ -86,6 +86,7 @@ namespace WixToolset.Core.CommandLine
                     }
                     else
                     {
+                        this.Messaging.Write(CoreErrors.ExpectedArgument(arg));
                         this.ErrorArgument = arg;
                         break;
                     }
@@ -207,7 +208,10 @@ namespace WixToolset.Core.CommandLine
 
         private static bool IsSwitchAt(string[] args, int index)
         {
-            return args.Length > index && !String.IsNullOrEmpty(args[index]) && ('/' == args[index][0] || '-' == args[index][0]);
+            // On non-Windows platforms an absolute path starts with '/', so it is not a switch.
+            var slashIsSwitch = Path.DirectorySeparatorChar == '\\';
+
+            return args.Length > index && !String.IsNullOrEmpty(args[index]) && ((slashIsSwitch && '/' == args[index][0]) || '-' == args[index][0]);
         }
     }
 }

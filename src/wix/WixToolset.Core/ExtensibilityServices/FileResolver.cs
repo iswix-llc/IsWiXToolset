@@ -67,6 +67,9 @@ namespace WixToolset.Core.ExtensibilityServices
         {
             string resolved = null;
 
+            // Authored paths often use Windows separators; on Linux and macOS they would otherwise never be found.
+            source = Common.NormalizeSourcePath(source);
+
             // If the file exists, we're good to go.
             checkedPaths.Add(source);
             if (CheckFileExists(source))
@@ -91,7 +94,7 @@ namespace WixToolset.Core.ExtensibilityServices
                     {
                         bindName = source.Substring(BindPathOpenString.Length, closeParen - BindPathOpenString.Length);
                         path = source.Substring(BindPathOpenString.Length + bindName.Length + 1); // +1 for the closing paren.
-                        path = path.TrimStart('\\'); // remove starting '\\' char so the path doesn't look rooted.
+                        path = path.TrimStart('\\', '/'); // remove starting separator so the path doesn't look rooted.
                     }
                 }
                 else if (source.StartsWith("SourceDir\\", StringComparison.Ordinal) || source.StartsWith("SourceDir/", StringComparison.Ordinal))

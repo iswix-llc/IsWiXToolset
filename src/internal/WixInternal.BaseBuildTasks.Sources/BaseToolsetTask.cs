@@ -6,6 +6,7 @@ namespace WixToolset.BaseBuildTasks
     using System.Collections.Generic;
     using System.IO;
     using System.Runtime.InteropServices;
+    using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
 
     public abstract class BaseToolsetTask : ToolTask
@@ -97,6 +98,37 @@ namespace WixToolset.BaseBuildTasks
             var commandLineBuilder = new WixCommandLineBuilder();
             this.BuildCommandLine(commandLineBuilder);
             return commandLineBuilder.ToString();
+        }
+
+        // The most recent output lines the tool wrote, kept so a failure that reported no error MSBuild recognizes can still be explained.
+        private const int MaximumCapturedOutputLines = 100;
+        private readonly Queue<string> capturedToolOutput = new Queue<string>();
+
+        protected override void LogEventsFromTextOutput(string singleLine, MessageImportance messageImportance)
+        {
+            if (!String.IsNullOrWhiteSpace(singleLine))
+            {
+                this.capturedToolOutput.Enqueue(singleLine);
+
+                if (this.capturedToolOutput.Count > MaximumCapturedOutputLines)
+                {
+                    this.capturedToolOutput.Dequeue();
+                }
+            }
+
+            base.LogEventsFromTextOutput(singleLine, messageImportance);
+        }
+
+        protected override bool HandleTaskExecutionErrors()
+        {
+            // When the tool fails without writing an error in a form MSBuild recognizes (for example an unhandled exception or a
+            // host failure), MSBuild would report only "exited with code N". Show what the tool wrote so the cause is visible.
+            if (!this.HasLoggedErrors && this.capturedToolOutput.Count > 0)
+            {
+                this.Log.LogError("{0} exited with code {1} without reporting an error. Its output was:{2}{3}", this.ToolName, this.ExitCode, Environment.NewLine, String.Join(Environment.NewLine, this.capturedToolOutput.ToArray()));
+            }
+
+            return base.HandleTaskExecutionErrors();
         }
 
 #if NETCOREAPP

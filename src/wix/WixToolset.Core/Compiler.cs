@@ -2616,7 +2616,7 @@ namespace WixToolset.Core
                             subdirectory = this.Core.GetAttributeLongFilename(sourceLineNumbers, attrib, allowRelative: true);
                             break;
                         case "Source":
-                            source = this.Core.GetAttributeValue(sourceLineNumbers, attrib);
+                            source = Common.NormalizeSourcePath(this.Core.GetAttributeValue(sourceLineNumbers, attrib));
                             break;
                         default:
                             this.Core.UnexpectedAttribute(node, attrib);
@@ -3754,7 +3754,7 @@ namespace WixToolset.Core
                             diskId = this.Core.GetAttributeIntegerValue(sourceLineNumbers, attrib, 1, Int16.MaxValue);
                             break;
                         case "FileSource":
-                            fileSource = this.Core.GetAttributeValue(sourceLineNumbers, attrib);
+                            fileSource = Common.NormalizeSourcePath(this.Core.GetAttributeValue(sourceLineNumbers, attrib));
                             fileSourceAttribSet = true;
                             break;
                         case "Name":
@@ -3965,7 +3965,7 @@ namespace WixToolset.Core
                             diskId = this.Core.GetAttributeIntegerValue(sourceLineNumbers, attrib, 1, Int16.MaxValue);
                             break;
                         case "FileSource":
-                            fileSource = this.Core.GetAttributeValue(sourceLineNumbers, attrib);
+                            fileSource = Common.NormalizeSourcePath(this.Core.GetAttributeValue(sourceLineNumbers, attrib));
                             break;
                         default:
                             this.Core.UnexpectedAttribute(node, attrib);
@@ -5102,7 +5102,7 @@ namespace WixToolset.Core
                             shortName = this.Core.GetAttributeShortFilename(sourceLineNumbers, attrib, false);
                             break;
                         case "Source":
-                            source = this.Core.GetAttributeValue(sourceLineNumbers, attrib);
+                            source = Common.NormalizeSourcePath(this.Core.GetAttributeValue(sourceLineNumbers, attrib));
                             sourceSet = true;
                             break;
                     }
@@ -5773,7 +5773,7 @@ namespace WixToolset.Core
                             subdirectory = this.Core.GetAttributeLongFilename(sourceLineNumbers, attrib, allowRelative: true);
                             break;
                         case "Include":
-                            inclusions.AddRange(this.Core.GetAttributeValue(sourceLineNumbers, attrib).Split(';'));
+                            inclusions.AddRange(Common.NormalizeSourcePath(this.Core.GetAttributeValue(sourceLineNumbers, attrib)).Split(';'));
                             break;
                         default:
                             this.Core.UnexpectedAttribute(node, attrib);
@@ -5851,7 +5851,7 @@ namespace WixToolset.Core
                     switch (attrib.Name.LocalName)
                     {
                         case "Files":
-                            paths.Add(this.Core.GetAttributeValue(sourceLineNumbers, attrib));
+                            paths.Add(Common.NormalizeSourcePath(this.Core.GetAttributeValue(sourceLineNumbers, attrib)));
                             break;
                         default:
                             this.Core.UnexpectedAttribute(node, attrib);
@@ -7127,7 +7127,7 @@ namespace WixToolset.Core
                             volumeLabel = this.Core.GetAttributeValue(sourceLineNumbers, attrib);
                             break;
                         case "Source":
-                            source = this.Core.GetAttributeValue(sourceLineNumbers, attrib);
+                            source = Common.NormalizeSourcePath(this.Core.GetAttributeValue(sourceLineNumbers, attrib));
                             break;
                         default:
                             this.Core.UnexpectedAttribute(node, attrib);

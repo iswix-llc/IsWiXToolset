@@ -215,7 +215,7 @@ namespace WixToolset.Core
                     var filePortion = Path.GetFileName(path);
                     var directoryPortion = Path.GetDirectoryName(path).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 
-                    if (directoryPortion?.EndsWith(@"\**") == true)
+                    if (directoryPortion?.EndsWith(@"\**") == true || directoryPortion?.EndsWith("/**") == true)
                     {
                         directoryPortion = directoryPortion.Substring(0, directoryPortion.Length - 3);
                     }
@@ -270,7 +270,7 @@ namespace WixToolset.Core
                 {
                     bindName = source.Substring(BindPathOpenString.Length, closeParen - BindPathOpenString.Length);
                     path = source.Substring(BindPathOpenString.Length + bindName.Length + 1); // +1 for the closing paren.
-                    path = path.TrimStart('\\'); // remove starting '\\' char so the path doesn't look rooted.
+                    path = path.TrimStart('\\', '/'); // remove starting '\\' char so the path doesn't look rooted.
                 }
             }
 
