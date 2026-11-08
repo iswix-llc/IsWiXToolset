@@ -21,8 +21,8 @@ namespace WixToolset.Core.Native.Managed
         private const int BlockAligned = 2;
         private const int BlockUncompressed = 3;
 
-        private static readonly int[] ExtraBits = BuildExtraBits();
-        private static readonly int[] PositionBase = BuildPositionBase();
+        internal static readonly int[] ExtraBits = BuildExtraBits();
+        internal static readonly int[] PositionBase = BuildPositionBase();
 
         private readonly byte[] output;
         private readonly int mainElements;

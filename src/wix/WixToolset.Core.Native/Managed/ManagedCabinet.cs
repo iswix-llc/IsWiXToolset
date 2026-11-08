@@ -5,13 +5,14 @@ namespace WixToolset.Core.Native.Managed
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Runtime.InteropServices;
     using System.Text;
     using WixToolset.Data;
 
     /// <summary>
     /// Cabinet creation, enumeration and extraction without wixnative.exe (FCI/FDI), so cabinets can be
-    /// built and read on any platform. Supports uncompressed and MSZIP cabinets in a single folder.
+    /// built and read on any platform. Supports uncompressed, MSZIP and LZX cabinets in a single folder.
     /// </summary>
     internal static class ManagedCabinet
     {
@@ -48,8 +49,10 @@ namespace WixToolset.Core.Native.Managed
             var blockStarts = new List<long>();
             var blockLengths = new List<int>();
             var blockUncompressed = new List<int>();
-            var useMszip = level != CompressionLevel.None;
-            var blockLevel = level == CompressionLevel.Low ? System.IO.Compression.CompressionLevel.Fastest : System.IO.Compression.CompressionLevel.Optimal;
+            // Low, medium and high use LZX with 15, 18 and 21 bit windows, like the native cabinet code.
+            var fileList = files.ToList();
+            var totalBytes = fileList.Sum(f => new FileInfo(f.Path).Exists ? new FileInfo(f.Path).Length : 0);
+            var compression = CabCompression.For(level, totalBytes);
 
             long uncompressedOffset = 0;
             var buffer = new byte[BlockSize];
@@ -64,7 +67,7 @@ namespace WixToolset.Core.Native.Managed
             {
                 using (var dataStream = new FileStream(tempData, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
                 {
-                    foreach (var file in files)
+                    foreach (var file in fileList)
                     {
                         if (entries.Count == 0)
                         {
@@ -104,7 +107,7 @@ namespace WixToolset.Core.Native.Managed
 
                                 if (buffered == buffer.Length)
                                 {
-                                    AddBlock(dataStream, buffer, buffered, useMszip, blockLevel, blockStarts, blockLengths, blockUncompressed);
+                                    AddBlock(dataStream, buffer, buffered, compression, blockStarts, blockLengths, blockUncompressed);
                                     buffered = 0;
                                 }
                             }
@@ -113,7 +116,7 @@ namespace WixToolset.Core.Native.Managed
 
                     if (buffered > 0)
                     {
-                        AddBlock(dataStream, buffer, buffered, useMszip, blockLevel, blockStarts, blockLengths, blockUncompressed);
+                        AddBlock(dataStream, buffer, buffered, compression, blockStarts, blockLengths, blockUncompressed);
                     }
 
                     // Decide which blocks go in which cabinet. A cabinet is full when adding the next block would
@@ -136,7 +139,7 @@ namespace WixToolset.Core.Native.Managed
                     for (var k = 0; k < ranges.Count; k++)
                     {
                         var target = Path.Combine(directory, names[k]);
-                        WriteCabinet(target, dataStream, entries, blockStarts, blockLengths, blockUncompressed, ranges, k, names, useMszip, setId);
+                        WriteCabinet(target, dataStream, entries, blockStarts, blockLengths, blockUncompressed, ranges, k, names, compression, setId);
                         created.Add(new CabinetCreated(names[k], firstToken));
                     }
                 }
@@ -155,10 +158,10 @@ namespace WixToolset.Core.Native.Managed
             return created;
         }
 
-        private static void AddBlock(Stream dataStream, byte[] buffer, int count, bool mszip, System.IO.Compression.CompressionLevel level, List<long> starts, List<int> lengths, List<int> uncompressed)
+        private static void AddBlock(Stream dataStream, byte[] buffer, int count, CabCompression compression, List<long> starts, List<int> lengths, List<int> uncompressed)
         {
             var start = dataStream.Position;
-            WriteBlock(dataStream, buffer, count, mszip, level);
+            WriteBlock(dataStream, buffer, count, compression);
             starts.Add(start);
             lengths.Add((int)(dataStream.Position - start));
             uncompressed.Add(count);
@@ -256,7 +259,7 @@ namespace WixToolset.Core.Native.Managed
             return stem + (char)('a' - 1 + first) + (char)('a' - 1 + second) + ".cab";
         }
 
-        private static void WriteCabinet(string target, Stream dataStream, List<FileEntry> entries, List<long> blockStarts, List<int> blockLengths, List<int> blockUncompressed, List<int[]> ranges, int index, List<string> names, bool mszip, ushort setId)
+        private static void WriteCabinet(string target, Stream dataStream, List<FileEntry> entries, List<long> blockStarts, List<int> blockLengths, List<int> blockUncompressed, List<int[]> ranges, int index, List<string> names, CabCompression compression, ushort setId)
         {
             var firstBlock = ranges[index][0];
             var endBlock = ranges[index][1];
@@ -349,7 +352,7 @@ namespace WixToolset.Core.Native.Managed
                 {
                     writer.Write((uint)dataOffset);                     // coffCabStart
                     writer.Write((ushort)blockCount);                   // cCFData
-                    writer.Write((ushort)(mszip ? 1 : 0));              // typeCompress
+                    writer.Write(compression.TypeCompress);                 // typeCompress
                 }
 
                 foreach (var entry in inCabinet)
@@ -507,12 +510,16 @@ namespace WixToolset.Core.Native.Managed
         }
 
         // Writes one CFDATA block.
-        private static void WriteBlock(Stream output, byte[] data, int count, bool mszip, System.IO.Compression.CompressionLevel level)
+        private static void WriteBlock(Stream output, byte[] data, int count, CabCompression compression)
         {
             byte[] payload;
-            if (mszip)
+            if (compression.Lzx != null)
             {
-                payload = CompressMszipBlock(data, count, level);
+                payload = compression.Lzx.EncodeFrame(data, count);
+            }
+            else if (compression.Mszip)
+            {
+                payload = CompressMszipBlock(data, count, compression.MszipLevel);
             }
             else
             {
@@ -535,6 +542,39 @@ namespace WixToolset.Core.Native.Managed
 
             output.Write(header, 0, header.Length);
             output.Write(payload, 0, payload.Length);
+        }
+
+        // How the data blocks of the cabinet folder are compressed. The LZX encoder is stateful: it carries its window from block to block.
+        private sealed class CabCompression
+        {
+            private const long LzxSizeLimit = 0x60000000;
+
+            public bool Mszip;
+            public System.IO.Compression.CompressionLevel MszipLevel = System.IO.Compression.CompressionLevel.Optimal;
+            public LzxEncoder Lzx;
+            public ushort TypeCompress;
+
+            public static CabCompression For(CompressionLevel level, long totalBytes)
+            {
+                var result = new CabCompression();
+                if (level == CompressionLevel.None)
+                {
+                    return result;
+                }
+
+                var windowBits = level == CompressionLevel.Low ? 15 : level == CompressionLevel.Medium ? 18 : level == CompressionLevel.High ? 21 : 0;
+                if (windowBits == 0 || totalBytes > LzxSizeLimit)
+                {
+                    // MSZIP was asked for, or the data is too large for the encoder's 32 bit window positions.
+                    result.Mszip = true;
+                    result.TypeCompress = 1;
+                    return result;
+                }
+
+                result.Lzx = new LzxEncoder(windowBits);
+                result.TypeCompress = (ushort)(3 | (windowBits << 8));
+                return result;
+            }
         }
 
         private static byte[] CompressMszipBlock(byte[] data, int count, System.IO.Compression.CompressionLevel level)
