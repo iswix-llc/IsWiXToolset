@@ -36,6 +36,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PackageEmptyCommentsThrows()
         {
             var exception = Assert.Throws<WixException>(() => BuildPackageAndQuerySummaryInformation("PackageEmpty.wxs"));
@@ -76,6 +77,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ModuleEmptyCommentsThrows()
         {
             var exception = Assert.Throws<WixException>(() => BuildModuleAndQuerySummaryInformation("ModuleEmpty.wxs"));

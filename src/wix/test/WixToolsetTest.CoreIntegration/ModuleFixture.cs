@@ -74,7 +74,7 @@ namespace WixToolsetTest.CoreIntegration
         [Fact]
         public void CanSuppressModularization()
         {
-            var folder = TestData.Get(@"TestData\SuppressModularization");
+            var folder = TestData.Get("TestData", "SuppressModularization");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -89,12 +89,12 @@ namespace WixToolsetTest.CoreIntegration
                     "-intermediateFolder", intermediateFolder,
                     "-sw1079",
                     "-sw1086",
-                    "-o", Path.Combine(intermediateFolder, @"bin\test.msm")
+                    "-o", Path.Combine(intermediateFolder, "bin", "test.msm")
                 });
 
                 result.AssertSuccess();
 
-                var msmPath = Path.Combine(intermediateFolder, @"bin\test.msm");
+                var msmPath = Path.Combine(intermediateFolder, "bin", "test.msm");
 
                 var rows = Query.QueryDatabase(msmPath, new[] { "CustomAction", "Property" });
                 WixAssert.CompareLineByLine(new[]

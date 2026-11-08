@@ -26,7 +26,7 @@ namespace WixToolsetTest.CoreIntegration
         [Fact]
         public void CanBuildAndValidateSimpleModule()
         {
-            var folder = TestData.Get(@"TestData\SimpleModule");
+            var folder = TestData.Get("TestData", "SimpleModule");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -40,16 +40,16 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "Module.en-us.wxl"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(intermediateFolder, @"bin\test.msm")
+                    "-o", Path.Combine(intermediateFolder, "bin", "test.msm")
                 });
 
                 result.AssertSuccess();
 
-                var msmPath = Path.Combine(intermediateFolder, @"bin\test.msm");
+                var msmPath = Path.Combine(intermediateFolder, "bin", "test.msm");
                 Assert.True(File.Exists(msmPath));
-                Assert.True(File.Exists(Path.Combine(intermediateFolder, @"bin\test.wixpdb")));
+                Assert.True(File.Exists(Path.Combine(intermediateFolder, "bin", "test.wixpdb")));
 
-                var intermediate = Intermediate.Load(Path.Combine(intermediateFolder, @"bin\test.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(intermediateFolder, "bin", "test.wixpdb"));
                 var section = intermediate.Sections.Single();
 
                 var dirSymbols = section.Symbols.OfType<DirectorySymbol>().OrderBy(d => d.Id.Id).ToList();
@@ -63,11 +63,11 @@ namespace WixToolsetTest.CoreIntegration
                 var fileSymbols = section.Symbols.OfType<FileSymbol>().OrderBy(d => d.Id.Id).ToList();
                 WixAssert.CompareLineByLine(new[]
                 {
-                    $"File1\t{Path.Combine(folder, @"data\test.txt")}\ttest.txt",
-                    $"File2\t{Path.Combine(folder, @"data\test.txt")}\ttest.txt",
+                    $"File1\t{Path.Combine(folder, "data", "test.txt")}\ttest.txt",
+                    $"File2\t{Path.Combine(folder, "data", "test.txt")}\ttest.txt",
                 }, fileSymbols.Select(fileSymbol => String.Join("\t", fileSymbol.Id.Id, fileSymbol[FileSymbolFields.Source].AsPath().Path, fileSymbol[FileSymbolFields.Source].PreviousValue.AsPath().Path)).ToArray());
 
-                var data = WindowsInstallerData.Load(Path.Combine(intermediateFolder, @"bin\test.wixpdb"));
+                var data = WindowsInstallerData.Load(Path.Combine(intermediateFolder, "bin", "test.wixpdb"));
                 var fileRows = data.Tables["File"].Rows;
                 WixAssert.CompareLineByLine(new[]
                 {
@@ -113,7 +113,7 @@ namespace WixToolsetTest.CoreIntegration
         [Fact]
         public void CanBuildAndValidateSimpleModuleWithProperty()
         {
-            var folder = TestData.Get(@"TestData\SimpleModuleWithProperty");
+            var folder = TestData.Get("TestData", "SimpleModuleWithProperty");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -127,14 +127,14 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "Module.en-us.wxl"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(intermediateFolder, @"bin\test.msm")
+                    "-o", Path.Combine(intermediateFolder, "bin", "test.msm")
                 });
 
                 result.AssertSuccess();
 
-                var msmPath = Path.Combine(intermediateFolder, @"bin\test.msm");
+                var msmPath = Path.Combine(intermediateFolder, "bin", "test.msm");
                 Assert.True(File.Exists(msmPath));
-                Assert.True(File.Exists(Path.Combine(intermediateFolder, @"bin\test.wixpdb")));
+                Assert.True(File.Exists(Path.Combine(intermediateFolder, "bin", "test.wixpdb")));
 
                 var validationResult = WixRunner.Execute(new[]
                 {
@@ -149,14 +149,14 @@ namespace WixToolsetTest.CoreIntegration
         [Fact]
         public void CanMergeModuleAndValidate()
         {
-            var msmFolder = TestData.Get(@"TestData\SimpleModule");
-            var folder = TestData.Get(@"TestData\SimpleMerge");
+            var msmFolder = TestData.Get("TestData", "SimpleModule");
+            var folder = TestData.Get("TestData", "SimpleMerge");
 
             using (var fs = new DisposableFileSystem())
             {
                 var intermediateFolder = fs.GetFolder();
-                var msiPath = Path.Combine(intermediateFolder, @"bin\test.msi");
-                var cabPath = Path.Combine(intermediateFolder, @"bin\cab1.cab");
+                var msiPath = Path.Combine(intermediateFolder, "bin", "test.msi");
+                var cabPath = Path.Combine(intermediateFolder, "bin", "cab1.cab");
 
                 var msmResult = WixRunner.Execute(new[]
                 {
@@ -190,11 +190,11 @@ namespace WixToolsetTest.CoreIntegration
                 });
                 validationResult.AssertSuccess();
 
-                var intermediate = Intermediate.Load(Path.Combine(intermediateFolder, @"bin\test.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(intermediateFolder, "bin", "test.wixpdb"));
                 var section = intermediate.Sections.Single();
                 Assert.Empty(section.Symbols.OfType<FileSymbol>());
 
-                var data = WindowsInstallerData.Load(Path.Combine(intermediateFolder, @"bin\test.wixpdb"));
+                var data = WindowsInstallerData.Load(Path.Combine(intermediateFolder, "bin", "test.wixpdb"));
                 Assert.Empty(data.Tables["File"].Rows);
 
                 var results = Query.QueryDatabase(msiPath, new[] { "File" });
@@ -393,14 +393,14 @@ namespace WixToolsetTest.CoreIntegration
         [Fact]
         public void CanMergeArm64ModuleAndValidate()
         {
-            var msmFolder = TestData.Get(@"TestData\SimpleModule");
-            var folder = TestData.Get(@"TestData\SimpleMerge");
+            var msmFolder = TestData.Get("TestData", "SimpleModule");
+            var folder = TestData.Get("TestData", "SimpleMerge");
 
             using (var fs = new DisposableFileSystem())
             {
                 var intermediateFolder = fs.GetFolder();
-                var msiPath = Path.Combine(intermediateFolder, @"bin\test.msi");
-                var cabPath = Path.Combine(intermediateFolder, @"bin\cab1.cab");
+                var msiPath = Path.Combine(intermediateFolder, "bin", "test.msi");
+                var cabPath = Path.Combine(intermediateFolder, "bin", "cab1.cab");
 
                 var msmResult = WixRunner.Execute(new[]
                 {
@@ -437,11 +437,11 @@ namespace WixToolsetTest.CoreIntegration
                 });
                 validationResult.AssertSuccess();
 
-                var intermediate = Intermediate.Load(Path.Combine(intermediateFolder, @"bin\test.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(intermediateFolder, "bin", "test.wixpdb"));
                 var section = intermediate.Sections.Single();
                 Assert.Empty(section.Symbols.OfType<FileSymbol>());
 
-                var data = WindowsInstallerData.Load(Path.Combine(intermediateFolder, @"bin\test.wixpdb"));
+                var data = WindowsInstallerData.Load(Path.Combine(intermediateFolder, "bin", "test.wixpdb"));
                 Assert.Empty(data.Tables["File"].Rows);
 
                 var results = Query.QueryDatabase(msiPath, new[] { "File" });

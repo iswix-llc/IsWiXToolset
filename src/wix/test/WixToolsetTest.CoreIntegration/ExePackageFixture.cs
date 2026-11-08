@@ -263,6 +263,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ErrorWhenArpEntryWithDetectCondition()
         {
             var folder = TestData.Get(@"TestData", "ExePackage");
@@ -287,6 +288,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ErrorWhenArpEntryWithUninstallArguments()
         {
             var folder = TestData.Get(@"TestData", "ExePackage");
@@ -311,6 +313,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ErrorWhenArpEntryWithInvalidId()
         {
             var folder = TestData.Get(@"TestData", "ExePackage");
@@ -335,6 +338,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ErrorWhenNonPermanentWithOnlyDetectCondition()
         {
             var folder = TestData.Get(@"TestData", "ExePackage");
@@ -359,6 +363,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ErrorWhenNonPermanentWithOnlyUninstallArguments()
         {
             var folder = TestData.Get(@"TestData", "ExePackage");
@@ -383,6 +388,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ErrorWhenRepairablePermanentWithoutDetectCondition()
         {
             var folder = TestData.Get(@"TestData", "ExePackage");
@@ -407,6 +413,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ErrorWhenRepairablePermanentWithoutDetectConditionOrUninstallArgumentsOrArpEntry()
         {
             var folder = TestData.Get(@"TestData", "ExePackage");
@@ -431,6 +438,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ErrorWhenNonPermanentWithoutDetectConditionOrUninstallArgumentsOrArpEntry()
         {
             var folder = TestData.Get(@"TestData", "ExePackage");
@@ -455,6 +463,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ErrorWhenRepairConditionWithoutRepairArguments()
         {
             var folder = TestData.Get(@"TestData", "ExePackage");
@@ -479,6 +488,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ErrorWhenUninstallArgumentsWithoutDetectCondition()
         {
             var folder = TestData.Get(@"TestData", "ExePackage");
@@ -503,6 +513,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildBundleWithExePackageUsingCertificateVerificationWithoutCacheId()
         {
             var dotDatafolder = TestData.Get(@"TestData", ".Data");
@@ -533,6 +544,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildBundleWithExePackageWithoutSourceOrHashOrCertificate()
         {
             var dotDatafolder = TestData.Get(@"TestData", ".Data");

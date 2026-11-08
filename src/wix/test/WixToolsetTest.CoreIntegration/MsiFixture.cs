@@ -14,9 +14,10 @@ namespace WixToolsetTest.CoreIntegration
     public class MsiFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildSingleFile()
         {
-            var folder = TestData.Get(@"TestData\SingleFile");
+            var folder = TestData.Get("TestData", "SingleFile");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -31,16 +32,16 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "Package.en-us.wxl"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(baseFolder, @"bin\test.msi")
+                    "-o", Path.Combine(baseFolder, "bin", "test.msi")
                 });
 
                 result.AssertSuccess();
 
-                Assert.True(File.Exists(Path.Combine(baseFolder, @"bin\test.msi")));
-                Assert.True(File.Exists(Path.Combine(baseFolder, @"bin\test.wixpdb")));
-                Assert.True(File.Exists(Path.Combine(baseFolder, @"bin\PFiles\Example Corporation MsiPackage\test.txt")));
+                Assert.True(File.Exists(Path.Combine(baseFolder, "bin", "test.msi")));
+                Assert.True(File.Exists(Path.Combine(baseFolder, "bin", "test.wixpdb")));
+                Assert.True(File.Exists(Path.Combine(baseFolder, "bin", "PFiles", "Example Corporation MsiPackage", "test.txt")));
 
-                var intermediate = Intermediate.Load(Path.Combine(baseFolder, @"bin\test.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(baseFolder, "bin", "test.wixpdb"));
 
                 Assert.False(intermediate.HasLevel(WixToolset.Data.IntermediateLevels.Compiled));
                 Assert.True(intermediate.HasLevel(WixToolset.Data.IntermediateLevels.Linked));
@@ -50,7 +51,7 @@ namespace WixToolsetTest.CoreIntegration
                 var section = intermediate.Sections.Single();
 
                 var fileSymbol = section.Symbols.OfType<FileSymbol>().First();
-                WixAssert.StringEqual(Path.Combine(folder, @"data\test.txt"), fileSymbol[FileSymbolFields.Source].AsPath().Path);
+                WixAssert.StringEqual(Path.Combine(folder, "data", "test.txt"), fileSymbol[FileSymbolFields.Source].AsPath().Path);
                 WixAssert.StringEqual(@"test.txt", fileSymbol[FileSymbolFields.Source].PreviousValue.AsPath().Path);
             }
         }
@@ -107,7 +108,7 @@ namespace WixToolsetTest.CoreIntegration
         [Fact]
         public void CannotBuildMissingFile()
         {
-            var folder = TestData.Get(@"TestData\SingleFile");
+            var folder = TestData.Get("TestData", "SingleFile");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -147,9 +148,10 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildWithErrorTable()
         {
-            var folder = TestData.Get(@"TestData\ErrorsInUI");
+            var folder = TestData.Get("TestData", "ErrorsInUI");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -164,16 +166,16 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "Package.en-us.wxl"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(baseFolder, @"bin\test.msi")
+                    "-o", Path.Combine(baseFolder, "bin", "test.msi")
                 });
 
                 result.AssertSuccess();
 
-                Assert.True(File.Exists(Path.Combine(baseFolder, @"bin\test.msi")));
-                Assert.True(File.Exists(Path.Combine(baseFolder, @"bin\test.wixpdb")));
-                Assert.True(File.Exists(Path.Combine(baseFolder, @"bin\PFiles\MsiPackage\test.txt")));
+                Assert.True(File.Exists(Path.Combine(baseFolder, "bin", "test.msi")));
+                Assert.True(File.Exists(Path.Combine(baseFolder, "bin", "test.wixpdb")));
+                Assert.True(File.Exists(Path.Combine(baseFolder, "bin", "PFiles", "MsiPackage", "test.txt")));
 
-                var intermediate = Intermediate.Load(Path.Combine(baseFolder, @"bin\test.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(baseFolder, "bin", "test.wixpdb"));
                 var section = intermediate.Sections.Single();
 
                 var errors = section.Symbols.OfType<ErrorSymbol>().ToDictionary(t => t.Id.Id);
@@ -191,7 +193,7 @@ namespace WixToolsetTest.CoreIntegration
         [Fact]
         public void CanLoadPdbGeneratedByBuild()
         {
-            var folder = TestData.Get(@"TestData\MultiFileCompressed");
+            var folder = TestData.Get("TestData", "MultiFileCompressed");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -206,15 +208,15 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "Package.en-us.wxl"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(intermediateFolder, @"bin\test.msi")
+                    "-o", Path.Combine(intermediateFolder, "bin", "test.msi")
                 });
 
                 result.AssertSuccess();
 
-                Assert.True(File.Exists(Path.Combine(intermediateFolder, @"bin\test.msi")));
-                Assert.True(File.Exists(Path.Combine(intermediateFolder, @"bin\cab1.cab")));
+                Assert.True(File.Exists(Path.Combine(intermediateFolder, "bin", "test.msi")));
+                Assert.True(File.Exists(Path.Combine(intermediateFolder, "bin", "cab1.cab")));
 
-                var pdbPath = Path.Combine(intermediateFolder, @"bin\test.wixpdb");
+                var pdbPath = Path.Combine(intermediateFolder, "bin", "test.wixpdb");
                 Assert.True(File.Exists(pdbPath));
 
                 var output = WindowsInstallerData.Load(pdbPath, suppressVersionCheck: true);
@@ -225,7 +227,7 @@ namespace WixToolsetTest.CoreIntegration
         [Fact]
         public void CanLoadPdbGeneratedByBuildViaWixOutput()
         {
-            var folder = TestData.Get(@"TestData\MultiFileCompressed");
+            var folder = TestData.Get("TestData", "MultiFileCompressed");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -240,15 +242,15 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "Package.en-us.wxl"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(intermediateFolder, @"bin\test.msi")
+                    "-o", Path.Combine(intermediateFolder, "bin", "test.msi")
                 });
 
                 result.AssertSuccess();
 
-                Assert.True(File.Exists(Path.Combine(intermediateFolder, @"bin\test.msi")));
-                Assert.True(File.Exists(Path.Combine(intermediateFolder, @"bin\cab1.cab")));
+                Assert.True(File.Exists(Path.Combine(intermediateFolder, "bin", "test.msi")));
+                Assert.True(File.Exists(Path.Combine(intermediateFolder, "bin", "cab1.cab")));
 
-                var pdbPath = Path.Combine(intermediateFolder, @"bin\test.wixpdb");
+                var pdbPath = Path.Combine(intermediateFolder, "bin", "test.wixpdb");
                 Assert.True(File.Exists(pdbPath));
 
                 var wixOutput = WixOutput.Read(pdbPath);
@@ -258,9 +260,10 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildManualUpgrade()
         {
-            var folder = TestData.Get(@"TestData\ManualUpgrade");
+            var folder = TestData.Get("TestData", "ManualUpgrade");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -274,15 +277,15 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "Package.en-us.wxl"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(intermediateFolder, @"bin\test.msi")
+                    "-o", Path.Combine(intermediateFolder, "bin", "test.msi")
                 }, out var messages);
 
                 Assert.Equal(0, result);
 
-                var pdbPath = Path.Combine(intermediateFolder, @"bin\test.wixpdb");
-                Assert.True(File.Exists(Path.Combine(intermediateFolder, @"bin\test.msi")));
+                var pdbPath = Path.Combine(intermediateFolder, "bin", "test.wixpdb");
+                Assert.True(File.Exists(Path.Combine(intermediateFolder, "bin", "test.msi")));
                 Assert.True(File.Exists(pdbPath));
-                Assert.True(File.Exists(Path.Combine(intermediateFolder, @"bin\PFiles\MsiPackage\test.txt")));
+                Assert.True(File.Exists(Path.Combine(intermediateFolder, "bin", "PFiles", "MsiPackage", "test.txt")));
 
                 var intermediate = Intermediate.Load(pdbPath);
                 var section = intermediate.Sections.Single();
@@ -304,9 +307,10 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildWixipl()
         {
-            var folder = TestData.Get(@"TestData\SingleFile");
+            var folder = TestData.Get("TestData", "SingleFile");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -321,7 +325,7 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "Package.en-us.wxl"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(baseFolder, @"bin\test.wixipl")
+                    "-o", Path.Combine(baseFolder, "bin", "test.wixipl")
                 }, out var messages);
 
                 Assert.Equal(0, result);
@@ -335,9 +339,10 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildWixlib()
         {
-            var folder = TestData.Get(@"TestData\SingleFile");
+            var folder = TestData.Get("TestData", "SingleFile");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -352,7 +357,7 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "Package.en-us.wxl"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(baseFolder, @"bin\test.wixlib")
+                    "-o", Path.Combine(baseFolder, "bin", "test.wixlib")
                 }, out var messages);
 
                 Assert.Equal(0, result);
@@ -366,9 +371,10 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildBinaryWixlib()
         {
-            var folder = TestData.Get(@"TestData\SingleFile");
+            var folder = TestData.Get("TestData", "SingleFile");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -383,11 +389,11 @@ namespace WixToolsetTest.CoreIntegration
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
                     "-bindfiles",
-                    "-o", Path.Combine(baseFolder, @"bin\test.wixlib"));
+                    "-o", Path.Combine(baseFolder, "bin", "test.wixlib"));
 
                 result.AssertSuccess();
 
-                using (var wixout = WixOutput.Read(Path.Combine(baseFolder, @"bin\test.wixlib")))
+                using (var wixout = WixOutput.Read(Path.Combine(baseFolder, "bin", "test.wixlib")))
                 {
                     Assert.NotNull(wixout.GetDataStream("wix-ir.json"));
 
@@ -398,9 +404,10 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildBinaryWixlibWithCollidingFilenames()
         {
-            var folder = TestData.Get(@"TestData\SameFileFolders");
+            var folder = TestData.Get("TestData", "SameFileFolders");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -413,11 +420,11 @@ namespace WixToolsetTest.CoreIntegration
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
                     "-bindfiles",
-                    "-o", Path.Combine(baseFolder, @"bin\test.wixlib"));
+                    "-o", Path.Combine(baseFolder, "bin", "test.wixlib"));
 
                 result.AssertSuccess();
 
-                using (var wixout = WixOutput.Read(Path.Combine(baseFolder, @"bin\test.wixlib")))
+                using (var wixout = WixOutput.Read(Path.Combine(baseFolder, "bin", "test.wixlib")))
                 {
                     Assert.NotNull(wixout.GetDataStream("wix-ir.json"));
 
@@ -434,9 +441,10 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildWithIncludePath()
         {
-            var folder = TestData.Get(@"TestData\IncludePath");
+            var folder = TestData.Get("TestData", "IncludePath");
             var bindpath = Path.Combine(folder, "data");
 
             using (var fs = new DisposableFileSystem())
@@ -451,20 +459,20 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "Package.en-us.wxl"),
                     "-bindpath", bindpath,
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(baseFolder, @"bin\test.msi"),
+                    "-o", Path.Combine(baseFolder, "bin", "test.msi"),
                     "-i", bindpath);
 
                 result.AssertSuccess();
 
-                Assert.True(File.Exists(Path.Combine(baseFolder, @"bin\test.msi")));
-                Assert.True(File.Exists(Path.Combine(baseFolder, @"bin\test.wixpdb")));
-                Assert.True(File.Exists(Path.Combine(baseFolder, @"bin\PFiles\MsiPackage\test.txt")));
+                Assert.True(File.Exists(Path.Combine(baseFolder, "bin", "test.msi")));
+                Assert.True(File.Exists(Path.Combine(baseFolder, "bin", "test.wixpdb")));
+                Assert.True(File.Exists(Path.Combine(baseFolder, "bin", "PFiles", "MsiPackage", "test.txt")));
 
-                var intermediate = Intermediate.Load(Path.Combine(baseFolder, @"bin\test.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(baseFolder, "bin", "test.wixpdb"));
                 var section = intermediate.Sections.Single();
 
                 var fileSymbol = section.Symbols.OfType<FileSymbol>().Single();
-                WixAssert.StringEqual(Path.Combine(folder, @"data\test.txt"), fileSymbol[FileSymbolFields.Source].AsPath().Path);
+                WixAssert.StringEqual(Path.Combine(folder, "data", "test.txt"), fileSymbol[FileSymbolFields.Source].AsPath().Path);
                 WixAssert.StringEqual(@"test.txt", fileSymbol[FileSymbolFields.Source].PreviousValue.AsPath().Path);
 
                 var featureSymbol = Assert.Single(section.Symbols.OfType<FeatureSymbol>());
@@ -473,9 +481,10 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuild64bit()
         {
-            var folder = TestData.Get(@"TestData\SingleFile");
+            var folder = TestData.Get("TestData", "SingleFile");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -491,12 +500,12 @@ namespace WixToolsetTest.CoreIntegration
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
                     "-arch", "x64",
-                    "-o", Path.Combine(baseFolder, @"bin\test.msi")
+                    "-o", Path.Combine(baseFolder, "bin", "test.msi")
                 });
 
                 result.AssertSuccess();
 
-                var intermediate = Intermediate.Load(Path.Combine(baseFolder, @"bin\test.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(baseFolder, "bin", "test.wixpdb"));
                 var section = intermediate.Sections.Single();
 
                 var platformSummary = section.Symbols.OfType<SummaryInformationSymbol>().Single(s => s.PropertyId == SummaryInformationType.PlatformAndLanguage);
@@ -505,9 +514,10 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildSharedComponent()
         {
-            var folder = TestData.Get(@"TestData\SingleFile");
+            var folder = TestData.Get("TestData", "SingleFile");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -523,12 +533,12 @@ namespace WixToolsetTest.CoreIntegration
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
                     "-arch", "x64",
-                    "-o", Path.Combine(baseFolder, @"bin\test.msi")
+                    "-o", Path.Combine(baseFolder, "bin", "test.msi")
                 });
 
                 result.AssertSuccess();
 
-                var intermediate = Intermediate.Load(Path.Combine(baseFolder, @"bin\test.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(baseFolder, "bin", "test.wixpdb"));
                 var section = intermediate.Sections.Single();
 
                 // Only one component is shared.
@@ -542,6 +552,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildBadProperty()
         {
             var folder = TestData.Get(@"TestData", "Property");
@@ -569,9 +580,10 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildVersionIndependentProgId()
         {
-            var folder = TestData.Get(@"TestData\ProgId");
+            var folder = TestData.Get("TestData", "ProgId");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -586,16 +598,16 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "Package.en-us.wxl"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(baseFolder, @"bin\test.msi")
+                    "-o", Path.Combine(baseFolder, "bin", "test.msi")
                 });
 
                 result.AssertSuccess();
 
-                Assert.True(File.Exists(Path.Combine(baseFolder, @"bin\test.msi")));
-                Assert.True(File.Exists(Path.Combine(baseFolder, @"bin\test.wixpdb")));
-                Assert.True(File.Exists(Path.Combine(baseFolder, @"bin\PFiles\MsiPackage\Foo.exe")));
+                Assert.True(File.Exists(Path.Combine(baseFolder, "bin", "test.msi")));
+                Assert.True(File.Exists(Path.Combine(baseFolder, "bin", "test.wixpdb")));
+                Assert.True(File.Exists(Path.Combine(baseFolder, "bin", "PFiles", "MsiPackage", "Foo.exe")));
 
-                var intermediate = Intermediate.Load(Path.Combine(baseFolder, @"bin\test.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(baseFolder, "bin", "test.wixpdb"));
                 var section = intermediate.Sections.Single();
 
                 var progids = section.Symbols.OfType<ProgIdSymbol>().OrderBy(symbol => symbol.ProgId).ToList();
@@ -614,6 +626,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void FailsBuildAtBindTimeForMissingEnsureTable()
         {
             var folder = TestData.Get(@"TestData");
@@ -622,7 +635,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var msiPath = Path.Combine(baseFolder, @"bin\test.msi");
+                var msiPath = Path.Combine(baseFolder, "bin", "test.msi");
 
                 var result = WixRunner.Execute(new[]
                 {

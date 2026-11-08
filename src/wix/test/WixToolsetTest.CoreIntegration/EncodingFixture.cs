@@ -12,6 +12,7 @@ namespace WixToolsetTest.CoreIntegration
     public class EncodingFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesAppIdTableWhenAdvertised()
         {
             var folder = TestData.Get(@"TestData");

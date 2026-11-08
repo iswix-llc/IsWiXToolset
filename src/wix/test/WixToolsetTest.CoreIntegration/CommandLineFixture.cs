@@ -11,6 +11,7 @@ namespace WixToolsetTest.CoreIntegration
     public class CommandLineFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void SwitchIsNotConsideredAnArgument()
         {
             var result = WixRunner.Execute(new[]
@@ -28,6 +29,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildWithInvalidPlatform()
         {
             var result = WixRunner.Execute(new[]
@@ -45,6 +47,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildWithNoOutputSpecified()
         {
             var folder = TestData.Get(@"TestData", "SimplePackage");

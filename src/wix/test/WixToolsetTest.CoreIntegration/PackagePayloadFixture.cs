@@ -21,7 +21,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var bundlePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var bundlePath = Path.Combine(baseFolder, "bin", "test.exe");
                 var baFolderPath = Path.Combine(baseFolder, "ba");
                 var extractFolderPath = Path.Combine(baseFolder, "extract");
 
@@ -89,7 +89,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var bundlePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var bundlePath = Path.Combine(baseFolder, "bin", "test.exe");
                 var baFolderPath = Path.Combine(baseFolder, "ba");
                 var extractFolderPath = Path.Combine(baseFolder, "extract");
 
@@ -130,6 +130,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanSpecifyExePackagePayloadWithCertificate()
         {
             var folder = TestData.Get(@"TestData", "PackagePayload");
@@ -150,6 +151,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ErrorWhenMissingSourceFileAndHash()
         {
             var folder = TestData.Get(@"TestData", "PackagePayload");
@@ -174,6 +176,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ErrorWhenMissingSourceFileAndName()
         {
             var folder = TestData.Get(@"TestData", "PackagePayload");
@@ -198,6 +201,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ErrorWhenSpecifiedHash()
         {
             var folder = TestData.Get(@"TestData", "PackagePayload");
@@ -222,6 +226,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ErrorWhenSpecifiedHashAndMissingDownloadUrl()
         {
             var folder = TestData.Get(@"TestData", "PackagePayload");
@@ -246,6 +251,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ErrorWhenSpecifiedSourceFileAndHash()
         {
             var folder = TestData.Get(@"TestData", "PackagePayload");
@@ -270,6 +276,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ErrorWhenSpecifiedSourceFileAndCertificatePublicKey()
         {
             var folder = TestData.Get(@"TestData", "PackagePayload");
@@ -294,6 +301,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ErrorWhenSpecifiedSourceFileAndCertificateThumprint()
         {
             var folder = TestData.Get(@"TestData", "PackagePayload");
@@ -318,6 +326,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ErrorWhenSpecifiedCertificateThumbprintWithoutPublicKey()
         {
             var folder = TestData.Get(@"TestData", "PackagePayload");
@@ -343,6 +352,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ErrorWhenSpecifiedCertificatePublicKeyWithoutThumbprint()
         {
             var folder = TestData.Get(@"TestData", "PackagePayload");
@@ -367,6 +377,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ErrorWhenWrongPackagePayloadInPayloadGroup()
         {
             var folder = TestData.Get(@"TestData");
@@ -375,7 +386,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var bundlePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var bundlePath = Path.Combine(baseFolder, "bin", "test.exe");
 
                 var result = WixRunner.Execute(new[]
                 {

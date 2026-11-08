@@ -11,9 +11,10 @@ namespace WixToolsetTest.CoreIntegration
     public class WarningFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void SuppressedWarningsWithWarningAsErrorsAreNotErrors()
         {
-            var folder = TestData.Get(@"TestData\Payload");
+            var folder = TestData.Get("TestData", "Payload");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -35,9 +36,10 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void WarningsAsErrorsTreatsWarningsAsErrors()
         {
-            var folder = TestData.Get(@"TestData\Payload");
+            var folder = TestData.Get("TestData", "Payload");
 
             using (var fs = new DisposableFileSystem())
             {

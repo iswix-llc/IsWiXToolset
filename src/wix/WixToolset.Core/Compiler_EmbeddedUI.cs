@@ -243,7 +243,7 @@ namespace WixToolset.Core
                         }
                         break;
                     case "SourceFile":
-                        sourceFile = this.Core.GetAttributeValue(sourceLineNumbers, attrib);
+                        sourceFile = Common.NormalizeSourcePath(this.Core.GetAttributeValue(sourceLineNumbers, attrib));
                         break;
                     case "SupportBasicUI":
                         supportsBasicUI = YesNoType.Yes == this.Core.GetAttributeYesNoValue(sourceLineNumbers, attrib);
@@ -355,7 +355,7 @@ namespace WixToolset.Core
                         name = this.Core.GetAttributeLongFilename(sourceLineNumbers, attrib, false);
                         break;
                     case "SourceFile":
-                        sourceFile = this.Core.GetAttributeValue(sourceLineNumbers, attrib);
+                        sourceFile = Common.NormalizeSourcePath(this.Core.GetAttributeValue(sourceLineNumbers, attrib));
                         break;
                     default:
                         this.Core.UnexpectedAttribute(node, attrib);

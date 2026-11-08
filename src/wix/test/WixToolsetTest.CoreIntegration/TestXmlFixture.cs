@@ -10,6 +10,7 @@ namespace WixToolsetTest.CoreIntegration
     public class TestXmlFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ChangesIgnoredAttributesToStarToHelpMakeTestsLessFragile()
         {
             var original = @"<Top One='f'>
@@ -24,6 +25,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void OutputsSingleQuotesSinceDoubleQuotesInCsharpLiteralStringsArePainful()
         {
             var original = "<Test Simple=\"\" EscapedDoubleQuote=\"&quot;\" SingleQuoteValue=\"'test'\" Alternating='\"' AlternatingEscaped='&quot;' />";
@@ -32,6 +34,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void RemovesAllNamespacesToReduceTyping()
         {
             var original = "<Test xmlns='a'><Child xmlns:b='b'><Grandchild xmlns:c='c' /><Grandchild /></Child></Test>";
@@ -40,6 +43,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void RemovesUnnecessaryWhitespaceToAvoidLineEndingIssues()
         {
             var original = @"<Test>
@@ -53,6 +57,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void RemovesXmlDeclarationToReduceTyping()
         {
             var original = "<?xml version='1.0'?><Test />";

@@ -18,6 +18,7 @@ namespace WixToolsetTest.CoreIntegration
     public class LinkerFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void MustCompileBeforeLinking()
         {
             var intermediate1 = new Intermediate("TestIntermediate1", new[] { new IntermediateSection("test1", SectionType.Package) }, null);
@@ -47,9 +48,10 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildWithOverridableActions()
         {
-            var folder = TestData.Get(@"TestData\OverridableActions");
+            var folder = TestData.Get("TestData", "OverridableActions");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -65,26 +67,27 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "Package.en-us.wxl"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(baseFolder, @"bin\test.msi")
+                    "-o", Path.Combine(baseFolder, "bin", "test.msi")
                 });
 
                 result.AssertSuccess();
 
-                Assert.True(File.Exists(Path.Combine(baseFolder, @"bin\test.msi")));
-                Assert.True(File.Exists(Path.Combine(baseFolder, @"bin\test.wixpdb")));
-                Assert.True(File.Exists(Path.Combine(baseFolder, @"bin\PFiles\MsiPackage\test.txt")));
+                Assert.True(File.Exists(Path.Combine(baseFolder, "bin", "test.msi")));
+                Assert.True(File.Exists(Path.Combine(baseFolder, "bin", "test.wixpdb")));
+                Assert.True(File.Exists(Path.Combine(baseFolder, "bin", "PFiles", "MsiPackage", "test.txt")));
 
-                var intermediate = Intermediate.Load(Path.Combine(baseFolder, @"bin\test.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(baseFolder, "bin", "test.wixpdb"));
                 var section = intermediate.Sections.Single();
 
                 var actions = section.Symbols.OfType<WixActionSymbol>().Where(wat => wat.Action.StartsWith("Set")).ToList();
                 Assert.Equal(2, actions.Count);
-                //Assert.Equal(Path.Combine(folder, @"data\test.txt"), wixFile[WixFileSymbolFields.Source].AsPath().Path);
+                //Assert.Equal(Path.Combine(folder, "data", "test.txt"), wixFile[WixFileSymbolFields.Source].AsPath().Path);
                 //Assert.Equal(@"test.txt", wixFile[WixFileSymbolFields.Source].PreviousValue.AsPath().Path);
             }
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void MissingEntrySectionDetectedPackage()
         {
             var folder = TestData.Get("TestData", "OverridableActions");
@@ -115,9 +118,10 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void MissingEntrySectionDetectedWixipl()
         {
-            var folder = TestData.Get(@"TestData\OverridableActions");
+            var folder = TestData.Get("TestData", "OverridableActions");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -131,7 +135,7 @@ namespace WixToolsetTest.CoreIntegration
                         "build",
                         Path.Combine(folder, "PackageComponents.wxs"),
                         "-intermediateFolder", intermediateFolder,
-                        "-o", Path.Combine(baseFolder, @"bin\test.wixipl")
+                        "-o", Path.Combine(baseFolder, "bin", "test.wixipl")
                     });
                 }
                 catch (WixException we)
@@ -145,9 +149,10 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void MissingEntrySectionDetectedUnknown()
         {
-            var folder = TestData.Get(@"TestData\OverridableActions");
+            var folder = TestData.Get("TestData", "OverridableActions");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -161,7 +166,7 @@ namespace WixToolsetTest.CoreIntegration
                         "build",
                         Path.Combine(folder, "PackageComponents.wxs"),
                         "-intermediateFolder", intermediateFolder,
-                        "-o", Path.Combine(baseFolder, @"bin\test.bob")
+                        "-o", Path.Combine(baseFolder, "bin", "test.bob")
                     });
                 }
                 catch (WixException we)

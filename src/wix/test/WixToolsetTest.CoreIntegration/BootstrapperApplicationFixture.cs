@@ -17,7 +17,7 @@ namespace WixToolsetTest.CoreIntegration
         [Fact]
         public void CanSetBootstrapperApplicationDllDpiAwareness()
         {
-            var folder = TestData.Get(@"TestData\BootstrapperApplication");
+            var folder = TestData.Get("TestData", "BootstrapperApplication");
 
             using (var fs = new DisposableFileSystem())
             {

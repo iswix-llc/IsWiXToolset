@@ -12,6 +12,7 @@ namespace WixToolsetTest.CoreIntegration
     public class TransformFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildTransformFromEnuToJpn()
         {
             var folder = TestData.Get(@"TestData", "Language");
@@ -19,9 +20,9 @@ namespace WixToolsetTest.CoreIntegration
             using (var fs = new DisposableFileSystem())
             {
                 var baseFolder = fs.GetFolder();
-                var enuMsiPath = Path.Combine(baseFolder, @"bin\enu.msi");
-                var jpnMsiPath = Path.Combine(baseFolder, @"bin\jpn.msi");
-                var mstPath = Path.Combine(baseFolder, @"bin\test.mst");
+                var enuMsiPath = Path.Combine(baseFolder, "bin", "enu.msi");
+                var jpnMsiPath = Path.Combine(baseFolder, "bin", "jpn.msi");
+                var mstPath = Path.Combine(baseFolder, "bin", "test.mst");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -62,6 +63,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildWixoutTransform()
         {
             var folder = TestData.Get(@"TestData", "Language");
@@ -69,10 +71,10 @@ namespace WixToolsetTest.CoreIntegration
             using (var fs = new DisposableFileSystem())
             {
                 var baseFolder = fs.GetFolder();
-                var enuMsiPath = Path.Combine(baseFolder, @"bin\enu.msi");
-                var jpnMsiPath = Path.Combine(baseFolder, @"bin\jpn.msi");
-                var wixmstPath = Path.Combine(baseFolder, @"bin\test.wixmst");
-                var mstPath = Path.Combine(baseFolder, @"bin\test.mst");
+                var enuMsiPath = Path.Combine(baseFolder, "bin", "enu.msi");
+                var jpnMsiPath = Path.Combine(baseFolder, "bin", "jpn.msi");
+                var wixmstPath = Path.Combine(baseFolder, "bin", "test.wixmst");
+                var mstPath = Path.Combine(baseFolder, "bin", "test.mst");
 
                 var result = WixRunner.Execute(new[]
                 {

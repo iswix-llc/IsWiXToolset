@@ -153,15 +153,26 @@ namespace WixToolset.Core.ExtensibilityServices
 
         public string GetCanonicalRelativePath(SourceLineNumber sourceLineNumbers, string elementName, string attributeName, string relativePath)
         {
-            // A drive-letter root only makes sense on Windows; elsewhere GetFullPath would resolve it against the working directory.
-            var root = Path.DirectorySeparatorChar == '\\' ? @"C:\" : "/";
-            if (!Path.IsPathRooted(relativePath))
+            // Authored payload names use Windows separators and Windows rooting rules (drive letters, UNC, leading separator)
+            // regardless of the platform doing the build, so evaluate them that way and return the Windows form.
+            var windows = Path.DirectorySeparatorChar == '\\';
+            var root = windows ? @"C:\" : "/";
+            var candidate = windows ? relativePath : relativePath.Replace('\\', '/');
+
+            var rooted = Path.IsPathRooted(relativePath) || (!windows && (candidate.StartsWith("/") || (candidate.Length > 1 && candidate[1] == ':' && Char.IsLetter(candidate[0]))));
+
+            if (!rooted)
             {
-                var normalizedPath = Path.GetFullPath(root + relativePath);
+                var normalizedPath = Path.GetFullPath(root + candidate);
                 if (normalizedPath.StartsWith(root))
                 {
                     var canonicalizedPath = normalizedPath.Substring(root.Length);
-                    if (canonicalizedPath != relativePath)
+                    if (!windows)
+                    {
+                        canonicalizedPath = canonicalizedPath.Replace('/', '\\');
+                    }
+
+                    if (canonicalizedPath != (windows ? relativePath : relativePath.Replace('/', '\\')))
                     {
                         this.Messaging.Write(CompilerWarnings.PathCanonicalized(sourceLineNumbers, elementName, attributeName, relativePath, canonicalizedPath));
                     }

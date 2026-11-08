@@ -14,6 +14,7 @@ namespace WixToolsetTest.CoreIntegration
     public class LanguageFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildWithDefaultProductLanguage()
         {
             var folder = TestData.Get(@"TestData", "Language");
@@ -29,12 +30,12 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "Package.wxl"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", Path.Combine(baseFolder, "obj"),
-                    "-o", Path.Combine(baseFolder, @"bin\test.msi")
+                    "-o", Path.Combine(baseFolder, "bin", "test.msi")
                 });
 
                 result.AssertSuccess();
 
-                var intermediate = Intermediate.Load(Path.Combine(baseFolder, @"bin\test.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(baseFolder, "bin", "test.wixpdb"));
                 var section = intermediate.Sections.Single();
 
                 var directorySymbols = section.Symbols.OfType<DirectorySymbol>();
@@ -54,7 +55,7 @@ namespace WixToolsetTest.CoreIntegration
                 var summaryCodepage = section.Symbols.OfType<SummaryInformationSymbol>().Single(s => s.PropertyId == SummaryInformationType.Codepage);
                 Assert.Equal("1252", summaryCodepage.Value);
 
-                var data = WindowsInstallerData.Load(Path.Combine(baseFolder, @"bin\test.wixpdb"));
+                var data = WindowsInstallerData.Load(Path.Combine(baseFolder, "bin", "test.wixpdb"));
                 var directoryRows = data.Tables["Directory"].Rows;
                 WixAssert.CompareLineByLine(
                 [
@@ -67,6 +68,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildEnuWxl()
         {
             var folder = TestData.Get(@"TestData", "Language");
@@ -82,12 +84,12 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "Package.en-us.wxl"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", Path.Combine(baseFolder, "obj"),
-                    "-o", Path.Combine(baseFolder, @"bin\test.msi")
+                    "-o", Path.Combine(baseFolder, "bin", "test.msi")
                 });
 
                 result.AssertSuccess();
 
-                var intermediate = Intermediate.Load(Path.Combine(baseFolder, @"bin\test.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(baseFolder, "bin", "test.wixpdb"));
                 var section = intermediate.Sections.Single();
 
                 var propertySymbol = section.Symbols.OfType<PropertySymbol>().Single(p => p.Id.Id == "ProductLanguage");
@@ -102,6 +104,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildJpnWxl()
         {
             var folder = TestData.Get(@"TestData", "Language");
@@ -117,12 +120,12 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "Package.ja-jp.wxl"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", Path.Combine(baseFolder, "obj"),
-                    "-o", Path.Combine(baseFolder, @"bin\test.msi")
+                    "-o", Path.Combine(baseFolder, "bin", "test.msi")
                 });
 
                 result.AssertSuccess();
 
-                var intermediate = Intermediate.Load(Path.Combine(baseFolder, @"bin\test.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(baseFolder, "bin", "test.wixpdb"));
                 var section = intermediate.Sections.Single();
 
                 var propertySymbol = section.Symbols.OfType<PropertySymbol>().Single(p => p.Id.Id == "ProductLanguage");
@@ -137,6 +140,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildJpnWxlWithEnuSummaryInfo()
         {
             var folder = TestData.Get(@"TestData", "Language");
@@ -152,12 +156,12 @@ namespace WixToolsetTest.CoreIntegration
                     "-loc", Path.Combine(folder, "PackageWithEnSummaryInfo.ja-jp.wxl"),
                     "-bindpath", Path.Combine(folder, "data"),
                     "-intermediateFolder", Path.Combine(baseFolder, "obj"),
-                    "-o", Path.Combine(baseFolder, @"bin\test.msi")
+                    "-o", Path.Combine(baseFolder, "bin", "test.msi")
                 });
 
                 result.AssertSuccess();
 
-                var intermediate = Intermediate.Load(Path.Combine(baseFolder, @"bin\test.wixpdb"));
+                var intermediate = Intermediate.Load(Path.Combine(baseFolder, "bin", "test.wixpdb"));
                 var section = intermediate.Sections.Single();
 
                 var propertySymbol = section.Symbols.OfType<PropertySymbol>().Single(p => p.Id.Id == "ProductLanguage");

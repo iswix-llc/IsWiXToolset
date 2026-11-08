@@ -5,6 +5,7 @@ namespace WixToolset.Core
     using System;
     using System.Diagnostics;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
     using System.Security.Cryptography;
     using System.Text;
@@ -135,6 +136,22 @@ namespace WixToolset.Core
         public static bool IsValidMsiProductVersion(string version)
         {
             return WixVersion.TryParse(version, out var wixVersion) && wixVersion.HasMajor && wixVersion.Major < 256 && wixVersion.Minor < 256 && wixVersion.Patch < 65536 && wixVersion.Labels == null && String.IsNullOrEmpty(wixVersion.Metadata);
+        }
+
+        /// <summary>
+        /// Converts the Windows directory separator in an authored source path to the current platform's separator.
+        /// Source paths are commonly written with backslashes (for example ..\Deploy\App\app.exe); on Linux and macOS a
+        /// backslash is an ordinary file name character, so such a path would otherwise be taken as one long file name.
+        /// Nothing changes on Windows.
+        /// </summary>
+        public static string NormalizeSourcePath(string path)
+        {
+            if (String.IsNullOrEmpty(path) || Path.DirectorySeparatorChar == '\\')
+            {
+                return path;
+            }
+
+            return path.Replace('\\', Path.DirectorySeparatorChar);
         }
 
         public static bool IsValidLongFilename(string filename, bool allowWildcards, bool allowRelative)

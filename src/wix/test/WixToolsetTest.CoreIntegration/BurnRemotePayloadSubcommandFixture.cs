@@ -21,7 +21,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var outputFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(outputFolder, "obj");
-                var exePath = Path.Combine(outputFolder, @"bin\test.exe");
+                var exePath = Path.Combine(outputFolder, "bin", "test.exe");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -293,6 +293,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanGetRemoteMsuPayload()
         {
             var folder = TestData.Get(@"TestData");

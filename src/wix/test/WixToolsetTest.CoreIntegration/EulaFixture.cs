@@ -15,6 +15,7 @@ namespace WixToolsetTest.CoreIntegration
         private static readonly string EulaFilePath = Path.Combine(EulaFileFolder, "wix" + SomeVerInfo.Major + "-osmf-eula.txt");
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void BuildsWithoutEulaAcceptance()
         {
             CleanEulaFile();
@@ -42,6 +43,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanAcceptEula()
         {
             CleanEulaFile();

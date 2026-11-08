@@ -152,7 +152,7 @@ namespace WixToolsetTest.CoreIntegration
         [Fact]
         public void CanBuildPackageUsingProvides()
         {
-            var folder = TestData.Get(@"TestData\UsingProvides");
+            var folder = TestData.Get("TestData", "UsingProvides");
             var build = new Builder(folder, new Type[] { }, new[] { folder });
 
             var results = build.BuildAndQuery(Build, "Wix4DependencyProvider");

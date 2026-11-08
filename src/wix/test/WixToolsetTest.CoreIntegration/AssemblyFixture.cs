@@ -108,6 +108,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildWithNet1xAssembly()
         {
             var folder = TestData.Get("TestData", "Assembly1x");

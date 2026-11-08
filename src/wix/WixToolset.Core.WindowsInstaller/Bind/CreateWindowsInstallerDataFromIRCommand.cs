@@ -18,7 +18,7 @@ namespace WixToolset.Core.WindowsInstaller.Bind
 
     internal class CreateWindowsInstallerDataFromIRCommand
     {
-        private static readonly char[] PathSeparatorChars = new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar };
+        private static readonly char[] PathSeparatorChars = new[] { '\\', '/' }; // Authored directory names use Windows separators on every platform.
 
         public CreateWindowsInstallerDataFromIRCommand(IMessaging messaging, IntermediateSection section, TableDefinitionCollection tableDefinitions, int codepage, IEnumerable<IWindowsInstallerBackendBinderExtension> backendExtensions, IWindowsInstallerBackendHelper backendHelper)
         {
@@ -1332,7 +1332,7 @@ namespace WixToolset.Core.WindowsInstaller.Bind
 
                 if (!String.IsNullOrEmpty(subdirectoryName))
                 {
-                    path = Path.Combine(path, subdirectoryName);
+                    path = path.Length == 0 ? subdirectoryName : String.Concat(path, "\\", subdirectoryName); // hashed into the id, so use Windows separators on every platform
 
                     var id = this.BackendHelper.GenerateIdentifier("d", symbol.ParentDirectoryRef, path, /*shortName:*/ null, /*sourceName:*/ null, /*shortSourceName:*/ null);
                     var shortnameSubdirectory = this.BackendHelper.IsValidShortFilename(subdirectoryName, false) ? null : this.CreateShortName(subdirectoryName, false, "Directory", symbol.ParentDirectoryRef);

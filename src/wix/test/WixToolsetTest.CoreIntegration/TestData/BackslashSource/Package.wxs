@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+    <!-- Source paths authored with Windows separators must build on every platform. -->
+    <Package Name="MsiPackage" Version="1.0.0.0" Manufacturer="Example Corporation" UpgradeCode="047730a5-30fe-4a62-a520-da9381b8226a">
+        <File Id="Nested" Directory="INSTALLFOLDER" Source="sub\folder\test.txt" />
+        <File Id="Parent" Directory="INSTALLFOLDER" Source="sub\..\sub\folder\test.txt" Name="parent.txt" />
+        <File Id="BindPath" Directory="INSTALLFOLDER" Source="!(bindpath.src)\sub\folder\test.txt" Name="bindpath.txt" />
+
+        <StandardDirectory Id="ProgramFiles6432Folder">
+            <Directory Id="BackslashDir" Name="BackslashDir" FileSource="sub\folder\">
+                <Component Id="InDir" Guid="*">
+                    <File Id="InDirFile" Name="test.txt" />
+                </Component>
+            </Directory>
+        </StandardDirectory>
+    </Package>
+</Wix>

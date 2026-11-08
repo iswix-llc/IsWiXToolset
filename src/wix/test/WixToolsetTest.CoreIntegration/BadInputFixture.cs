@@ -13,9 +13,10 @@ namespace WixToolsetTest.CoreIntegration
     public class BadInputFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void HandleInvalidIds()
         {
-            var folder = TestData.Get(@"TestData\BadInput");
+            var folder = TestData.Get("TestData", "BadInput");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -36,6 +37,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CantBuildSingleExeBundleWithInvalidArgument()
         {
             var folder = TestData.Get(@"TestData");
@@ -44,7 +46,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var exePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var exePath = Path.Combine(baseFolder, "bin", "test.exe");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -64,9 +66,10 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void RegistryKeyWithoutAttributesDoesntCrash()
         {
-            var folder = TestData.Get(@"TestData\BadInput");
+            var folder = TestData.Get("TestData", "BadInput");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -87,9 +90,10 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void BundleExePackageWithNetfxProtocolIsRejected()
         {
-            var folder = TestData.Get(@"TestData\BadInput");
+            var folder = TestData.Get("TestData", "BadInput");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -110,9 +114,10 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void BundleVariableWithBadTypeIsRejected()
         {
-            var folder = TestData.Get(@"TestData\BadInput");
+            var folder = TestData.Get("TestData", "BadInput");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -133,9 +138,10 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void BundleVariableWithHiddenPersistedIsRejected()
         {
-            var folder = TestData.Get(@"TestData\BadInput");
+            var folder = TestData.Get("TestData", "BadInput");
 
             using (var fs = new DisposableFileSystem())
             {
@@ -156,6 +162,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildBundleWithLocVariableNames()
         {
             var folder = TestData.Get(@"TestData");
@@ -189,6 +196,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildBundleWithReservedVariableNames()
         {
             var folder = TestData.Get(@"TestData");
@@ -254,6 +262,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void GuardsAgainstVariousBundleValuesFromLoc()
         {
             var folder = TestData.Get(@"TestData");
@@ -272,7 +281,7 @@ namespace WixToolsetTest.CoreIntegration
                     "-bindpath", Path.Combine(folder, "DecompileSingleFileCompressed"),
                     "-bindpath", Path.Combine(folder, "SimpleBundle", "data"),
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(baseFolder, @"bin\test.exe")
+                    "-o", Path.Combine(baseFolder, "bin", "test.exe")
                 });
 
                 var warningMessages = result.Messages.Where(m => m.Level == MessageLevel.Warning).Select(m => m.ToString()).OrderBy(s => s, StringComparer.Ordinal).ToArray();

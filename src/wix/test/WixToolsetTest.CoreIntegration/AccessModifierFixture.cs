@@ -14,6 +14,7 @@ namespace WixToolsetTest.CoreIntegration
     public class AccessModifierFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanCompileVirtualSymbol()
         {
             var dirSymbols = BuildToGetDirectorySymbols("TestData", "AccessModifier", "HasVirtualSymbol.wxs");
@@ -26,6 +27,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanCompileOverrideVirtualSymbol()
         {
             var dirSymbols = BuildToGetDirectorySymbols("TestData", "AccessModifier", "OverrideVirtualSymbol.wxs");
@@ -38,6 +40,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanCompileVirtualSymbolOverridden()
         {
             var dirSymbols = BuildToGetDirectorySymbols("TestData", "AccessModifier", "VirtualSymbolOverridden.wxs");
@@ -50,6 +53,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanCompileVirtualSymbolWithFragments()
         {
             var dirSymbols = BuildToGetDirectorySymbols("TestData", "AccessModifier", "OverrideVirtualSymbolWithFragments.wxs");
@@ -63,6 +67,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanCompileVirtualSymbolThatDoesNotGetOverridden()
         {
             var dirSymbols = BuildToGetDirectorySymbols("TestData", "AccessModifier", "VirtualSymbolThatDoesNotGetOverridden.wxs");
@@ -75,6 +80,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotCompileInvalidCrossFragmentReference()
         {
             var errors = BuildForFailure("TestData", "AccessModifier", "InvalidCrossFragmentReference.wxs");
@@ -97,6 +103,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotCompileOverrideWithoutVirtualSymbol()
         {
             var errors = BuildForFailure("TestData", "AccessModifier", "OverrideWithoutVirtualSymbol.wxs");
@@ -107,6 +114,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotCompileDuplicatedOverride()
         {
             var errors = BuildForFailure("TestData", "AccessModifier", "DuplicatedOverrideVirtualSymbol.wxs");
@@ -118,6 +126,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotCompileDuplicatedVirtual()
         {
             var errors = BuildForFailure("TestData", "AccessModifier", "DuplicatedVirtualSymbol.wxs");
@@ -129,6 +138,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotCompilePublicWithVirtualSymbol()
         {
             var errors = BuildForFailure("TestData", "AccessModifier", "VirtualSymbolWithoutOverride.wxs");
@@ -140,6 +150,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotCompilePublicAndOverrideWithVirtualSymbol()
         {
             var errors = BuildForFailure("TestData", "AccessModifier", "DuplicatePublicOverrideVirtualSymbol.wxs");

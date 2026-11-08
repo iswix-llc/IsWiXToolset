@@ -6,6 +6,7 @@ namespace WixToolset.Core
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using WixToolset.Data;
     using WixToolset.Data.Symbols;
     using WixToolset.Extensibility.Data;
@@ -179,7 +180,7 @@ namespace WixToolset.Core
 
                         section.AddSymbol(new WixBundlePayloadSymbol(sourceLineNumbers, id)
                         {
-                            Name = Path.Combine(recursiveDir, name),
+                            Name = Path.Combine(Common.NormalizeSourcePath(recursiveDir), name),
                             SourceFile = new IntermediateFieldPathValue { Path = file },
                             Compressed = null,
                             UnresolvedSourceFile = file, // duplicate of sourceFile but in a string column so it won't get resolved to a full path during binding.
@@ -215,7 +216,7 @@ namespace WixToolset.Core
                     var filePortion = Path.GetFileName(path);
                     var directoryPortion = Path.GetDirectoryName(path).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 
-                    if (directoryPortion?.EndsWith(@"\**") == true)
+                    if (directoryPortion?.EndsWith(@"\**") == true || directoryPortion?.EndsWith("/**") == true)
                     {
                         directoryPortion = directoryPortion.Substring(0, directoryPortion.Length - 3);
                     }
@@ -231,13 +232,29 @@ namespace WixToolset.Core
 
                     try
                     {
-                        var recursiveDirOffset = directoryPortion.Length + 1;
+                        var searchOption = recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+                        IEnumerable<string> foundFiles;
 
-                        var foundFiles = Directory.EnumerateFiles(directoryPortion, filePortion, recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+                        if (Path.DirectorySeparatorChar == '\\')
+                        {
+                            foundFiles = Directory.EnumerateFiles(directoryPortion, filePortion, searchOption);
+                        }
+                        else
+                        {
+                            // Windows matches paths without regard to case; do the same on case-sensitive file systems
+                            // so authoring done on Windows still harvests the same files.
+                            directoryPortion = ResolveDirectoryIgnoringCase(directoryPortion);
+
+                            var matcher = new Regex("^" + Regex.Escape(filePortion).Replace(@"\*", ".*").Replace(@"\?", ".") + "$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+                            foundFiles = Directory.EnumerateFiles(directoryPortion, "*", searchOption).Where(f => matcher.IsMatch(Path.GetFileName(f)));
+                        }
+
+                        var recursiveDirOffset = directoryPortion.Length + 1;
 
                         foreach (var foundFile in foundFiles)
                         {
-                            var recursiveDir = Path.GetDirectoryName(foundFile.Substring(recursiveDirOffset));
+                            // Always use Windows separators so generated identifiers hash the same on every platform.
+                            var recursiveDir = Path.GetDirectoryName(foundFile.Substring(recursiveDirOffset)).Replace('/', '\\');
                             files.Add(new WildcardFile()
                             {
                                 RecursiveDir = recursiveDir,
@@ -255,6 +272,38 @@ namespace WixToolset.Core
             return files;
         }
 
+        private static string ResolveDirectoryIgnoringCase(string directory)
+        {
+            if (Directory.Exists(directory))
+            {
+                return directory;
+            }
+
+            var current = Path.IsPathRooted(directory) ? Path.GetPathRoot(directory) : ".";
+            var segments = directory.Substring(Path.IsPathRooted(directory) ? current.Length : 0)
+                .Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (var segment in segments)
+            {
+                var next = Path.Combine(current, segment);
+
+                if (!Directory.Exists(next) && Directory.Exists(current))
+                {
+                    var match = Directory.EnumerateDirectories(current)
+                        .FirstOrDefault(d => String.Equals(Path.GetFileName(d), segment, StringComparison.OrdinalIgnoreCase));
+
+                    if (match != null)
+                    {
+                        next = match;
+                    }
+                }
+
+                current = next;
+            }
+
+            return current == "." ? directory : current;
+        }
+
         private IEnumerable<string> ResolveBindPaths(SourceLineNumber sourceLineNumbers, string source)
         {
             var resultingDirectories = new List<string>();
@@ -270,7 +319,7 @@ namespace WixToolset.Core
                 {
                     bindName = source.Substring(BindPathOpenString.Length, closeParen - BindPathOpenString.Length);
                     path = source.Substring(BindPathOpenString.Length + bindName.Length + 1); // +1 for the closing paren.
-                    path = path.TrimStart('\\'); // remove starting '\\' char so the path doesn't look rooted.
+                    path = path.TrimStart('\\', '/'); // remove starting '\\' char so the path doesn't look rooted.
                 }
             }
 

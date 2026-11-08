@@ -11,6 +11,7 @@ namespace WixToolsetTest.CoreIntegration
     public class MsiTransactionFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildExePackageInMsiTransaction()
         {
             var folder = TestData.Get(@"TestData");
@@ -19,7 +20,7 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var exePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var exePath = Path.Combine(baseFolder, "bin", "test.exe");
 
                 var result = WixRunner.Execute(new[]
                 {

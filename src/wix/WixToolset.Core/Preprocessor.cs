@@ -1424,6 +1424,9 @@ namespace WixToolset.Core
                 includePath = includePath.Substring(1, includePath.Length - 2);
             }
 
+            // Windows separators in authored paths must work on every platform.
+            includePath = Common.NormalizeSourcePath(includePath);
+
             // check if the include file is a full path
             if (Path.IsPathRooted(includePath))
             {

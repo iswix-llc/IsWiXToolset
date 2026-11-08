@@ -343,7 +343,7 @@ namespace WixToolset.Core
 
         public void ParseSourceFile(XAttribute attrib)
         {
-            this.SourceFile = this.Core.GetAttributeValue(this.SourceLineNumbers, attrib);
+            this.SourceFile = Common.NormalizeSourcePath(this.Core.GetAttributeValue(this.SourceLineNumbers, attrib));
         }
 
         public void ParseVersion(XAttribute attrib)

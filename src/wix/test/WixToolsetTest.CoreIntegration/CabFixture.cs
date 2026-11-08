@@ -14,14 +14,14 @@ namespace WixToolsetTest.CoreIntegration
         [Fact]
         public void CabinetFilesSequencedCorrectly()
         {
-            var folder = TestData.Get(@"TestData\MultiFileCompressed");
+            var folder = TestData.Get("TestData", "MultiFileCompressed");
 
             using (var fs = new DisposableFileSystem())
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var msiPath = Path.Combine(baseFolder, @"bin\test.msi");
-                var cabPath = Path.Combine(baseFolder, @"bin\cab1.cab");
+                var msiPath = Path.Combine(baseFolder, "bin", "test.msi");
+                var cabPath = Path.Combine(baseFolder, "bin", "cab1.cab");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -59,8 +59,8 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder(create: true);
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var msiPath = Path.Combine(baseFolder, @"bin\test.msi");
-                var cabPath = Path.Combine(baseFolder, @"bin\cab1.cab");
+                var msiPath = Path.Combine(baseFolder, "bin", "test.msi");
+                var cabPath = Path.Combine(baseFolder, "bin", "cab1.cab");
 
                 var old = new DateTime(1980, 1, 1, 0, 0, 0, DateTimeKind.Utc);
                 var oldTxt = Path.Combine(baseFolder, "test.txt");

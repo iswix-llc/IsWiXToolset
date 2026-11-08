@@ -12,14 +12,14 @@ namespace WixToolsetTest.CoreIntegration
         [Fact]
         public void CanInscribeMsiWithSignedCabinet()
         {
-            var folder = TestData.Get(@"TestData\SingleFileCompressed");
-            var signedFolder = TestData.Get(@"TestData\.Data");
+            var folder = TestData.Get("TestData", "SingleFileCompressed");
+            var signedFolder = TestData.Get("TestData", ".Data");
 
             using (var fs = new DisposableFileSystem())
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var outputMsi = Path.Combine(intermediateFolder, @"bin\test.msi");
+                var outputMsi = Path.Combine(intermediateFolder, "bin", "test.msi");
                 var signedMsi = Path.Combine(baseFolder, @"signed.msi");
 
                 var result = WixRunner.Execute(new[]
@@ -73,9 +73,9 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var exePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var exePath = Path.Combine(baseFolder, "bin", "test.exe");
                 var signedExe = Path.Combine(intermediateFolder, @"signed.exe");
-                var reattachedExe = Path.Combine(baseFolder, @"bin\final.exe");
+                var reattachedExe = Path.Combine(baseFolder, "bin", "final.exe");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -129,9 +129,9 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var exePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var exePath = Path.Combine(baseFolder, "bin", "test.exe");
                 var signedExe = Path.Combine(intermediateFolder, @"signed.exe");
-                var reattachedExe = Path.Combine(baseFolder, @"bin\final.exe");
+                var reattachedExe = Path.Combine(baseFolder, "bin", "final.exe");
 
                 var result = WixRunner.Execute(new[]
                 {
@@ -171,9 +171,9 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var exePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var exePath = Path.Combine(baseFolder, "bin", "test.exe");
                 var signedExe = Path.Combine(intermediateFolder, @"signed.exe");
-                var reattachedExe = Path.Combine(baseFolder, @"bin\final.exe");
+                var reattachedExe = Path.Combine(baseFolder, "bin", "final.exe");
 
                 var result = WixRunner.Execute(new[]
                 {
