@@ -65,6 +65,7 @@ jobs:
         with:
           name: linux-test-inputs
           path: build/wix/Release/test/WixToolsetTest.CoreIntegration/net8.0/
+          include-hidden-files: true
           retention-days: 1
           if-no-files-found: error
 
@@ -83,6 +84,16 @@ jobs:
           --results-directory build\logs\managed-results
           --logger "trx;LogFileName=windows-managed-crossplatform.trx"
           --logger "console;verbosity=normal"
+
+      - name: Save Core.Native test binaries for the Linux job
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-test-inputs-native
+          path: build/wix/Release/test/WixToolsetTest.Core.Native/net8.0/win-x64/
+          include-hidden-files: true
+          retention-days: 1
+          if-no-files-found: error
 
       - name: Validate test results
         shell: cmd
@@ -138,12 +149,26 @@ jobs:
           name: linux-test-inputs
           path: linux-tests
 
+      - name: Download Core.Native test binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-test-inputs-native
+          path: linux-tests-native
+
       - name: Run cross-platform tests
         run: >
           dotnet test linux-tests/WixToolsetTest.CoreIntegration.dll
           --filter "Platform=CrossPlatform"
           --results-directory linux-results
           --logger "trx;LogFileName=linux-crossplatform.trx"
+          --logger "console;verbosity=normal"
+
+      - name: Run cross-platform Core.Native tests (cabinets, LZX)
+        run: >
+          dotnet test linux-tests-native/WixToolsetTest.Core.Native.dll
+          --filter "Platform=CrossPlatform"
+          --results-directory linux-results
+          --logger "trx;LogFileName=linux-crossplatform-native.trx"
           --logger "console;verbosity=normal"
 
       - name: Save Linux test results
