@@ -381,5 +381,51 @@ namespace WixToolsetTest.CoreIntegration
             var result = WixRunner.Execute(args);
             result.AssertSuccess();
         }
+
+        [Fact]
+        public void ReportsErrorWhenExtensionSwitchHasNoValue()
+        {
+            var result = WixRunner.Execute(new[]
+            {
+                "build",
+                "-ext",
+                "-nologo",
+            });
+
+            // Used to fail with no message at all.
+            Assert.NotEqual(0, result.ExitCode);
+            Assert.Contains(result.Messages, m => m.Id == 251 && m.ToString().Contains("-ext"));
+        }
+
+        [Fact]
+        public void CanLoadExtensionWithAbsolutePathStartingWithSlash()
+        {
+            // On Linux and macOS an absolute path starts with '/', which must not be mistaken for a switch.
+            if (System.IO.Path.DirectorySeparatorChar != '/')
+            {
+                return;
+            }
+
+            var folder = TestData.Get("TestData", "ExampleExtensionUsingPossibleKeyPath");
+
+            using (var fs = new DisposableFileSystem())
+            {
+                var intermediateFolder = fs.GetFolder();
+
+                Assert.StartsWith("/", ExtensionPaths.ExampleExtensionPath);
+
+                var result = WixRunner.Execute(new[]
+                {
+                    "build",
+                    Path.Combine(folder, "PackageWithFile.wxs"),
+                    "-ext", ExtensionPaths.ExampleExtensionPath,
+                    "-bindpath", Path.Combine(folder, "data"),
+                    "-intermediateFolder", intermediateFolder,
+                    "-o", Path.Combine(intermediateFolder, "bin", "extest.msi")
+                });
+
+                result.AssertSuccess();
+            }
+        }
     }
 }
