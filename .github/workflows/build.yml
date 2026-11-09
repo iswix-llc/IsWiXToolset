@@ -27,8 +27,9 @@ env:
 
 jobs:
   # The first job builds everything and runs the quick suites; it also produces the packages and the inputs
-  # for the Linux job, which only waits for this one. The two slow end-to-end suites (burn about 17 minutes,
-  # msi about 12) run in parallel with it, each in a job that repeats the build.
+  # for the Linux job, which only waits for this one. The slow end-to-end suites (BurnE2E about 17 minutes,
+  # MsiE2E about 12) are cut into five groups of 5 to 7 minutes (see src/test/burn/test_burn.cmd and
+  # src/test/msi/test_msi.cmd) that run in parallel with it, each in a job that repeats the build.
   rest:
     name: Build and test (rest)
     uses: ./.github/workflows/build-suite.yml
@@ -40,7 +41,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        suite: [burn, msi]
+        suite: [burn-a, burn-b, burn-c, msi-a, msi-b]
     uses: ./.github/workflows/build-suite.yml
     with:
       suite: ${{ matrix.suite }}
