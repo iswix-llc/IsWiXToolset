@@ -154,6 +154,20 @@ namespace WixToolset.Core
             return path.Replace('\\', Path.DirectorySeparatorChar);
         }
 
+        /// <summary>
+        /// Maps a platform source path back to Windows separators so values hashed into generated ids are
+        /// identical on every platform. Nothing changes on Windows.
+        /// </summary>
+        public static string ToWindowsSourcePath(string path)
+        {
+            if (String.IsNullOrEmpty(path) || Path.DirectorySeparatorChar == '\\')
+            {
+                return path;
+            }
+
+            return path.Replace(Path.DirectorySeparatorChar, '\\');
+        }
+
         public static bool IsValidLongFilename(string filename, bool allowWildcards, bool allowRelative)
         {
             if (String.IsNullOrEmpty(filename))

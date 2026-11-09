@@ -57,6 +57,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildReadOnlyMsi()
         {
             var folder = TestData.Get(@"TestData", "AllUsers");
@@ -95,7 +96,7 @@ namespace WixToolsetTest.CoreIntegration
                     // error information is available on the system.
                     WixAssert.CompareLineByLine(
                     [
-                        @"223 Error - Failed to open database '<baseFolder>\bin\test.msi'. Ensure it is a valid database, is writable, and it is not open by another process. ",
+                        @"223 Error - Failed to open database '<baseFolder>\bin\test.msi'. Ensure it is a valid database, is writable, and it is not open by another process. ".Replace('\\', Path.DirectorySeparatorChar),
                     ], [.. messages.Select(m => $"{m.Id} {m.Level} - {m.ToString().Replace(folder, "<folder>").Replace(baseFolder, "<baseFolder>").Substring(0, 136)}")]);
                 }
                 finally
@@ -106,6 +107,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildMissingFile()
         {
             var folder = TestData.Get("TestData", "SingleFile");
@@ -132,8 +134,8 @@ namespace WixToolsetTest.CoreIntegration
                 var errorMessages = messages.Select(m => m.ToString().Replace(folder, "<folder>")).ToArray();
                 WixAssert.CompareLineByLine(new[]
                 {
-                    @"Cannot find the File file 'test.txt'. The following paths were checked: test.txt, <folder>\does-not-exist\test.txt, <folder>\also-does-not-exist\test.txt",
-                    @"Cannot find the File file 'test.txt'. The following paths were checked: test.txt, <folder>\does-not-exist\test.txt, <folder>\also-does-not-exist\test.txt",
+                    @"Cannot find the File file 'test.txt'. The following paths were checked: test.txt, <folder>\does-not-exist\test.txt, <folder>\also-does-not-exist\test.txt".Replace('\\', Path.DirectorySeparatorChar),
+                    @"Cannot find the File file 'test.txt'. The following paths were checked: test.txt, <folder>\does-not-exist\test.txt, <folder>\also-does-not-exist\test.txt".Replace('\\', Path.DirectorySeparatorChar),
                 }, errorMessages);
 
                 var errorMessage = errorMessages.First();

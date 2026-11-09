@@ -39,6 +39,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildX64AfterX86Bundle()
         {
             var folder = TestData.Get(@"TestData");

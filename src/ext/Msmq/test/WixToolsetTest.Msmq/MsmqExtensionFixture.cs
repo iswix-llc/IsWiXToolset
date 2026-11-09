@@ -21,7 +21,7 @@ namespace WixToolsetTest.Msmq
         [TestMethod]
         public void CanBuildUsingMessageQueue()
         {
-            var folder = TestData.Get(@"TestData\UsingMessageQueue");
+            var folder = TestData.Get("TestData", "UsingMessageQueue");
             var build = new Builder(folder, new[] { typeof(MsmqExtensionFactory), typeof(UtilExtensionFactory) }, new[] { folder });
 
             var results = build.BuildAndQuery(BuildWithUtil, "Wix4MessageQueue", "CustomAction", "Wix4MessageQueueUserPermission", "Wix4MessageQueueGroupPermission", "Wix4Group", "Wix4User");
@@ -45,7 +45,7 @@ namespace WixToolsetTest.Msmq
         [Ignore("Util:Wix4Group and Util:Wix6Group decompilation issues prevent this usage currently")]
         public void CanRoundtripMessageQueue()
         {
-            var folder = TestData.Get(@"TestData\UsingMessageQueue");
+            var folder = TestData.Get("TestData", "UsingMessageQueue");
             var build = new Builder(folder, new[] { typeof(MsmqExtensionFactory), typeof(UtilExtensionFactory) }, new[] { folder });
             var output = Path.Combine(folder, "MessageQueueDecompile.xml");
 

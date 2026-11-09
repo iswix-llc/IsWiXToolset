@@ -23,7 +23,7 @@ namespace WixToolsetTest.Netfx
             {
                 var baseFolder = fs.GetFolder();
                 var bundleFile = Path.Combine(baseFolder, "bin", "test.exe");
-                var bundleSourceFolder = TestData.Get(@"TestData\UsingDotNetCorePackages");
+                var bundleSourceFolder = TestData.Get("TestData", "UsingDotNetCorePackages");
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
 
                 var compileResult = WixRunner.Execute(new[]
@@ -50,7 +50,7 @@ namespace WixToolsetTest.Netfx
             {
                 var baseFolder = fs.GetFolder();
                 var bundleFile = Path.Combine(baseFolder, "bin", "test.exe");
-                var bundleSourceFolder = TestData.Get(@"TestData\UsingDotNetCorePackages");
+                var bundleSourceFolder = TestData.Get("TestData", "UsingDotNetCorePackages");
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
 
                 var compileResult = WixRunner.Execute(new[]
@@ -76,7 +76,7 @@ namespace WixToolsetTest.Netfx
             {
                 var baseFolder = fs.GetFolder();
                 var bundleFile = Path.Combine(baseFolder, "bin", "test.exe");
-                var bundleSourceFolder = TestData.Get(@"TestData\UsingNetFxPackages");
+                var bundleSourceFolder = TestData.Get("TestData", "UsingNetFxPackages");
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
 
                 var compileResult = WixRunner.Execute(new[]
@@ -102,7 +102,7 @@ namespace WixToolsetTest.Netfx
             {
                 var baseFolder = fs.GetFolder();
                 var bundleFile = Path.Combine(baseFolder, "bin", "test.exe");
-                var bundleSourceFolder = TestData.Get(@"TestData\UsingNetFxSearches");
+                var bundleSourceFolder = TestData.Get("TestData", "UsingNetFxSearches");
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
 
                 var compileResult = WixRunner.Execute(new[]
@@ -125,7 +125,7 @@ namespace WixToolsetTest.Netfx
         [TestMethod]
         public void CanBuildUsingNativeImage()
         {
-            var folder = TestData.Get(@"TestData\UsingNativeImage");
+            var folder = TestData.Get("TestData", "UsingNativeImage");
             var build = new Builder(folder, typeof(NetfxExtensionFactory), new[] { folder });
 
             var results = build.BuildAndQuery(Build, "Binary", "CustomAction", "Wix4NetFxNativeImage");
@@ -144,7 +144,7 @@ namespace WixToolsetTest.Netfx
         [TestMethod]
         public void CanBuildUsingNativeImageX64()
         {
-            var folder = TestData.Get(@"TestData\UsingNativeImage");
+            var folder = TestData.Get("TestData", "UsingNativeImage");
             var build = new Builder(folder, typeof(NetfxExtensionFactory), new[] { folder });
 
             var results = build.BuildAndQuery(BuildX64, "Binary", "CustomAction", "Wix4NetFxNativeImage");
@@ -163,7 +163,7 @@ namespace WixToolsetTest.Netfx
         [TestMethod]
         public void CanBuildUsingNativeImageARM64()
         {
-            var folder = TestData.Get(@"TestData\UsingNativeImage");
+            var folder = TestData.Get("TestData", "UsingNativeImage");
             var build = new Builder(folder, typeof(NetfxExtensionFactory), new[] { folder });
 
             var results = build.BuildAndQuery(BuildARM64, "Binary", "CustomAction", "Wix4NetFxNativeImage");
@@ -182,7 +182,7 @@ namespace WixToolsetTest.Netfx
         [TestMethod]
         public void CanBuildUsingDotNetCompatibilityCheck()
         {
-            var folder = TestData.Get(@"TestData\UsingDotNetCompatibilityCheck");
+            var folder = TestData.Get("TestData", "UsingDotNetCompatibilityCheck");
             var build = new Builder(folder, typeof(NetfxExtensionFactory), new[] { folder });
 
             var results = build.BuildAndQuery(BuildX64, "Binary", "CustomAction", "Wix4NetFxDotNetCheck");

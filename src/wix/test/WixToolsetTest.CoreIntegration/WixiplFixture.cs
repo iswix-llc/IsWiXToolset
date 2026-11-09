@@ -106,6 +106,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildMsiUsingExtensionLibrary()
         {
             var folder = TestData.Get("TestData", "Wixipl");
@@ -142,13 +143,14 @@ namespace WixToolsetTest.CoreIntegration
                     var binary = section.Symbols.OfType<BinarySymbol>().Single();
                     var path = binary[BinarySymbolFields.Data].AsPath().Path;
                     Assert.StartsWith(Path.Combine(baseFolder, "obj", "Example.Extension"), path);
-                    Assert.EndsWith(@"wix-ir\example.txt", path);
+                    Assert.EndsWith(Path.Combine("wix-ir", "example.txt"), path);
                     WixAssert.StringEqual(@"BinFromWir", binary.Id.Id);
                 }
             }
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildWixiplUsingExtensionLibrary()
         {
             var folder = TestData.Get("TestData", "Wixipl");
@@ -196,7 +198,7 @@ namespace WixToolsetTest.CoreIntegration
                     var binary = section.Symbols.OfType<BinarySymbol>().Single();
                     var path = binary[BinarySymbolFields.Data].AsPath().Path;
                     Assert.StartsWith(Path.Combine(baseFolder, "obj", "test"), path);
-                    Assert.EndsWith(@"wix-ir\example.txt", path);
+                    Assert.EndsWith(Path.Combine("wix-ir", "example.txt"), path);
                     WixAssert.StringEqual(@"BinFromWir", binary.Id.Id);
                 }
             }

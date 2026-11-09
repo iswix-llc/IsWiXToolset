@@ -17,7 +17,7 @@ namespace WixToolsetTest.Sql
         [TestMethod]
         public void CanBuildUsingSqlStuff()
         {
-            var folder = TestData.Get(@"TestData\UsingSql");
+            var folder = TestData.Get("TestData", "UsingSql");
             var build = new Builder(folder, typeof(SqlExtensionFactory), new[] { folder });
 
             var results = build.BuildAndQuery(Build, "Wix4SqlDatabase", "Wix4SqlFileSpec", "Wix4SqlScript", "Wix4SqlString");

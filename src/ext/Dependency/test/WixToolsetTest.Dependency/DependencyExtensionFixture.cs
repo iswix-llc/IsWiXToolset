@@ -18,7 +18,7 @@ namespace WixToolsetTest.Dependency
         [TestMethod]
         public void CanBuildUsingProvides()
         {
-            var folder = TestData.Get(@"TestData\UsingProvides");
+            var folder = TestData.Get("TestData", "UsingProvides");
             var build = new Builder(folder, typeof(DependencyExtensionFactory), new[] { folder });
 
             var results = build.BuildAndQuery(Build, "CustomAction", "Wix4DependencyProvider", "Wix4Dependency")

@@ -22,7 +22,7 @@ namespace WixToolsetTest.Firewall
         [TestMethod]
         public void CanBuildUsingFirewall()
         {
-            var folder = TestData.Get(@"TestData\UsingFirewall");
+            var folder = TestData.Get("TestData", "UsingFirewall");
             var build = new Builder(folder, typeof(FirewallExtensionFactory), new[] { folder });
 
             var results = build.BuildAndQuery(Build, "Wix5FirewallException", "CustomAction");
@@ -61,7 +61,7 @@ namespace WixToolsetTest.Firewall
         [TestMethod]
         public void CanBuildUsingFirewallARM64()
         {
-            var folder = TestData.Get(@"TestData\UsingFirewall");
+            var folder = TestData.Get("TestData", "UsingFirewall");
             var build = new Builder(folder, typeof(FirewallExtensionFactory), new[] { folder });
 
             var results = build.BuildAndQuery(BuildARM64, "Wix5FirewallException", "CustomAction");
@@ -100,7 +100,7 @@ namespace WixToolsetTest.Firewall
         [TestMethod]
         public void CanBuildWithProperties()
         {
-            var folder = TestData.Get(@"TestData\UsingProperties");
+            var folder = TestData.Get("TestData", "UsingProperties");
             var build = new Builder(folder, typeof(FirewallExtensionFactory), new[] { folder });
 
             var results = build.BuildAndQuery(Build, "Wix5FirewallException", "CustomAction");
@@ -121,7 +121,7 @@ namespace WixToolsetTest.Firewall
         [TestMethod]
         public void CanBuildWithPropertiesUsingFirewallARM64()
         {
-            var folder = TestData.Get(@"TestData\UsingProperties");
+            var folder = TestData.Get("TestData", "UsingProperties");
             var build = new Builder(folder, typeof(FirewallExtensionFactory), new[] { folder });
 
             var results = build.BuildAndQuery(BuildARM64, "Wix5FirewallException", "CustomAction");
@@ -629,7 +629,7 @@ namespace WixToolsetTest.Firewall
         [TestMethod]
         public void CanDecompileWix4FirewallPackage()
         {
-            var folder = TestData.Get(@"TestData\DecompileWix4Firewall");
+            var folder = TestData.Get("TestData", "DecompileWix4Firewall");
             var output = Path.Combine(folder, "DecompiledWix4Firewall.xml");
 
             var result = WixRunner.Execute(

@@ -17,7 +17,7 @@ namespace WixToolsetTest.ComPlus
         [TestMethod]
         public void CanBuildUsingComPlusPartition()
         {
-            var folder = TestData.Get(@"TestData\UsingComPlusPartition");
+            var folder = TestData.Get("TestData", "UsingComPlusPartition");
             var build = new Builder(folder, typeof(ComPlusExtensionFactory), new[] { folder });
 
             var results = build.BuildAndQuery(Build, "Wix4ComPlusPartition", "CustomAction");

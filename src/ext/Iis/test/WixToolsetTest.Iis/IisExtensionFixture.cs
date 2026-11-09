@@ -18,7 +18,7 @@ namespace WixToolsetTest.Iis
         [TestMethod]
         public void CanBuildUsingIIs()
         {
-            var folder = TestData.Get(@"TestData\UsingIis");
+            var folder = TestData.Get("TestData", "UsingIis");
             var build = new Builder(folder, typeof(IisExtensionFactory), new[] { folder });
 
             var results = build.BuildAndQuery(Build, validate: true, "Wix4Certificate", "Wix4CertificateHash", "Wix4IIsWebSite", "Wix4IIsWebAddress");

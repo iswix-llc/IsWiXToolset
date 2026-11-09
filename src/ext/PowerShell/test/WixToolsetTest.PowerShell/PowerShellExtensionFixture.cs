@@ -16,7 +16,7 @@ namespace WixToolsetTest.PowerShell
         [TestMethod]
         public void CantBuildUsingTypesFileWithoutSnapIn()
         {
-            var folder = TestData.Get(@"TestData\TypesFile");
+            var folder = TestData.Get("TestData", "TypesFile");
             var build = new Builder(folder, typeof(PowerShellExtensionFactory), new[] { folder });
 
             WixRunnerResult wixRunnerResult = null;

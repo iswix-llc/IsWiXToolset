@@ -17,7 +17,7 @@ namespace WixToolsetTest.VisualStudio
         [TestMethod]
         public void CanBuildUsingVsixPackage()
         {
-            var folder = TestData.Get(@"TestData\UsingVsixPackage");
+            var folder = TestData.Get("TestData", "UsingVsixPackage");
             var build = new Builder(folder, typeof(VSExtensionFactory), new[] { folder });
 
             var results = build.BuildAndQuery(Build, "CustomAction");
@@ -43,7 +43,7 @@ namespace WixToolsetTest.VisualStudio
         [TestMethod]
         public void CanBuildUsingVsixPackageOnArm64()
         {
-            var folder = TestData.Get(@"TestData\UsingVsixPackage");
+            var folder = TestData.Get("TestData", "UsingVsixPackage");
             var build = new Builder(folder, typeof(VSExtensionFactory), new[] { folder });
 
             var results = build.BuildAndQuery(BuildARM64, "CustomAction", "Property");
