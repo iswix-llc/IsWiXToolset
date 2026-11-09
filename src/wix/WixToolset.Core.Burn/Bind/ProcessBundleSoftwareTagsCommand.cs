@@ -92,7 +92,7 @@ namespace WixToolset.Core.Burn.Bind
         {
             var versionScheme = Version.TryParse(version, out _) ? "multipartnumeric" : "alphanumeric";
 
-            using (var writer = XmlWriter.Create(stream, new XmlWriterSettings { Indent = true }))
+            using (var writer = XmlWriter.Create(stream, new XmlWriterSettings { Indent = true, NewLineChars = "\r\n" }))
             {
                 writer.WriteStartDocument();
                 writer.WriteStartElement("SoftwareIdentity", "http://standards.iso.org/iso/19770/-2/2015/schema.xsd");

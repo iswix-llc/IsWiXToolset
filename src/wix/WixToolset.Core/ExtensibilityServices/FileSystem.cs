@@ -30,7 +30,7 @@ namespace WixToolset.Core.ExtensibilityServices
             {
                 try
                 {
-                    this.ExecuteWithRetries(() => hardlinked = CreateHardLink(destination, source, IntPtr.Zero));
+                    this.ExecuteWithRetries(() => hardlinked = CreateHardLinkFile(destination, source));
                 }
                 catch
                 {
@@ -139,7 +139,21 @@ namespace WixToolset.Core.ExtensibilityServices
             this.ExecuteWithRetries(() => File.Delete(path));
         }
 
+        private static bool CreateHardLinkFile(string destination, string source)
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return CreateHardLink(destination, source, IntPtr.Zero);
+            }
+
+            // link(2) fails when the destination exists or is on another file system, like CreateHardLink does.
+            return link(source, destination) == 0;
+        }
+
         [DllImport("Kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern bool CreateHardLink(string lpFileName, string lpExistingFileName, IntPtr lpSecurityAttributes);
+
+        [DllImport("libc", SetLastError = true)]
+        private static extern int link(string oldpath, string newpath);
     }
 }

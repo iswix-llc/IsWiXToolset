@@ -17,6 +17,7 @@ namespace WixToolsetTest.CoreIntegration
         private static readonly XNamespace SwidTagNamespace = "http://standards.iso.org/iso/19770/-2/2015/schema.xsd";
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildPackageWithTag()
         {
             var folder = TestData.Get("TestData", "ProductTag");

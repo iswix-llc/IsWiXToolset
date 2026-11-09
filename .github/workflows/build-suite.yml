@@ -75,6 +75,7 @@ jobs:
         env:
           WIX_MANAGED_MSI: 1
           WIX_MANAGED_CAB: 1
+          WIX_MANAGED_RES: 1
         run: >
           dotnet test build\wix\Release\test\WixToolsetTest.CoreIntegration\net8.0\WixToolsetTest.CoreIntegration.dll
           --filter "Platform=CrossPlatform"

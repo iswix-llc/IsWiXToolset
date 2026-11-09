@@ -11,6 +11,7 @@ namespace WixToolsetTest.CoreIntegration
     public class HardlinkFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanLayoutUncompressedFilesWithHardlinks()
         {
             var sourceModified = BuildAndModifyLaidOutFile(suppressHardlinks: false);
