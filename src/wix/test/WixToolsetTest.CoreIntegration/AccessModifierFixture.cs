@@ -91,12 +91,13 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotCompileDuplicateCrossFragmentReference()
         {
             var errors = BuildForFailure("TestData", "AccessModifier", "DuplicateCrossFragmentReference.wxs");
             WixAssert.CompareLineByLine(new[]
             {
-                "ln 8: Duplicate Directory with identifier 'TestFolder' referenced by <sourceFolder>\\DuplicateCrossFragmentReference.wxs(4). Ensure all your identifiers of a given type (Directory, File, etc.) are unique or use an access modifier to scope the identfier.",
+                "ln 8: Duplicate Directory with identifier 'TestFolder' referenced by <sourceFolder>\\DuplicateCrossFragmentReference.wxs(4). Ensure all your identifiers of a given type (Directory, File, etc.) are unique or use an access modifier to scope the identfier.".Replace('\\', Path.DirectorySeparatorChar),
                 "ln 12: Location of symbol related to previous error.",
                 "ln 16: Location of symbol related to previous error."
             }, errors);

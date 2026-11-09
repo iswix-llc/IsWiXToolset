@@ -249,7 +249,9 @@ namespace WixToolset.Core.Burn.Bundles
 
         private ISet<string> GetPayloadTargetNames()
         {
-            var payloadNames = this.PackagePayloads.Values.Select(p => p.Name);
+            // Compare with Windows separators on every platform so authored names such as MsiPackage\test.txt match
+            // names derived from the MSI on Linux and macOS.
+            var payloadNames = this.PackagePayloads.Values.Select(p => p.Name.Replace('/', '\\'));
 
             return new HashSet<string>(payloadNames, StringComparer.OrdinalIgnoreCase);
         }
@@ -460,7 +462,7 @@ namespace WixToolset.Core.Burn.Bundles
                             // the MSI expects to find it...
                             var cabinetName = Path.Combine(Path.GetDirectoryName(this.PackagePayload.Name), cabinet);
 
-                            if (!payloadNames.Contains(cabinetName))
+                            if (!payloadNames.Contains(cabinetName.Replace('/', '\\')))
                             {
                                 var generatedId = this.BackendHelper.GenerateIdentifier("cab", this.PackagePayload.Id.Id, cabinet);
                                 var payloadSourceFile = this.ResolveRelatedFile(this.PackagePayload.SourceFile.Path, this.PackagePayload.UnresolvedSourceFile, cabinet, "cabinet", sourceLineNumbers);
@@ -524,7 +526,7 @@ namespace WixToolset.Core.Burn.Bundles
                             var fileSourcePath = this.PathResolver.GetFileSourcePath(directories, record.GetString(1), record.GetString(3), compressed, longNamesInImage);
                             var name = Path.Combine(Path.GetDirectoryName(this.PackagePayload.Name), fileSourcePath);
 
-                            if (!payloadNames.Contains(name))
+                            if (!payloadNames.Contains(name.Replace('/', '\\')))
                             {
                                 var generatedId = this.BackendHelper.GenerateIdentifier("f", this.PackagePayload.Id.Id, record.GetString(2));
                                 var payloadSourceFile = this.ResolveRelatedFile(this.PackagePayload.SourceFile.Path, this.PackagePayload.UnresolvedSourceFile, fileSourcePath, "payload", sourceLineNumbers);

@@ -633,6 +633,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildWithDuplicatePayloadNames()
         {
             var folder = TestData.Get(@"TestData");

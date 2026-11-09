@@ -229,6 +229,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildWithUnknownOutputType()
         {
             var folder = TestData.Get(@"TestData");
@@ -254,7 +255,7 @@ namespace WixToolsetTest.CoreIntegration
 
                 WixAssert.CompareLineByLine(new[]
                 {
-                    @"Unable to find a backend to process output type: invalid for output file: <folder>\test.pkg. Specify a different output type or output file extension.",
+                    @"Unable to find a backend to process output type: invalid for output file: <folder>\test.pkg. Specify a different output type or output file extension.".Replace('\\', Path.DirectorySeparatorChar),
                 }, messages.Select(s => s.Replace(intermediateFolder, "<folder>")).ToArray());
 
                 Assert.Equal(7014, result.ExitCode);

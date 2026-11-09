@@ -43,6 +43,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void MissingHarvestDirectoryIsAWarning()
         {
             Build("BadDirectory.wxs", (_, sourceFolder, baseFolder, result) =>
@@ -50,9 +51,9 @@ namespace WixToolsetTest.CoreIntegration
                 var messages = result.Messages.Select(m => FormatMessage(m, sourceFolder, baseFolder)).ToArray();
                 WixAssert.CompareLineByLine(new[]
                 {
-                    @"8601: Missing directory for harvesting files: Could not find a part of the path '<sourceFolder>\files2\MissingDirectory'.",
+                    @"8601: Missing directory for harvesting files: Could not find a part of the path '<sourceFolder>\files2\MissingDirectory'.".Replace('\\', Path.DirectorySeparatorChar),
                     @"8600: Inclusions and exclusions resulted in zero files harvested. Unless that is expected, you should verify paths, inclusions, and exclusions on Files or Payloads for accuracy.",
-                    @"8601: Missing directory for harvesting files: Could not find a part of the path '<sourceFolder>\files2\ThisDirectoryIsAlsoMissing'.",
+                    @"8601: Missing directory for harvesting files: Could not find a part of the path '<sourceFolder>\files2\ThisDirectoryIsAlsoMissing'.".Replace('\\', Path.DirectorySeparatorChar),
                     @"8600: Inclusions and exclusions resulted in zero files harvested. Unless that is expected, you should verify paths, inclusions, and exclusions on Files or Payloads for accuracy.",
                 }, messages);
             }, assertSuccess: false);
@@ -65,8 +66,8 @@ namespace WixToolsetTest.CoreIntegration
             {
                 var expectedWarnings = new[]
                 {
-                    @"8601: Missing directory for harvesting files: Could not find a part of the path '<sourceFolder>\files2\files2_sub2\MissingDirectory'.",
-                    @"8601: Missing directory for harvesting files: Could not find a part of the path '<sourceFolder>\files2\files2_sub2\ThisDirectoryIsAlsoMissing'.",
+                    @"8601: Missing directory for harvesting files: Could not find a part of the path '<sourceFolder>\files2\files2_sub2\MissingDirectory'.".Replace('\\', Path.DirectorySeparatorChar),
+                    @"8601: Missing directory for harvesting files: Could not find a part of the path '<sourceFolder>\files2\files2_sub2\ThisDirectoryIsAlsoMissing'.".Replace('\\', Path.DirectorySeparatorChar),
                 };
 
                 var expectedFiles = new[]

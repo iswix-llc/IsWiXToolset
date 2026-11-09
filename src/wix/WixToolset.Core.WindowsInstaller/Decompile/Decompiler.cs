@@ -1060,11 +1060,11 @@ namespace WixToolset.Core.WindowsInstaller.Decompile
                     // set the source (done here because it requires information from the Directory table)
                     if (OutputType.Module == this.OutputType && !this.KeepModularizationIds)
                     {
-                        xFile.SetAttributeValue("Source", String.Concat(this.BaseSourcePath, Path.DirectorySeparatorChar, "File", Path.DirectorySeparatorChar, fileId, '.', this.ModularizationGuid.Substring(1, 36).Replace('-', '_')));
+                        xFile.SetAttributeValue("Source", String.Concat(this.BaseSourcePath, '\\', "File", '\\', fileId, '.', this.ModularizationGuid.Substring(1, 36).Replace('-', '_')));
                     }
                     else if (fileCompressed == "yes" || (fileCompressed != "no" && this.Compressed) || OutputType.Module == this.OutputType)
                     {
-                        xFile.SetAttributeValue("Source", String.Concat(this.BaseSourcePath, Path.DirectorySeparatorChar, "File", Path.DirectorySeparatorChar, fileId));
+                        xFile.SetAttributeValue("Source", String.Concat(this.BaseSourcePath, '\\', "File", '\\', fileId));
                     }
                     else // uncompressed
                     {
@@ -1072,12 +1072,12 @@ namespace WixToolset.Core.WindowsInstaller.Decompile
 
                         if (this.Compressed) // uncompressed at the root of the source image
                         {
-                            xFile.SetAttributeValue("Source", String.Concat("SourceDir", Path.DirectorySeparatorChar, name));
+                            xFile.SetAttributeValue("Source", String.Concat("SourceDir", '\\', name));
                         }
                         else
                         {
                             var sourcePath = this.GetSourcePath(xFile);
-                            xFile.SetAttributeValue("Source", Path.Combine(sourcePath, name));
+                            xFile.SetAttributeValue("Source", String.IsNullOrEmpty(sourcePath) ? name : String.Concat(sourcePath, '\\', name));
                         }
                     }
                 }
@@ -2144,7 +2144,7 @@ namespace WixToolset.Core.WindowsInstaller.Decompile
                 }
                 else
                 {
-                    sourcePath.Insert(0, Path.DirectorySeparatorChar);
+                    sourcePath.Insert(0, '\\');
                     sourcePath.Insert(0, name);
                 }
 
@@ -2153,7 +2153,7 @@ namespace WixToolset.Core.WindowsInstaller.Decompile
 
             if (xDirectory?.Name.LocalName == "StandardDirectory" && WindowsInstallerStandard.TryGetStandardDirectoryName(xDirectory.Attribute("Id").Value, out var standardDirectoryName))
             {
-                sourcePath.Insert(0, Path.DirectorySeparatorChar);
+                sourcePath.Insert(0, '\\');
                 sourcePath.Insert(0, standardDirectoryName);
             }
 

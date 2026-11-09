@@ -44,6 +44,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildBundleWithBootstrapperApplicationSourceAndBootstrapperApplicationDll()
         {
             var folder = TestData.Get(@"TestData");
@@ -69,7 +70,7 @@ namespace WixToolsetTest.CoreIntegration
                 WixAssert.CompareLineByLine(new[]
                 {
                     "Warning 1130: The BootstrapperApplicationDll element has been deprecated.",
-                    "Error 6604: More than one BootstrapperApplication source file was specified. Only one is allowed. Another BootstrapperApplication source file was defined via the BootstrapperApplication element at <testdata>\\BundleBackwardsCompatible\\BundleWithBootstrapperApplicationSourceAndBootstrapperApplicationDll.wxs(3)."
+                    "Error 6604: More than one BootstrapperApplication source file was specified. Only one is allowed. Another BootstrapperApplication source file was defined via the BootstrapperApplication element at <testdata>\\BundleBackwardsCompatible\\BundleWithBootstrapperApplicationSourceAndBootstrapperApplicationDll.wxs(3).".Replace('\\', Path.DirectorySeparatorChar)
                 }, messages);
             }
         }

@@ -31,6 +31,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanRoundtripExampleExtension()
         {
             var folder = TestData.Get(@"TestData", "ExampleExtension");

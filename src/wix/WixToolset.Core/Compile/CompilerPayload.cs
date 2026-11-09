@@ -71,7 +71,8 @@ namespace WixToolset.Core
                 }
                 else
                 {
-                    this.SourceFile = Path.Combine(this.SourceFile, Path.GetFileName(this.Name));
+                    // Name is authored with Windows separators; Path.GetFileName only splits on them on Windows.
+                    this.SourceFile = Path.Combine(this.SourceFile, Path.GetFileName(Common.NormalizeSourcePath(this.Name)));
                 }
             }
 
@@ -266,7 +267,7 @@ namespace WixToolset.Core
             {
                 if (!String.IsNullOrEmpty(this.Name))
                 {
-                    this.Id = this.Core.CreateIdentifierFromFilename(Path.GetFileName(this.Name));
+                    this.Id = this.Core.CreateIdentifierFromFilename(Path.GetFileName(Common.NormalizeSourcePath(this.Name)));
                 }
                 else if (!String.IsNullOrEmpty(this.SourceFile))
                 {

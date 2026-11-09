@@ -190,6 +190,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanCompileAndDecompile()
         {
             var folder = TestData.Get(@"TestData");

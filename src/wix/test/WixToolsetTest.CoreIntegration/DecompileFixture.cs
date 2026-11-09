@@ -51,24 +51,28 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanDecompileSingleFileCompressed()
         {
             DecompileAndCompare("example.msi", extract: true, "Expected.wxs", "TestData", "DecompileSingleFileCompressed");
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanDecompile64BitSingleFileCompressed()
         {
             DecompileAndCompare("example.msi", extract: true, "Expected.wxs", "TestData", "DecompileSingleFileCompressed64");
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanDecompileNestedDirSearchUnderRegSearch()
         {
             DecompileAndCompare("NestedDirSearchUnderRegSearch.msi", extract: false, "DecompiledNestedDirSearchUnderRegSearch.wxs", "TestData", "AppSearch");
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanDecompileOldClassTableDefinition()
         {
             // The input MSI was not created using standard methods, it is an example of a real world database that needs to be decompiled.
@@ -78,48 +82,56 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanDecompileSequenceTables()
         {
             DecompileAndCompare("SequenceTables.msi", extract: false, "DecompiledSequenceTables.wxs", "TestData", "SequenceTables");
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanDecompileShortcuts()
         {
             DecompileAndCompare("shortcuts.msi", extract: false, "DecompiledShortcuts.wxs", "TestData", "Shortcut");
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanDecompileNullComponent()
         {
             DecompileAndCompare("example.msi", extract: true, "Expected.wxs", "TestData", "DecompileNullComponent");
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanDecompileMergeModuleWithTargetDirComponent()
         {
             DecompileAndCompare("MergeModule1.msm", extract: true, "Expected.wxs", "TestData", "DecompileTargetDirMergeModule");
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanDecompileUI()
         {
             DecompileAndCompare("ui.msi", extract: false, "ExpectedUI.wxs", "TestData", "Decompile");
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanDecompileMsiLockPermissionsEx()
         {
             DecompileAndCompare("MsiLockPermissionsEx.msi", extract: false, "MsiLockPermissionsEx_expected.wxs", "TestData", "Decompile");
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanDecompileLockPermissions()
         {
             DecompileAndCompare("LockPermissions.msi", extract: false, "LockPermissions_expected.wxs", "TestData", "Decompile");
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanDecompileMergeModuleWithKeepModularizationIds()
         {
             using (var fs = new DisposableFileSystem())
