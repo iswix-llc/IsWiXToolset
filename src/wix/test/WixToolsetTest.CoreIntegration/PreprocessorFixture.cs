@@ -2,6 +2,7 @@
 
 namespace WixToolsetTest.CoreIntegration
 {
+    using System;
     using System.IO;
     using System.Linq;
     using WixInternal.Core.TestPackage;
@@ -83,21 +84,37 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
-        /// <remarks>
-        /// This test will fail on 32-bit operating systems because it depends on "CommonProgramFiles(x86)"
-        /// which is only defined on 64-bit Windows.
-        /// </remarks>
+        [Trait("Platform", "CrossPlatform")]
         public void SupportParensInEnvironmentVariables()
         {
-            var folder = TestData.Get(@"TestData", "Preprocessor");
+            // "CommonProgramFiles(x86)" is only defined on 64-bit Windows, so define it when it is missing.
+            const string variableName = "CommonProgramFiles(x86)";
+            var original = Environment.GetEnvironmentVariable(variableName);
 
-            var serviceProvider = WixToolsetServiceProviderFactory.CreateServiceProvider();
-            var context = serviceProvider.GetService<IPreprocessContext>();
-            context.SourcePath = Path.Combine(folder, "EnvParens.wxs");
+            try
+            {
+                if (original == null)
+                {
+                    Environment.SetEnvironmentVariable(variableName, "ParensValue");
+                }
 
-            var preprocessor = serviceProvider.GetService<IPreprocessor>();
-            var result = preprocessor.Preprocess(context);
-            Assert.NotNull(result.Document);
+                var folder = TestData.Get(@"TestData", "Preprocessor");
+
+                var serviceProvider = WixToolsetServiceProviderFactory.CreateServiceProvider();
+                var context = serviceProvider.GetService<IPreprocessContext>();
+                context.SourcePath = Path.Combine(folder, "EnvParens.wxs");
+
+                var preprocessor = serviceProvider.GetService<IPreprocessor>();
+                var result = preprocessor.Preprocess(context);
+                Assert.NotNull(result.Document);
+            }
+            finally
+            {
+                if (original == null)
+                {
+                    Environment.SetEnvironmentVariable(variableName, null);
+                }
+            }
         }
 
         [Fact]

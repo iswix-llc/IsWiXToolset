@@ -12,6 +12,7 @@ namespace WixToolsetTest.CoreIntegration
     public class CabFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CabinetFilesSequencedCorrectly()
         {
             var folder = TestData.Get("TestData", "MultiFileCompressed");

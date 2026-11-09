@@ -193,6 +193,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanLoadPdbGeneratedByBuild()
         {
             var folder = TestData.Get("TestData", "MultiFileCompressed");
@@ -227,6 +228,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanLoadPdbGeneratedByBuildViaWixOutput()
         {
             var folder = TestData.Get("TestData", "MultiFileCompressed");
