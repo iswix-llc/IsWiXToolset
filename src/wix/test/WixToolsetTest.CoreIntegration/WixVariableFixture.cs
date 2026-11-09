@@ -12,6 +12,7 @@ namespace WixToolsetTest.CoreIntegration
     public class WixVariableFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildMsiWithBindVariable()
         {
             var folder = TestData.Get(@"TestData");
@@ -41,6 +42,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildMsiWithDefaultedBindVariable()
         {
             var folder = TestData.Get(@"TestData");
@@ -76,6 +78,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildMsiWithPrefixedVersionBindVariable()
         {
             var folder = TestData.Get(@"TestData");
@@ -112,6 +115,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildMsiWithOverridableBindVariable()
         {
             var folder = TestData.Get(@"TestData");
@@ -139,6 +143,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildBundleWithBindVariable()
         {
             var folder = TestData.Get(@"TestData");

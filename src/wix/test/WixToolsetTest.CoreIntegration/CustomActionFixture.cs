@@ -158,6 +158,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanScheduleCustomActionInModule()
         {
             var folder = TestData.Get(@"TestData");
@@ -194,6 +195,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanScheduleSetPropertyInModule()
         {
             var folder = TestData.Get(@"TestData");
@@ -230,6 +232,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesCustomActionTable()
         {
             var folder = TestData.Get(@"TestData");

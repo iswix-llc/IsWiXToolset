@@ -13,6 +13,7 @@ namespace WixToolsetTest.CoreIntegration
     public class VersionFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildMsiWithPrefixedVersion()
         {
             var folder = TestData.Get(@"TestData");
@@ -41,6 +42,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildMsiWithInsignificantZeroesVersion()
         {
             var folder = TestData.Get(@"TestData");
@@ -69,6 +71,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildMsiWithPrefixedInsignificantZeroesVersion()
         {
             var folder = TestData.Get(@"TestData");
@@ -97,6 +100,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildMsiWithPrefixedVersionBindVariable()
         {
             var folder = TestData.Get(@"TestData");
@@ -224,6 +228,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildBundleWithSemanticVersion()
         {
             var folder = TestData.Get(@"TestData");

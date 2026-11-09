@@ -45,6 +45,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanAutomaticallyCreateDefaultFeature()
         {
             var folder = TestData.Get(@"TestData");

@@ -11,6 +11,7 @@ namespace WixToolsetTest.CoreIntegration
     public class CustomTableFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesCustomTable1()
         {
             var folder = TestData.Get(@"TestData");
@@ -45,6 +46,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesCustomTableWithLocalization()
         {
             var folder = TestData.Get(@"TestData");
@@ -80,6 +82,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesCustomTableWithFilePath()
         {
             var folder = TestData.Get(@"TestData");
@@ -114,6 +117,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesCustomTableWithFilePathSerialized()
         {
             var folder = TestData.Get(@"TestData");
@@ -160,6 +164,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void UnrealCustomTableIsNotPresentInMsi()
         {
             var folder = TestData.Get(@"TestData");

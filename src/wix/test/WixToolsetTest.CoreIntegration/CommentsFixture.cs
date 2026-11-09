@@ -14,6 +14,7 @@ namespace WixToolsetTest.CoreIntegration
     public class CommentsFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PackageNoSummaryInformation()
         {
             var propertyRows = BuildPackageAndQuerySummaryInformation("PackageNoSummaryInformation.wxs");
@@ -25,6 +26,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PackageDefaultComments()
         {
             var propertyRows = BuildPackageAndQuerySummaryInformation("PackageDefault.wxs");
@@ -44,6 +46,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PackageCustomComments()
         {
             var propertyRows = BuildPackageAndQuerySummaryInformation("PackageCustom.wxs");
@@ -55,6 +58,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ModuleNoSummaryInformation()
         {
             var propertyRows = BuildModuleAndQuerySummaryInformation("ModuleNoSummaryInformation.wxs");
@@ -66,6 +70,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ModuleDefaultComments()
         {
             var propertyRows = BuildModuleAndQuerySummaryInformation("ModuleDefault.wxs");
@@ -85,6 +90,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ModuleCustomComments()
         {
             var propertyRows = BuildModuleAndQuerySummaryInformation("ModuleCustom.wxs");

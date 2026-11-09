@@ -142,6 +142,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildMultipleFilesSpanningCabinets()
         {
             var folder = TestData.Get(@"TestData", "MsiCabinet");

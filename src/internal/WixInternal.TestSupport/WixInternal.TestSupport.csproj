@@ -20,6 +20,8 @@
     <PackageReference Include="IsWiX.WixToolSet.Dtf.WindowsInstaller" />
     <PackageReference Include="IsWiX.WixToolSet.Dtf.Compression" />
     <PackageReference Include="IsWiX.WixToolSet.Dtf.Compression.Cab" />
+    <PackageReference Include="IsWiX.WindowsInstaller" />
+    <PackageReference Include="IsWiX.Compression.Cab" />
   </ItemGroup>
 
   <ItemGroup>

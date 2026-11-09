@@ -12,6 +12,7 @@ namespace WixToolsetTest.CoreIntegration
     public class UIFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesControlTables()
         {
             var folder = TestData.Get(@"TestData");

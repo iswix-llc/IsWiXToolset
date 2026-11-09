@@ -13,6 +13,7 @@ namespace WixToolsetTest.CoreIntegration
     public class AssemblyFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildWithAssembly()
         {
             var folder = TestData.Get(@"TestData", "Assembly");
@@ -72,6 +73,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildWithAssemblyInModule()
         {
             var folder = TestData.Get(@"TestData", "Assembly");

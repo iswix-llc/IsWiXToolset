@@ -448,6 +448,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildPatchWithFileFiltering()
         {
             var sourceFolder = TestData.Get(@"TestData", "PatchFamilyFileFilter");
@@ -478,6 +479,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildPatchWithRegistryFiltering()
         {
             var sourceFolder = TestData.Get(@"TestData", "PatchFamilyRegistryFilter");
@@ -659,7 +661,7 @@ namespace WixToolsetTest.CoreIntegration
             return DecompileMst(mstPath, baseFolder);
         }
 
-        private static CabFileInfo[] ExtractFilesFromPatchCabinet(string patchPath, string cabinetName, string baseFolder)
+        private static CabinetFile[] ExtractFilesFromPatchCabinet(string patchPath, string cabinetName, string baseFolder)
         {
             var cab = Path.Combine(baseFolder, cabinetName);
             Query.ExtractStream(patchPath, cabinetName, cab);

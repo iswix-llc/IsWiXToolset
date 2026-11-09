@@ -10,6 +10,7 @@ namespace WixToolsetTest.CoreIntegration
     public class ClassFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ClassWithoutContextDoesNotCrash()
         {
             var folder = TestData.Get(@"TestData");
@@ -40,6 +41,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesClassTablesWhenIconIndexIsZero()
         {
             var folder = TestData.Get(@"TestData");
@@ -75,6 +77,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesClassTablesWhenProgIdIsNestedUnderAdvertisedClass()
         {
             var folder = TestData.Get(@"TestData");
@@ -112,6 +115,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesModuleClassTablesWhenProgIdIsNestedUnderAdvertisedClass()
         {
             var folder = TestData.Get(@"TestData");
@@ -148,6 +152,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildProductWithProgIdExtensionVerb()
         {
             var folder = TestData.Get(@"TestData");
@@ -183,6 +188,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildModuleWithProgIdExtensionVerb()
         {
             var folder = TestData.Get(@"TestData");

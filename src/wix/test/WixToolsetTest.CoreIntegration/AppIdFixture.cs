@@ -10,6 +10,7 @@ namespace WixToolsetTest.CoreIntegration
     public class AppIdFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesAppIdTableAtTopLevel()
         {
             var folder = TestData.Get(@"TestData");
@@ -41,6 +42,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesAppIdTableWhenAdvertised()
         {
             var folder = TestData.Get(@"TestData");

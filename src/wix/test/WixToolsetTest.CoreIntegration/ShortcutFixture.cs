@@ -10,6 +10,7 @@ namespace WixToolsetTest.CoreIntegration
     public class ShortcutFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildShortcutNameWithShortname()
         {
             var folder = TestData.Get(@"TestData");
@@ -42,6 +43,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesMsiShortcutPropertyTable()
         {
             var folder = TestData.Get(@"TestData");

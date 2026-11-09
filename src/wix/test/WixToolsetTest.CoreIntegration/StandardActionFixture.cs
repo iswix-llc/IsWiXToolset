@@ -11,6 +11,7 @@ namespace WixToolsetTest.CoreIntegration
     public class StandardActionFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanCompileSpecialActionWithOverride()
         {
             using var fs = new DisposableFileSystem();
@@ -53,6 +54,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanCompileStandardActionWithOverride()
         {
             using var fs = new DisposableFileSystem();

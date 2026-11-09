@@ -11,6 +11,7 @@ namespace WixToolsetTest.CoreIntegration
     public class MsiQueryFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesAppSearchTablesFromComponentSearch()
         {
             var folder = TestData.Get(@"TestData");
@@ -45,6 +46,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesAppSearchTablesFromDirectorySearch()
         {
             var folder = TestData.Get(@"TestData");
@@ -81,6 +83,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesAppSearchTablesFromFileSearch()
         {
             var folder = TestData.Get(@"TestData");
@@ -116,6 +119,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesAppSearchTablesFromDirectorySearchInMergeModule()
         {
             var folder = TestData.Get(@"TestData");
@@ -149,6 +153,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesAppSearchTablesFromRegistrySearch()
         {
             var folder = TestData.Get(@"TestData");
@@ -183,6 +188,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesAppSearchTablesFromRegistrySearch64()
         {
             var folder = TestData.Get(@"TestData");
@@ -217,6 +223,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesCreateFolderTableForNullKeypathComponents()
         {
             var folder = TestData.Get("TestData", "Components");
@@ -250,6 +257,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesDirectoryTableWithValidDefaultDir()
         {
             var folder = TestData.Get(@"TestData");
@@ -302,6 +310,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesEnvironmentTable()
         {
             var folder = TestData.Get(@"TestData");
@@ -338,6 +347,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildMsiWithEmptyCustomTableBecauseOfCustomTableRef()
         {
             var folder = TestData.Get(@"TestData");
@@ -369,6 +379,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildMsiWithEmptyStandardTableBecauseOfEnsureTable()
         {
             var folder = TestData.Get(@"TestData");
@@ -400,6 +411,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildMsiWithEmptyTableFromExtensionBecauseOfEnsureTable()
         {
             var folder = TestData.Get(@"TestData");
@@ -431,6 +443,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesFeatureTableWithParent()
         {
             var folder = TestData.Get(@"TestData");
@@ -466,6 +479,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesFontTableFromFontTitle()
         {
             var folder = TestData.Get(@"TestData");
@@ -501,6 +515,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesFontTableFromTrueType()
         {
             var folder = TestData.Get(@"TestData");
@@ -536,6 +551,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesIniFile()
         {
             var folder = TestData.Get(@"TestData");
@@ -582,6 +598,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesInstallExecuteSequenceTable()
         {
             var folder = TestData.Get(@"TestData");
@@ -635,6 +652,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesLockPermissionsTableWithEmptyPermissions()
         {
             var folder = TestData.Get(@"TestData");
@@ -668,6 +686,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesMsiAssemblyTables()
         {
             var folder = TestData.Get(@"TestData");
@@ -704,6 +723,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesReserveCostTable()
         {
             var folder = TestData.Get(@"TestData");
@@ -737,6 +757,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesServiceTables()
         {
             var folder = TestData.Get(@"TestData");
@@ -774,6 +795,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesTextStyleTableWhenColorIsNull()
         {
             var folder = TestData.Get(@"TestData");
@@ -807,6 +829,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesTextStyleTableWhenSizeIsLocalized()
         {
             var folder = TestData.Get(@"TestData");
@@ -841,6 +864,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesTypeLibTableWhenLanguageIsZero()
         {
             var folder = TestData.Get(@"TestData");
@@ -873,6 +897,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesUpgradeTableFromManualUpgrade()
         {
             var folder = TestData.Get("TestData", "ManualUpgrade");
@@ -905,6 +930,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesUpgradeTableFromDetectOnlyUpgrade()
         {
             var folder = TestData.Get(@"TestData");
@@ -953,6 +979,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanPublishComponentWithMultipleFeatureComponents()
         {
             var folder = TestData.Get("TestData", "PublishComponent");
@@ -986,6 +1013,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void EnsureTableSchedulesAppropriateStandardActions()
         {
             var folder = TestData.Get("TestData", "EnsureTable");

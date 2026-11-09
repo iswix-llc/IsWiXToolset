@@ -54,7 +54,7 @@ namespace WixToolset.Core.Burn.Bundles
             // Copy the burn.exe to a writable location then mark it to be moved to its final build location.
 
             var stubPlatform = this.BundleSymbol.Platform.ToString();
-            var stubFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), stubPlatform, "burn.exe");
+            var stubFile = FindStubFile(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), stubPlatform);
             var bundleTempPath = Path.Combine(this.IntermediateFolder, bundleFilename);
 
             this.Messaging.Write(VerboseMessages.GeneratingBundle(bundleTempPath, stubFile));
@@ -235,6 +235,31 @@ namespace WixToolset.Core.Burn.Bundles
                     Marshal.FreeHGlobal(pBuffer);
                 }
             }
+        }
+
+        // The stub folders are laid out in lower case (x86, x64, arm64) but the platform name is not, which
+        // only matters on case-sensitive file systems.
+        private static string FindStubFile(string baseFolder, string platform)
+        {
+            var stubFile = Path.Combine(baseFolder, platform, "burn.exe");
+
+            if (!File.Exists(stubFile))
+            {
+                foreach (var folder in Directory.EnumerateDirectories(baseFolder))
+                {
+                    if (Path.GetFileName(folder).Equals(platform, StringComparison.OrdinalIgnoreCase))
+                    {
+                        var candidate = Path.Combine(folder, "burn.exe");
+
+                        if (File.Exists(candidate))
+                        {
+                            return candidate;
+                        }
+                    }
+                }
+            }
+
+            return stubFile;
         }
     }
 }

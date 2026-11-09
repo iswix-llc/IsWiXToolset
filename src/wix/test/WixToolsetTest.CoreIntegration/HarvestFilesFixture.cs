@@ -60,6 +60,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void MissingHarvestExclusionsDoesNotBlockAllHarvesting()
         {
             Build("SomeExclusionsMissing.wxs", (msiPath, sourceFolder, baseFolder, result) =>
@@ -118,6 +119,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanHarvestFilesInComponentGroup()
         {
             var expected = new[]
@@ -133,6 +135,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanHarvestFilesInDirectory()
         {
             var expected = new[]
@@ -148,6 +151,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanHarvestFilesWithCaseInsensitiveExcludeSubdirectory()
         {
             var expected = new[]
@@ -161,6 +165,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanHarvestFilesWithCaseInsensitiveIncludeExclude()
         {
             var expected = new[]
@@ -175,6 +180,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanHarvestFilesInDirectoryRef()
         {
             var expected = new[]
@@ -194,6 +200,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanHarvestFilesInFeature()
         {
             var expected = new[]
@@ -207,6 +214,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanHarvestFilesInFeatureGroup()
         {
             var expected = new[]
@@ -226,6 +234,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanHarvestFilesInStraightAndCrookedTrees()
         {
             var expected = new[]
@@ -246,6 +255,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanHarvestFilesInFeatureRef()
         {
             var expected = new[]
@@ -265,6 +275,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanHarvestFilesInFragments()
         {
             var expected = new[]
@@ -280,6 +291,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanHarvestFilesInModules()
         {
             var expectedFilesAndTargetPaths = new[]
@@ -313,6 +325,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanHarvestFilesWithNamedBindPaths()
         {
             var expected = new[]
@@ -332,6 +345,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanHarvestFilesRelativeToSourceFile()
         {
             var expected = new[]
@@ -348,6 +362,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanHarvestFilesInStandardDirectory()
         {
             var expected = new[]
@@ -373,6 +388,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanHarvestFilesInFiveLines()
         {
             var expected = new[]
@@ -408,6 +424,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanHarvestFilesWithDuplicateNames()
         {
             var expectedFiles = new[]
@@ -444,9 +461,17 @@ namespace WixToolsetTest.CoreIntegration
 
         private static void AssertFileIdsAndTargetPaths(string msiPath, string[] expected)
         {
-            var pkg = new WixToolset.Dtf.WindowsInstaller.Package.InstallPackage(msiPath, WixToolset.Dtf.WindowsInstaller.DatabaseOpenMode.ReadOnly);
             var sortedExpected = expected.OrderBy(s => s).ToArray();
-            var actual = pkg.Files.OrderBy(kvp => kvp.Key).Select(kvp => $"{kvp.Key}={kvp.Value.TargetPath}").ToArray();
+            string[] actual;
+            if (Query.UseManagedReader)
+            {
+                actual = Query.GetFileTargetPaths(msiPath).OrderBy(kvp => kvp.Key).Select(kvp => $"{kvp.Key}={kvp.Value}").ToArray();
+            }
+            else
+            {
+                var pkg = new WixToolset.Dtf.WindowsInstaller.Package.InstallPackage(msiPath, WixToolset.Dtf.WindowsInstaller.DatabaseOpenMode.ReadOnly);
+                actual = pkg.Files.OrderBy(kvp => kvp.Key).Select(kvp => $"{kvp.Key}={kvp.Value.TargetPath}").ToArray();
+            }
 
             WixAssert.CompareLineByLine(sortedExpected, actual);
         }

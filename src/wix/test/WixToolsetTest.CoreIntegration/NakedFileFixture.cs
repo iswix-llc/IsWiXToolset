@@ -14,6 +14,7 @@ namespace WixToolsetTest.CoreIntegration
     public class NakedFileFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildNakedFilesInComponentGroup()
         {
             var rows = BuildAndQueryComponentAndFileTables("ComponentGroup.wxs");
@@ -22,6 +23,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildNakedFilesInFeature()
         {
             var rows = BuildAndQueryComponentAndFileTables("Feature.wxs");
@@ -30,6 +32,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildNakedFilesInDirectory()
         {
             var rows = BuildAndQueryComponentAndFileTables("Directory.wxs");
@@ -38,6 +41,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildNakedFilesInDirectoryRef()
         {
             var rows = BuildAndQueryComponentAndFileTables("DirectoryRef.wxs");
@@ -46,6 +50,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildNakedFilesInFeatureRef()
         {
             var rows = BuildAndQueryComponentAndFileTables("FeatureRef.wxs");
@@ -54,6 +59,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildNakedFilesInFeatureGroup()
         {
             var rows = BuildAndQueryComponentAndFileTables("FeatureGroup.wxs");
@@ -62,6 +68,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildNakedFilesInFragments()
         {
             var rows = BuildAndQueryComponentAndFileTables("Fragment.wxs");
@@ -70,6 +77,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildNakedFilesInStandardDirectory()
         {
             var rows = BuildAndQueryComponentAndFileTables("StandardDirectory.wxs");
@@ -78,6 +86,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildNakedFilesInModule()
         {
             var rows = BuildAndQueryComponentAndFileTables("Module.wxs", isPackage: false);
@@ -94,6 +103,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildNakedFilesWithConditions()
         {
             var rows = BuildAndQueryComponentAndFileTables("Condition.wxs");
@@ -108,6 +118,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildNakedFilesUnderPackage()
         {
             var rows = BuildAndQueryComponentAndFileTables("Package.wxs");
@@ -115,6 +126,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildNakedFilesUnderPackageWithDuplicateNames()
         {
             var rows = BuildAndQueryComponentAndFileTables("DuplicateNames.wxs");
@@ -122,6 +134,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildNakedFilesUnderPackageWithDefaultInstallFolder()
         {
             var rows = BuildAndQueryComponentAndFileTables("PackageWithDefaultInstallFolder.wxs");
@@ -155,6 +168,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildNakedFileFromWixlibComponentGroup()
         {
             var rows = BuildPackageWithWixlib("WixlibComponentGroup.wxs", "WixlibComponentGroupPackage.wxs");

@@ -53,6 +53,8 @@
     <PackageVersion Include="System.DirectoryServices.AccountManagement" Version="8.0.0" />
     <PackageVersion Include="System.Management" Version="8.0.0" />
     <PackageVersion Include="IsWiX.WindowsInstaller" Version="1.0.3" />
+    <PackageVersion Include="IsWiX.Compression" Version="1.0.0" />
+    <PackageVersion Include="IsWiX.Compression.Cab" Version="1.0.0" />
     <PackageVersion Include="System.Memory" Version="4.6.3" />
     <PackageVersion Include="System.Reflection.Metadata" Version="8.0.0" />
     <PackageVersion Include="System.Security.Cryptography.Xml" Version="8.0.5" />

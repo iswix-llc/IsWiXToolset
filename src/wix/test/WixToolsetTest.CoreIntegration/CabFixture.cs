@@ -51,6 +51,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanCabReallyOldFiles()
         {
             var folder = TestData.Get(@"TestData", "SingleFileCompressed");

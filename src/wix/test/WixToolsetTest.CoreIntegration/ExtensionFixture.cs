@@ -18,6 +18,7 @@ namespace WixToolsetTest.CoreIntegration
     public class ExtensionFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildAndQuery()
         {
             var folder = TestData.Get("TestData", "ExampleExtension");

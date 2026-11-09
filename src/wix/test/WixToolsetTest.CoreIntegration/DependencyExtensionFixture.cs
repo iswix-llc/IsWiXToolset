@@ -153,6 +153,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildPackageUsingProvides()
         {
             var folder = TestData.Get("TestData", "UsingProvides");

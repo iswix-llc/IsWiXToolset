@@ -12,6 +12,7 @@ namespace WixToolsetTest.CoreIntegration
     public class RegistryFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesRegistryTableFromRegistryValue()
         {
             var folder = TestData.Get(@"TestData");
@@ -45,6 +46,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesRegistryTableFromRegistryValueMultiString()
         {
             var folder = TestData.Get(@"TestData");
@@ -111,6 +113,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesRegistryTableFromRemoveRegistryKey()
         {
             var folder = TestData.Get(@"TestData");
@@ -143,6 +146,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesRegistryTableWithoutExtraBackslash()
         {
             var folder = TestData.Get(@"TestData");

@@ -14,6 +14,7 @@ namespace WixToolsetTest.CoreIntegration
     public class InstanceTransformFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildInstanceTransform()
         {
             var folder = TestData.Get("TestData", "InstanceTransform");
@@ -67,11 +68,8 @@ namespace WixToolsetTest.CoreIntegration
                 var names = Query.GetSubStorageNames(msiPath);
                 Query.ExtractSubStorage(msiPath, "I1", mstPath);
 
-                using (var db = new Database(msiPath, DatabaseOpenMode.Transact))
                 {
-                    db.ApplyTransform(mstPath);
-
-                    var results = Query.QueryDatabase(db, new[] { "Property", "Upgrade" });
+                    var results = Query.QueryDatabaseWithTransform(msiPath, mstPath, new[] { "Property", "Upgrade" });
                     var resultsWithoutProductCode = results.Where(s => !s.StartsWith("Property:ProductCode\t{")).ToArray();
                     WixAssert.CompareLineByLine(new[]
                     {

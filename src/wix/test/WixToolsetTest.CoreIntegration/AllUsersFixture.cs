@@ -11,6 +11,7 @@ namespace WixToolsetTest.CoreIntegration
     public class AllUsersFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanCheckPerMachineMsi()
         {
             var propertyRows = BuildAndQueryPropertyTable("PerMachine.wxs");
@@ -23,6 +24,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanCheckPerMachineOrUserMsi()
         {
             var propertyRows = BuildAndQueryPropertyTable("PerMachineOrUser.wxs");
@@ -35,6 +37,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanCheckPerUserMsi()
         {
             var propertyRows = BuildAndQueryPropertyTable("PerUser.wxs");
@@ -46,6 +49,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanCheckPerUserOrMachineMsi()
         {
             var propertyRows = BuildAndQueryPropertyTable("PerUserOrMachine.wxs");

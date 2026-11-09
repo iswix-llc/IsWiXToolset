@@ -44,6 +44,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void MajorUpgradeDowngradeMessagePopulatesRowsAsExpected()
         {
             var folder = TestData.Get("TestData", "Upgrade");
@@ -60,6 +61,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void DefaultMajorUpgradePopulatesUpgradeRowsAsExpected()
         {
             var folder = TestData.Get("TestData", "DefaultMajorUpgrade");
@@ -76,6 +78,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanRescheduleRemoveExistingProductsWithDefaultMajorUpgrade()
         {
             var folder = TestData.Get("TestData", "DefaultMajorUpgradeReschedule");
@@ -90,6 +93,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanOverrideDefaultMajorUpgradeLaunchConditionMessage()
         {
             var folder = TestData.Get("TestData", "DefaultMajorUpgradeOverride");
@@ -103,6 +107,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void UpgradeStrategyNoneDoesNotCreateDefaultMajorUpgrade()
         {
             var folder = TestData.Get("TestData", "DefaultMajorUpgradeNone");
