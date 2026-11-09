@@ -206,13 +206,35 @@ namespace WixToolset.Core.Burn.CommandLine
                     folder = ".";
                 }
 
-                foreach (var path in Directory.EnumerateFiles(folder, filename, this.Recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly))
+                foreach (var path in EnumerateFilesInOrder(folder, filename, this.Recurse))
                 {
                     result.Add(path);
                 }
             }
 
             return result.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+        }
+
+        // Directory.EnumerateFiles returns entries in whatever order the file system does, which differs
+        // between NTFS and Linux file systems. Return each folder's files in name order, then its
+        // subfolders in name order, so the harvested payload order is the same everywhere.
+        private static IEnumerable<string> EnumerateFilesInOrder(string folder, string pattern, bool recurse)
+        {
+            foreach (var file in Directory.EnumerateFiles(folder, pattern, SearchOption.TopDirectoryOnly).OrderBy(f => f, StringComparer.OrdinalIgnoreCase))
+            {
+                yield return file;
+            }
+
+            if (recurse)
+            {
+                foreach (var subfolder in Directory.EnumerateDirectories(folder).OrderBy(f => f, StringComparer.OrdinalIgnoreCase))
+                {
+                    foreach (var file in EnumerateFilesInOrder(subfolder, pattern, recurse))
+                    {
+                        yield return file;
+                    }
+                }
+            }
         }
 
         private XElement HarvestPackageElement(IEnumerable<string> paths)
