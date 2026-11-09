@@ -161,8 +161,19 @@ namespace WixToolsetTest.CoreNative
                 var merge = MsmInterop.GetManagedMsmMerge();
                 merge.OpenDatabase(database);
                 merge.OpenModule(module, 0);
-                Assert.ThrowsAny<System.Runtime.InteropServices.COMException>(() => merge.MergeEx(String.Empty, String.Empty, null));
-                Assert.Equal(MsmErrorType.msmErrorFeatureRequired, merge.Errors[1].Type);
+
+                // Like mergemod.dll, the merge succeeds and reports each row that needed a feature as an error.
+                merge.MergeEx(String.Empty, String.Empty, null);
+                var featureRequired = 0;
+                for (var i = 1; i <= merge.Errors.Count; i++)
+                {
+                    if (merge.Errors[i].Type == MsmErrorType.msmErrorFeatureRequired)
+                    {
+                        featureRequired++;
+                    }
+                }
+
+                Assert.True(featureRequired > 0);
                 merge.CloseModule();
                 merge.CloseDatabase(false);
             }
@@ -258,6 +269,8 @@ namespace WixToolsetTest.CoreNative
 
                 db.Execute("INSERT INTO `ModuleSignature` (`ModuleID`, `Language`, `Version`) VALUES ('TestModule." + ModuleGuid + "', 0, '1.0.0.0')");
                 db.Execute("INSERT INTO `ModuleComponents` (`Component`, `ModuleID`, `Language`) VALUES ('Component1." + ModuleGuid + "', 'TestModule." + ModuleGuid + "', 0)");
+                // The module lists the base action with its sequence number; mergemod.dll reports a relative action whose base the module does not list as orphaned.
+                db.Execute("INSERT INTO `ModuleInstallExecuteSequence` (`Action`, `Sequence`) VALUES ('CostFinalize', 1000)");
                 db.Execute("INSERT INTO `ModuleInstallExecuteSequence` (`Action`, `BaseAction`, `After`, `Condition`) VALUES ('After." + ModuleGuid + "', 'CostFinalize', 1, 'NOT REMOVE')");
                 db.Execute("INSERT INTO `ModuleInstallExecuteSequence` (`Action`, `BaseAction`, `After`) VALUES ('Before." + ModuleGuid + "', 'CostFinalize', 0)");
                 db.Execute("INSERT INTO `ModuleInstallExecuteSequence` (`Action`, `BaseAction`, `After`) VALUES ('Second." + ModuleGuid + "', 'CostFinalize', 1)");

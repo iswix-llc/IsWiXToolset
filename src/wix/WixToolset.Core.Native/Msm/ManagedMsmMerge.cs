@@ -150,20 +150,6 @@ namespace WixToolset.Core.Native.Msm
                 throw Fail("Cannot open the merge module '" + fileName + "': " + e.Message);
             }
 
-            // The first language is the one the module is built in. Others are language transforms inside the module.
-            List<int> languages = ParseLanguages(template);
-            if (language != 0 && languages.Count > 0 && !languages.Contains(0) && !languages.Contains(language))
-            {
-                this.AddError(MsmErrorType.msmErrorLanguageUnsupported, language: language);
-                throw Fail("The merge module does not support language " + language + ".");
-            }
-
-            if (language != 0 && languages.Count > 0 && languages[0] != 0 && languages[0] != language)
-            {
-                this.AddError(MsmErrorType.msmErrorLanguageFailed, language: language);
-                throw Fail("Applying the language transform for language " + language + " is not supported.");
-            }
-
             try
             {
                 this.module = new Lib.Database(fileName, Lib.DatabaseOpenMode.ReadOnly);
@@ -173,12 +159,44 @@ namespace WixToolset.Core.Native.Msm
                 throw Fail("Cannot open the merge module '" + fileName + "': " + e.Message);
             }
 
+            // A database without a ModuleSignature table is not a merge module (mergemod.dll aborts).
+            if (!this.module.Tables.Contains("ModuleSignature"))
+            {
+                this.module.Dispose();
+                this.module = null;
+                throw new COMException("The file '" + fileName + "' is not a merge module.", unchecked((int)0x80004004));
+            }
+
+            // The first language is the one the module is built in. Others are language transforms inside the module,
+            // which are not applied here. mergemod.dll takes any language the module has no transform for.
+            List<int> languages = ParseLanguages(template);
+            if (language != 0 && languages.Count > 0 && languages[0] != language && this.HasLanguageTransform(language))
+            {
+                this.module.Dispose();
+                this.module = null;
+                this.AddError(MsmErrorType.msmErrorLanguageFailed, language: language);
+                throw Fail("Applying the language transform for language " + language + " is not supported.");
+            }
+
             this.modulePath = fileName;
             this.moduleId = this.module.Tables.Contains("ModuleSignature")
                 ? this.ReadStrings(this.module, "SELECT `ModuleID` FROM `ModuleSignature`").FirstOrDefault()
                 : null;
 
             this.WriteLog("Opened Merge Module: " + fileName);
+        }
+
+        private bool HasLanguageTransform(int language)
+        {
+            try
+            {
+                string name = language.ToString(CultureInfo.InvariantCulture);
+                return this.ReadStrings(this.module, "SELECT `Name` FROM `_Storages`").Contains(name);
+            }
+            catch (Lib.InstallerException)
+            {
+                return false;
+            }
         }
 
         public void CloseModule()
@@ -323,7 +341,10 @@ namespace WixToolset.Core.Native.Msm
         private void MergeWorkingCopy(Lib.Database working, string feature, string redirectDir, IMsmConfigureModule configuration)
         {
             this.CheckPlatform();
-            this.CheckExclusions();
+            if (this.CheckExclusions())
+            {
+                return;
+            }
 
             List<string> directories = working.Tables.Contains("Directory")
                 ? this.ReadStrings(working, "SELECT `Directory` FROM `Directory`")
@@ -341,6 +362,14 @@ namespace WixToolset.Core.Native.Msm
             List<SequenceRow> sequenceRows = this.ReadSequenceRows(working);
             this.DropModuleOnlyTables(working);
 
+            if (this.HasSignatureConflict(working))
+            {
+                this.WriteLog(">> Error: Failed to merge Merge Module due to a conflicting Merge Module.");
+                return;
+            }
+
+            this.OffsetFileSequences(working);
+
             this.WriteLog("Merging module tables.");
             if (!this.MergeTables(working))
             {
@@ -351,9 +380,79 @@ namespace WixToolset.Core.Native.Msm
             this.MergeSequences(sequenceRows);
             this.AddDirectoryActions(directories, lowestSequences);
 
-            if (!String.IsNullOrEmpty(feature))
+            this.ConnectComponents(feature);
+        }
+
+        private bool HasSignatureConflict(Lib.Database working)
+        {
+            if (!working.Tables.Contains("ModuleSignature") || !this.database.Tables.Contains("ModuleSignature"))
             {
-                this.ConnectComponents(feature);
+                return false;
+            }
+
+            List<Signature> existing = this.ReadSignatures(this.database);
+            foreach (Signature signature in this.ReadSignatures(working))
+            {
+                if (existing.Any(e => e.Id == signature.Id && e.Language == signature.Language && e.Version != signature.Version))
+                {
+                    string[] keys = new[] { signature.Id, signature.Language.ToString(CultureInfo.InvariantCulture) };
+                    this.AddError(MsmErrorType.msmErrorTableMerge, databaseTable: "ModuleSignature", databaseKeys: keys, moduleTable: "ModuleSignature", moduleKeys: keys);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>The module's files come after the files already in the database: their sequence numbers are moved up by the highest one there.</summary>
+        private void OffsetFileSequences(Lib.Database working)
+        {
+            if (!working.Tables.Contains("File") || !this.database.Tables.Contains("File"))
+            {
+                return;
+            }
+
+            int highest = 0;
+            using (Lib.View view = this.database.OpenView("SELECT `Sequence` FROM `File`"))
+            {
+                view.Execute();
+                for (Lib.Record row = view.Fetch(); row != null; row = view.Fetch())
+                {
+                    using (row)
+                    {
+                        if (!row.IsNull(1))
+                        {
+                            highest = Math.Max(highest, row.GetInteger(1));
+                        }
+                    }
+                }
+            }
+
+            if (highest <= 0)
+            {
+                return;
+            }
+
+            var files = new List<KeyValuePair<string, int>>();
+            using (Lib.View view = working.OpenView("SELECT `File`, `Sequence` FROM `File`"))
+            {
+                view.Execute();
+                for (Lib.Record row = view.Fetch(); row != null; row = view.Fetch())
+                {
+                    using (row)
+                    {
+                        if (!row.IsNull(2))
+                        {
+                            files.Add(new KeyValuePair<string, int>(row.GetString(1), row.GetInteger(2)));
+                        }
+                    }
+                }
+            }
+
+            foreach (KeyValuePair<string, int> file in files)
+            {
+                this.WriteLog("     * Changing " + file.Key + "'s Sequence Column from " + file.Value + " to " + (file.Value + highest) + ".");
+                working.Execute("UPDATE `File` SET `Sequence` = ? WHERE `File` = ?", new Lib.Record(file.Value + highest, file.Key));
             }
         }
 
@@ -368,34 +467,38 @@ namespace WixToolset.Core.Native.Msm
             }
         }
 
-        private void CheckExclusions()
+        /// <summary>Returns true when the module is excluded by a module already merged, and so is not merged.</summary>
+        private bool CheckExclusions()
         {
             if (!this.module.Tables.Contains("ModuleSignature"))
             {
-                return;
+                return false;
             }
 
             List<Signature> moduleSignatures = this.ReadSignatures(this.module);
             List<Signature> databaseSignatures = this.database.Tables.Contains("ModuleSignature") ? this.ReadSignatures(this.database) : new List<Signature>();
 
-            bool excluded = false;
+            // mergemod.dll skips a module that excludes one already in the database, with the excluded module as the
+            // database key. A module the database excludes is merged all the same, with its own signature as the error.
+            bool skip = false;
             if (this.module.Tables.Contains("ModuleExclusion"))
             {
-                excluded |= this.FindExclusions(this.module, databaseSignatures);
+                skip = this.FindExclusions(this.module, databaseSignatures, true);
+                if (skip)
+                {
+                    this.WriteLog(">> Error: Merge Module `" + this.modulePath + "` is excluded by another Merge Module.");
+                }
             }
 
             if (this.database.Tables.Contains("ModuleExclusion"))
             {
-                excluded |= this.FindExclusions(this.database, moduleSignatures);
+                this.FindExclusions(this.database, moduleSignatures, false);
             }
 
-            if (excluded)
-            {
-                throw Fail("The merge module is excluded by, or excludes, a module already merged.");
-            }
+            return skip;
         }
 
-        private bool FindExclusions(Lib.Database source, List<Signature> candidates)
+        private bool FindExclusions(Lib.Database source, List<Signature> candidates, bool databaseKeys)
         {
             bool found = false;
             using (Lib.View view = source.OpenView("SELECT `ExcludedID`, `ExcludedLanguage`, `ExcludedMinVersion`, `ExcludedMaxVersion` FROM `ModuleExclusion`"))
@@ -423,7 +526,15 @@ namespace WixToolset.Core.Native.Msm
                             }
 
                             found = true;
-                            this.AddError(MsmErrorType.msmErrorExclusion, moduleKeys: new[] { candidate.Id, candidate.Language.ToString(CultureInfo.InvariantCulture), candidate.Version });
+                            string[] keys = new[] { candidate.Id, candidate.Language.ToString(CultureInfo.InvariantCulture), candidate.Version };
+                            if (databaseKeys)
+                            {
+                                this.AddError(MsmErrorType.msmErrorExclusion, databaseKeys: keys);
+                            }
+                            else
+                            {
+                                this.AddError(MsmErrorType.msmErrorExclusion, moduleKeys: keys);
+                            }
                         }
                     }
                 }
@@ -434,7 +545,8 @@ namespace WixToolset.Core.Native.Msm
 
         private void ApplySubstitutions(Lib.Database working, IMsmConfigureModule configuration)
         {
-            if (!working.Tables.Contains("ModuleSubstitution"))
+            // mergemod.dll leaves the module as it is when no configuration callback is given.
+            if (configuration == null || !working.Tables.Contains("ModuleSubstitution"))
             {
                 return;
             }
@@ -501,7 +613,6 @@ namespace WixToolset.Core.Native.Msm
                 string name = match.Groups[1].Value;
                 if (!items.TryGetValue(name, out ConfigurationItem item))
                 {
-                    this.AddError(MsmErrorType.msmErrorMissingConfigItem, moduleTable: table, moduleKeys: new[] { row });
                     throw Fail("The module has no configuration item '" + name + "'.");
                 }
 
@@ -564,12 +675,15 @@ namespace WixToolset.Core.Native.Msm
 
                 if (String.IsNullOrEmpty(feature))
                 {
+                    // mergemod.dll reports each row, leaves it out and merges the rest.
                     foreach (string key in keys)
                     {
-                        this.AddError(MsmErrorType.msmErrorFeatureRequired, moduleTable: table.Name, moduleKeys: new[] { key });
+                        this.WriteLog(">> Error: Failed to merge Row: " + key + " into Table: " + table.Name + ". Feature required.");
+                        this.AddError(MsmErrorType.msmErrorFeatureRequired, databaseTable: table.Name, databaseKeys: new[] { key }, moduleTable: table.Name, moduleKeys: new[] { key });
                     }
 
-                    throw Fail("A feature is required to merge the module.");
+                    working.Execute("DELETE FROM `" + table.Name + "` WHERE `Feature_` = '" + NullGuid + "'");
+                    continue;
                 }
 
                 working.Execute("UPDATE `" + table.Name + "` SET `Feature_` = ? WHERE `Feature_` = '" + NullGuid + "'", new Lib.Record(feature));
@@ -867,9 +981,12 @@ namespace WixToolset.Core.Native.Msm
 
                 Dictionary<string, int> sequences = this.ReadSequences(table);
                 var placed = new HashSet<string>(StringComparer.Ordinal);
+                List<SequenceRow> tableRows = group.ToList();
+                var known = new HashSet<string>(tableRows.Select(r => r.Action), StringComparer.Ordinal);
+                var anchors = new HashSet<string>(tableRows.Where(r => r.Sequence.HasValue).Select(r => r.Action), StringComparer.Ordinal);
 
                 // Actions with a sequence number first, then the ones placed relative to another action.
-                foreach (SequenceRow row in group.Where(r => r.Sequence.HasValue))
+                foreach (SequenceRow row in tableRows.Where(r => r.Sequence.HasValue))
                 {
                     if (sequences.ContainsKey(row.Action) || this.RowExists(table, "Action", row.Action))
                     {
@@ -877,34 +994,54 @@ namespace WixToolset.Core.Native.Msm
                         continue;
                     }
 
+                    this.MakeRoom(table, sequences, row.Sequence.Value);
                     this.InsertAction(table, row.Action, row.Condition, row.Sequence.Value);
                     sequences[row.Action] = row.Sequence.Value;
                     placed.Add(row.Action);
                 }
 
-                var pending = group.Where(r => !r.Sequence.HasValue && r.BaseAction != null).ToList();
-                while (pending.Count > 0)
+                // An action is placed relative to a base action the module lists with a sequence number, or one it has
+                // already placed. mergemod.dll reports any other as orphaned in the module.
+                var pending = tableRows.Where(r => !r.Sequence.HasValue && r.BaseAction != null).ToList();
+                bool progress = true;
+                while (pending.Count > 0 && progress)
                 {
-                    SequenceRow next = pending.FirstOrDefault(r => sequences.ContainsKey(r.BaseAction)) ?? pending[0];
-                    pending.Remove(next);
-
-                    if (sequences.ContainsKey(next.Action) || this.RowExists(table, "Action", next.Action))
+                    progress = false;
+                    foreach (SequenceRow next in pending.ToList())
                     {
-                        this.WriteLog("Base Action " + next.Action + " in " + table + " table already exists in MSI. Using MSI action.");
-                        continue;
+                        if (sequences.ContainsKey(next.Action) || this.RowExists(table, "Action", next.Action))
+                        {
+                            this.WriteLog("Base Action " + next.Action + " in " + table + " table already exists in MSI. Using MSI action.");
+                            pending.Remove(next);
+                            progress = true;
+                        }
+                        else if (!known.Contains(next.BaseAction))
+                        {
+                            this.Orphan(table, next);
+                            pending.Remove(next);
+                            progress = true;
+                        }
+                        else if ((anchors.Contains(next.BaseAction) || placed.Contains(next.BaseAction)) && sequences.ContainsKey(next.BaseAction))
+                        {
+                            this.WriteLog("Placing action " + next.Action + " " + (next.After ? "after " : "before ") + next.BaseAction);
+                            this.Place(table, sequences, placed, next);
+                            pending.Remove(next);
+                            progress = true;
+                        }
                     }
+                }
 
-                    if (!sequences.ContainsKey(next.BaseAction))
-                    {
-                        this.WriteLog("Cannot place action " + next.Action + " " + (next.After ? "after " : "before ") + next.BaseAction + ": the base action is not in " + table + ".");
-                        this.AddError(MsmErrorType.msmErrorResequenceMerge, databaseTable: table, databaseKeys: new[] { next.Action });
-                        continue;
-                    }
-
-                    this.WriteLog("Placing action " + next.Action + " " + (next.After ? "after " : "before ") + next.BaseAction);
-                    this.Place(table, sequences, placed, next);
+                foreach (SequenceRow next in pending)
+                {
+                    this.Orphan(table, next);
                 }
             }
+        }
+
+        private void Orphan(string table, SequenceRow row)
+        {
+            this.WriteLog("> Warning: Failed to merge action " + row.Action + " into " + table + " table. Action is orphaned in the module.");
+            this.AddError(MsmErrorType.msmErrorResequenceMerge, moduleTable: "Module" + table, moduleKeys: new[] { row.Action });
         }
 
         private void Place(string table, Dictionary<string, int> sequences, HashSet<string> placed, SequenceRow row)
@@ -915,26 +1052,52 @@ namespace WixToolset.Core.Native.Msm
                 : sequences.Values.Where(v => v < baseSequence).DefaultIfEmpty(0).Max() + 1;
 
             // Actions this merge already placed there are stepped over (mergemod.dll puts a second action after the same
-            // base action after the first one) without disturbing the rows that were already in the database.
+            // base action after the first one).
             while (sequences.Any(p => p.Value == desired && placed.Contains(p.Key)))
             {
                 desired++;
             }
 
-            if (sequences.ContainsValue(desired))
-            {
-                // No room: move this action and everything after it up by one, keeping their order.
-                this.AddError(MsmErrorType.msmErrorResequenceMerge, databaseTable: table, databaseKeys: new[] { row.Action });
-                foreach (KeyValuePair<string, int> other in sequences.Where(p => p.Value >= desired).OrderByDescending(p => p.Value).ToList())
-                {
-                    this.database.Execute("UPDATE `" + table + "` SET `Sequence` = ? WHERE `Action` = ?", new Lib.Record(other.Value + 1, other.Key));
-                    sequences[other.Key] = other.Value + 1;
-                }
-            }
-
+            this.MakeRoom(table, sequences, desired);
             this.InsertAction(table, row.Action, row.Condition, desired);
             sequences[row.Action] = desired;
             placed.Add(row.Action);
+        }
+
+        /// <summary>
+        /// Frees a sequence number the way mergemod.dll does: the actions numbered from it up to the next multiple of a step
+        /// (the largest power of ten, up to 1000, that divides the number) move up by the step, and any action they land on
+        /// moves up by the step as well.
+        /// </summary>
+        private void MakeRoom(string table, Dictionary<string, int> sequences, int number)
+        {
+            if (!sequences.ContainsValue(number))
+            {
+                return;
+            }
+
+            int step = 1;
+            while (number > 0 && step < 1000 && number % (step * 10) == 0)
+            {
+                step *= 10;
+            }
+
+            foreach (string action in sequences.Where(p => p.Value >= number && p.Value < number + step).OrderByDescending(p => p.Value).Select(p => p.Key).ToList())
+            {
+                this.MoveAction(table, sequences, action, sequences[action] + step, step);
+            }
+        }
+
+        private void MoveAction(string table, Dictionary<string, int> sequences, string action, int to, int step)
+        {
+            string occupant = sequences.Where(p => p.Value == to && p.Key != action).Select(p => p.Key).FirstOrDefault();
+            if (occupant != null)
+            {
+                this.MoveAction(table, sequences, occupant, to + step, step);
+            }
+
+            this.database.Execute("UPDATE `" + table + "` SET `Sequence` = ? WHERE `Action` = ?", new Lib.Record(to, action));
+            sequences[action] = to;
         }
 
         private void InsertAction(string table, string action, string condition, int sequence)
@@ -983,6 +1146,13 @@ namespace WixToolset.Core.Native.Msm
             foreach (string component in this.ReadStrings(this.module, "SELECT `Component` FROM `Component`"))
             {
                 this.WriteLog("   o Connecting Component: " + component);
+                if (String.IsNullOrEmpty(feature))
+                {
+                    this.WriteLog(">> Error: Failed to connect component " + component + ". Feature required.");
+                    this.AddError(MsmErrorType.msmErrorFeatureRequired, moduleTable: "Component", moduleKeys: new[] { component });
+                    continue;
+                }
+
                 using (Lib.View view = this.database.OpenView("SELECT `Feature_` FROM `FeatureComponents` WHERE `Feature_` = ? AND `Component_` = ?"))
                 {
                     view.Execute(new Lib.Record(feature, component));
@@ -1107,8 +1277,9 @@ namespace WixToolset.Core.Native.Msm
 
         private static bool PlatformsOverlap(string moduleTemplate, string databaseTemplate)
         {
+            // A module for the default platform (Intel, or none) merges into any database, as with mergemod.dll.
             HashSet<string> modulePlatforms = ParsePlatforms(moduleTemplate);
-            return ParsePlatforms(databaseTemplate).Any(modulePlatforms.Contains);
+            return modulePlatforms.Contains("Intel") || ParsePlatforms(databaseTemplate).Any(modulePlatforms.Contains);
         }
 
         private static bool LanguageExcluded(int excluded, int language)
@@ -1138,7 +1309,7 @@ namespace WixToolset.Core.Native.Msm
             return 0;
         }
 
-        private void AddError(MsmErrorType type, string path = null, int language = 0, string databaseTable = null, string[] databaseKeys = null, string moduleTable = null, string[] moduleKeys = null)
+        private void AddError(MsmErrorType type, string path = null, int language = -1, string databaseTable = null, string[] databaseKeys = null, string moduleTable = null, string[] moduleKeys = null)
         {
             this.errors.Add(new MsmErrorItem
             {
