@@ -152,6 +152,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void ReplacesDownloadUrlPlaceholders()
         {
             var folder = TestData.Get(@"TestData");
@@ -206,6 +207,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildBundleWithRemotePackagePaylod()
         {
             var folder = TestData.Get(@"TestData");

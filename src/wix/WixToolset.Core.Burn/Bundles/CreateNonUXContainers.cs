@@ -76,18 +76,18 @@ namespace WixToolset.Core.Burn.Bundles
                     this.UXContainer = container;
 
                     container.AttachedContainerIndex = 0;
-                    container.WorkingPath = Path.Combine(this.IntermediateFolder, container.Name);
+                    container.WorkingPath = Path.Combine(this.IntermediateFolder, container.Name.Replace('\\', Path.DirectorySeparatorChar));
 
                     uxPayloadSymbols.AddRange(containerPayloads);
                 }
                 else
                 {
-                    container.WorkingPath = Path.Combine(this.IntermediateFolder, container.Name);
+                    container.WorkingPath = Path.Combine(this.IntermediateFolder, container.Name.Replace('\\', Path.DirectorySeparatorChar));
 
                     if (ContainerType.Detached == container.Type)
                     {
                         // Add file transfer to move the detached containers from intermediate build location to the correct output location.
-                        var outputPath = Path.Combine(this.LayoutFolder, container.Name);
+                        var outputPath = Path.Combine(this.LayoutFolder, container.Name.Replace('\\', Path.DirectorySeparatorChar));
                         var transfer = this.BackendHelper.CreateFileTransfer(container.WorkingPath, outputPath, true, container.SourceLineNumbers);
                         fileTransfers.Add(transfer);
 

@@ -11,6 +11,7 @@ namespace WixToolsetTest.CoreIntegration
     public class MsuPackageFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildBundleWithMsuPackage()
         {
             var dotDatafolder = TestData.Get(@"TestData", ".Data");
@@ -52,6 +53,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildBundleWithMsuPackageUsingCertificateVerification()
         {
             var dotDatafolder = TestData.Get(@"TestData", ".Data");

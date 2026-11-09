@@ -13,6 +13,7 @@ namespace WixToolsetTest.CoreIntegration
     public class RollbackBoundaryFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanStartChainWithRollbackBoundary()
         {
             var folder = TestData.Get(@"TestData");
@@ -76,6 +77,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void DiscardsConsecutiveRollbackBoundaries()
         {
             var folder = TestData.Get(@"TestData");

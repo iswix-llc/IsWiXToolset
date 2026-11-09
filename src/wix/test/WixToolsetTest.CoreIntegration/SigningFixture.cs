@@ -64,6 +64,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanInscribeBundle()
         {
             var folder = TestData.Get(@"TestData", "SimpleBundle");
@@ -120,6 +121,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanInscribe64BitBundle()
         {
             var folder = TestData.Get(@"TestData", "SimpleBundle");
@@ -161,6 +163,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanInscribeUncompressedBundle()
         {
             var folder = TestData.Get(@"TestData", "BundleUncompressed");

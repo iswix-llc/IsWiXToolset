@@ -53,8 +53,9 @@ msbuild %1 -restore -p:Configuration=Debug -p:SuppressWixClean=true -m -nologo -
 exit /b %errorlevel%
 
 :build
-echo Building %~nx1
-dotnet build %1 -c Debug --nologo -v:m -tl:off -m
+rem Core.Native references wixnative.vcxproj, which dotnet build cannot load, so use MSBuild.
+call :devcmd || exit /b
+call :buildms %1
 exit /b %errorlevel%
 
 :fail

@@ -12,6 +12,7 @@ namespace WixToolsetTest.CoreIntegration
     public class BindVariablesFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildBundleWithPackageBindVariables()
         {
             var folder = TestData.Get(@"TestData");

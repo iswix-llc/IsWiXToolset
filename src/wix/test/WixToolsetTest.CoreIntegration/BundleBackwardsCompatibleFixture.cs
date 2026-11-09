@@ -11,6 +11,7 @@ namespace WixToolsetTest.CoreIntegration
     public class BundleBackwardsCompatibleFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildBundleWithBootstrapperApplicationDll()
         {
             var folder = TestData.Get(@"TestData");

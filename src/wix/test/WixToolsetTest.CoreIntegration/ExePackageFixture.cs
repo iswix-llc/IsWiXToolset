@@ -13,6 +13,7 @@ namespace WixToolsetTest.CoreIntegration
     public class ExePackageFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildWithArpEntry()
         {
             var folder = TestData.Get(@"TestData");
@@ -55,6 +56,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildWithCustomExitCodes()
         {
             var folder = TestData.Get(@"TestData");
@@ -117,6 +119,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void WarningWhenInvalidArpEntryVersion()
         {
             var folder = TestData.Get(@"TestData");
@@ -167,6 +170,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void WarningWhenPermanentWithoutDetectConditionOrUninstallArgumentsOrArpEntry()
         {
             var folder = TestData.Get(@"TestData");
@@ -217,6 +221,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void NoWarningWhenPermanentWithEmptyDetectCondition()
         {
             var folder = TestData.Get(@"TestData");

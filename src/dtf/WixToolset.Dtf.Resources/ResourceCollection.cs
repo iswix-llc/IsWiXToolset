@@ -48,6 +48,12 @@ namespace WixToolset.Dtf.Resources
         {
             this.Clear();
 
+            if (PeResources.UseManaged)
+            {
+                this.AddManaged(PeResources.Read(resFile), null, null);
+                return;
+            }
+
             var module = NativeMethods.LoadLibraryEx(resFile, IntPtr.Zero, NativeMethods.LOAD_LIBRARY_AS_DATAFILE);
             if (module == IntPtr.Zero)
             {
@@ -79,6 +85,12 @@ namespace WixToolset.Dtf.Resources
         {
             this.Clear();
 
+            if (PeResources.UseManaged)
+            {
+                this.AddManaged(PeResources.Read(resFile), (string) type, null);
+                return;
+            }
+
             var module = NativeMethods.LoadLibraryEx(resFile, IntPtr.Zero, NativeMethods.LOAD_LIBRARY_AS_DATAFILE);
             try
             {
@@ -106,6 +118,12 @@ namespace WixToolset.Dtf.Resources
         {
             this.Clear();
 
+            if (PeResources.UseManaged)
+            {
+                this.AddManaged(PeResources.Read(resFile), (string) type, name);
+                return;
+            }
+
             var module = NativeMethods.LoadLibraryEx(resFile, IntPtr.Zero, NativeMethods.LOAD_LIBRARY_AS_DATAFILE);
             try
             {
@@ -118,6 +136,42 @@ namespace WixToolset.Dtf.Resources
             finally
             {
                 NativeMethods.FreeLibrary(module);
+            }
+        }
+
+        private void AddManaged(System.Collections.Generic.IEnumerable<PeResources.Item> items, string type, string name)
+        {
+            var typeKey = type == null ? null : new PeResources.Item { Type = type, Name = "#0" }.Key;
+            foreach (var item in items)
+            {
+                if (typeKey != null)
+                {
+                    var itemType = new PeResources.Item { Type = item.Type, Name = "#0" }.Key;
+                    if (itemType != typeKey)
+                    {
+                        continue;
+                    }
+                }
+
+                if (name != null && !String.Equals(item.Name, name, StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                Resource res;
+                if (item.Type == "#16")
+                {
+                    res = new VersionResource(item.Name, item.Language);
+                }
+                else
+                {
+                    res = new Resource(item.Type, item.Name, item.Language);
+                }
+
+                if (!this.Contains(res))
+                {
+                    this.Add(res);
+                }
             }
         }
 
@@ -179,6 +233,23 @@ namespace WixToolset.Dtf.Resources
         /// <param name="file">The file from which resources are loaded.</param>
         public void Load(string file)
         {
+            if (PeResources.UseManaged)
+            {
+                var items = new System.Collections.Generic.Dictionary<string, PeResources.Item>();
+                foreach (var item in PeResources.Read(file))
+                {
+                    items[item.Key] = item;
+                }
+
+                foreach (var res in this)
+                {
+                    PeResources.Item found;
+                    res.Data = items.TryGetValue(res.ToItem().Key, out found) ? found.Data : null;
+                }
+
+                return;
+            }
+
             var module = NativeMethods.LoadLibraryEx(file, IntPtr.Zero, NativeMethods.LOAD_LIBRARY_AS_DATAFILE);
             try
             {
@@ -199,6 +270,18 @@ namespace WixToolset.Dtf.Resources
         /// <param name="file">The file to which resources are saved.</param>
         public void Save(string file)
         {
+            if (PeResources.UseManaged)
+            {
+                var updates = new System.Collections.Generic.List<PeResources.Item>();
+                foreach (var res in this)
+                {
+                    updates.Add(res.ToItem());
+                }
+
+                PeResources.Write(file, updates);
+                return;
+            }
+
             var updateHandle = IntPtr.Zero;
             try
             {

@@ -14,6 +14,7 @@ namespace WixToolsetTest.CoreIntegration
     public class DependencyExtensionFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildBundleUsingExePackageWithProvides()
         {
             var folder = TestData.Get(@"TestData");
@@ -54,6 +55,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildBundleUsingMsiWithProvides()
         {
             var folder = TestData.Get(@"TestData");
@@ -107,6 +109,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildBundleWithCustomProviderKey()
         {
             var folder = TestData.Get(@"TestData");

@@ -108,6 +108,22 @@ namespace WixToolset.Dtf.Resources
         /// <param name="file">Win32 PE file containing the resource</param>
         public void Load(string file)
         {
+            if (PeResources.UseManaged)
+            {
+                var key = this.ToItem().Key;
+                this.Data = null;
+                foreach (var item in PeResources.Read(file))
+                {
+                    if (item.Key == key)
+                    {
+                        this.Data = item.Data;
+                        break;
+                    }
+                }
+
+                return;
+            }
+
             IntPtr module = NativeMethods.LoadLibraryEx(file, IntPtr.Zero, NativeMethods.LOAD_LIBRARY_AS_DATAFILE);
             try
             {
@@ -117,6 +133,17 @@ namespace WixToolset.Dtf.Resources
             {
                 NativeMethods.FreeLibrary(module);
             }
+        }
+
+        internal PeResources.Item ToItem()
+        {
+            return new PeResources.Item
+            {
+                Type = (string) this.ResourceType,
+                Name = this.Name,
+                Language = (ushort) this.Locale,
+                Data = this.Data,
+            };
         }
 
         internal void Load(IntPtr module)
@@ -143,6 +170,12 @@ namespace WixToolset.Dtf.Resources
         /// <param name="file">Win32 PE file to contain the resource</param>
         public void Save(string file)
         {
+            if (PeResources.UseManaged)
+            {
+                PeResources.Write(file, new[] { this.ToItem() });
+                return;
+            }
+
             IntPtr updateHandle = IntPtr.Zero;
             try
             {

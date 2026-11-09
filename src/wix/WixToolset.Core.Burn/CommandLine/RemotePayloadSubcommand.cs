@@ -403,7 +403,8 @@ namespace WixToolset.Core.Burn.CommandLine
             {
                 if (path.StartsWith(basePath, StringComparison.OrdinalIgnoreCase))
                 {
-                    return path.Substring(basePath.Length).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                    // Payload names always use Windows separators.
+                    return path.Substring(basePath.Length).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).Replace('/', '\\');
                 }
             }
 

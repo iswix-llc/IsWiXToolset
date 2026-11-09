@@ -291,7 +291,7 @@ namespace WixToolset.Core.Burn.Bundles
                 // the bundle expects to find it...
                 container.IncludedAsPayload = true;
                 var containerName = container.FilePath;
-                var containerFullName = Path.Combine(Path.GetDirectoryName(this.PackagePayload.Name), containerName);
+                var containerFullName = PayloadNames.Combine(this.PackagePayload.Name, containerName);
 
                 if (!payloadNames.Contains(containerFullName))
                 {
@@ -351,7 +351,7 @@ namespace WixToolset.Core.Burn.Bundles
                 // add it.  We expect the file to exist on-disk in the same relative location as
                 // the bundle expects to find it...
                 var payloadName = payload.FilePath;
-                var payloadFullName = Path.Combine(Path.GetDirectoryName(this.PackagePayload.Name), payloadName);
+                var payloadFullName = PayloadNames.Combine(this.PackagePayload.Name, payloadName);
 
                 if (!payloadNames.Contains(payloadFullName))
                 {
@@ -392,7 +392,7 @@ namespace WixToolset.Core.Burn.Bundles
                 }
             }
 
-            var resolvedPath = Path.Combine(Path.GetDirectoryName(resolvedSource), relatedSource);
+            var resolvedPath = Path.Combine(Path.GetDirectoryName(resolvedSource), relatedSource.Replace('\\', Path.DirectorySeparatorChar));
 
             if (!File.Exists(resolvedPath))
             {

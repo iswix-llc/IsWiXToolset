@@ -13,6 +13,7 @@ namespace WixToolsetTest.CoreIntegration
     public class BurnRemotePayloadSubcommandFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanGetRemoteBundlePayload()
         {
             var folder = TestData.Get(@"TestData");
@@ -226,6 +227,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanGetRemoteV3BundlePayload()
         {
             var folder = TestData.Get(@"TestData");
@@ -261,6 +263,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanGetRemoteExePayload()
         {
             var folder = TestData.Get(@"TestData");
@@ -465,6 +468,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanGetRemotePayloadWithoutCertificate()
         {
             var folder = TestData.Get(@"TestData");
@@ -498,6 +502,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanGetRemotePayloadsRecursive()
         {
             var folder = TestData.Get(@"TestData");

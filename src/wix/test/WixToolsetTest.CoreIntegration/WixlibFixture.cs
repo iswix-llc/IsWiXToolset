@@ -15,6 +15,7 @@ namespace WixToolsetTest.CoreIntegration
     public class WixlibFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildSimpleBundleUsingWixlib()
         {
             var folder = TestData.Get("TestData", "SimpleBundle");

@@ -358,6 +358,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildBundleWithNonSpecificPatches()
         {
             var folder = TestData.Get(@"TestData", "PatchNonSpecific");
@@ -393,6 +394,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildBundleWithSlipstreamPatch()
         {
             var folder = TestData.Get(@"TestData", "PatchSingle");

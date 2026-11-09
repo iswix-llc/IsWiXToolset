@@ -1678,7 +1678,7 @@ namespace WixToolset.Core
                     switch (attrib.Name.LocalName)
                     {
                         case "Include":
-                            inclusions.AddRange(this.Core.GetAttributeValue(sourceLineNumbers, attrib).Split(';'));
+                            inclusions.AddRange(Common.NormalizeSourcePath(this.Core.GetAttributeValue(sourceLineNumbers, attrib)).Split(';'));
                             break;
                         default:
                             this.Core.UnexpectedAttribute(node, attrib);

@@ -36,6 +36,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildBundleWithTag()
         {
             var testDataFolder = TestData.Get(@"TestData");
@@ -97,6 +98,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildBundleWithTagWhereMsiDoesNotHaveTag()
         {
             var testDataFolder = TestData.Get(@"TestData");

@@ -14,6 +14,7 @@ namespace WixToolsetTest.CoreIntegration
     public class BundleManifestFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesBAManifestWithBootstrapperApplicationBundleCustomData()
         {
             var folder = TestData.Get(@"TestData");
@@ -146,6 +147,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildBundleManifestWithNormalizedRelatedBundles()
         {
             var folder = TestData.Get(@"TestData");
@@ -193,6 +195,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesBEManifestWithBootstrapperExtensionBundleCustomData()
         {
             var folder = TestData.Get(@"TestData");
@@ -234,6 +237,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesManifestWithBootstrapperExtension()
         {
             var folder = TestData.Get(@"TestData");
@@ -280,6 +284,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesManifestWithBootstrapperExtensionSearches()
         {
             var folder = TestData.Get(@"TestData");
@@ -388,6 +393,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesManifestWithSetVariables()
         {
             var folder = TestData.Get(@"TestData");

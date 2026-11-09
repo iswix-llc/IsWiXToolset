@@ -460,7 +460,7 @@ namespace WixToolset.Core.Burn.Bundles
                             // If we didn't find the Payload as an existing child of the package, we need to
                             // add it.  We expect the file to exist on-disk in the same relative location as
                             // the MSI expects to find it...
-                            var cabinetName = Path.Combine(Path.GetDirectoryName(this.PackagePayload.Name), cabinet);
+                            var cabinetName = PayloadNames.Combine(this.PackagePayload.Name, cabinet);
 
                             if (!payloadNames.Contains(cabinetName.Replace('/', '\\')))
                             {
@@ -524,7 +524,7 @@ namespace WixToolset.Core.Burn.Bundles
                             (!compressed && 0 == (compressionBit & WindowsInstallerConstants.MsidbFileAttributesCompressed)))
                         {
                             var fileSourcePath = this.PathResolver.GetFileSourcePath(directories, record.GetString(1), record.GetString(3), compressed, longNamesInImage);
-                            var name = Path.Combine(Path.GetDirectoryName(this.PackagePayload.Name), fileSourcePath);
+                            var name = PayloadNames.Combine(this.PackagePayload.Name, fileSourcePath);
 
                             if (!payloadNames.Contains(name.Replace('/', '\\')))
                             {
@@ -612,7 +612,7 @@ namespace WixToolset.Core.Burn.Bundles
                 }
             }
 
-            var resolvedPath = Path.Combine(Path.GetDirectoryName(resolvedSource), relatedSource);
+            var resolvedPath = Path.Combine(Path.GetDirectoryName(resolvedSource), relatedSource.Replace('\\', Path.DirectorySeparatorChar));
 
             if (!File.Exists(resolvedPath))
             {

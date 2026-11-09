@@ -14,6 +14,7 @@ namespace WixToolsetTest.CoreIntegration
     public class BundlePackageFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildBundleWithBundlePackage()
         {
             var folder = TestData.Get(@"TestData");
@@ -172,6 +173,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildBundleWithRemoteBundlePackage()
         {
             var folder = TestData.Get(@"TestData");
@@ -242,6 +244,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildBundleWithV3BundlePackage()
         {
             var folder = TestData.Get(@"TestData");
@@ -320,6 +323,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildBundleWithPerUserOrMachineBundlePackage()
         {
             var folder = TestData.Get("TestData");
@@ -417,6 +421,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildBundleWithAllUsersPackage()
         {
             var folder = TestData.Get("TestData");
@@ -488,6 +493,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildBundleWithPerUserPackage()
         {
             var folder = TestData.Get("TestData");
@@ -559,6 +565,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildBundleWithPerUserOrMachinePackage()
         {
             var folder = TestData.Get("TestData");

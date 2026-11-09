@@ -8,6 +8,7 @@ namespace WixToolset.Core.Burn.ExtensibilityServices
     using WixToolset.Core.Burn.Bundles;
     using WixToolset.Core.Burn.Interfaces;
     using WixToolset.Data.Symbols;
+    using WixToolset.Dtf.Resources;
 
     internal class PayloadHarvester : IPayloadHarvester
     {
@@ -46,8 +47,78 @@ namespace WixToolset.Core.Burn.ExtensibilityServices
             }
         }
 
+        private static void UpdatePayloadVersionInformationFromResource(WixBundlePayloadSymbol payload, string filePath)
+        {
+            VersionResource versionResource = null;
+
+            try
+            {
+                var resources = new ResourceCollection();
+                resources.Find(filePath, ResourceType.Version);
+                resources.Load(filePath);
+
+                foreach (var resource in resources)
+                {
+                    versionResource = resource as VersionResource;
+
+                    if (versionResource != null && resource.Data != null)
+                    {
+                        break;
+                    }
+
+                    versionResource = null;
+                }
+            }
+            catch (Exception)
+            {
+                // Like FileVersionInfo, a file without readable version information just has none.
+            }
+
+            if (versionResource == null)
+            {
+                return;
+            }
+
+            string productName = null;
+            string fileDescription = null;
+            string productVersion = null;
+            string fileVersion = null;
+
+            foreach (var table in versionResource)
+            {
+                productName = table["ProductName"];
+                fileDescription = table["FileDescription"];
+                productVersion = table["ProductVersion"];
+                fileVersion = table["FileVersion"];
+                break;
+            }
+
+            var version = String.IsNullOrEmpty(productVersion) ? fileVersion : productVersion;
+
+            if (String.IsNullOrEmpty(version))
+            {
+                var fixedVersion = versionResource.ProductVersion;
+
+                if (fixedVersion != null && PayloadHarvester.EmptyVersion != fixedVersion)
+                {
+                    version = fixedVersion.ToString();
+                }
+            }
+
+            payload.Description = fileDescription;
+            payload.DisplayName = productName;
+            payload.Version = version;
+        }
+
         private void UpdatePayloadVersionInformation(WixBundlePayloadSymbol payload, string filePath)
         {
+            if (Path.DirectorySeparatorChar != '\\')
+            {
+                // FileVersionInfo only understands managed assemblies off Windows; read the version resource directly.
+                UpdatePayloadVersionInformationFromResource(payload, filePath);
+                return;
+            }
+
             var versionInfo = FileVersionInfo.GetVersionInfo(filePath);
 
             if (null != versionInfo)

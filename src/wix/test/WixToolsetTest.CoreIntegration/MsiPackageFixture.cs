@@ -12,6 +12,7 @@ namespace WixToolsetTest.CoreIntegration
     public class MsiPackageFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanDefaultPermanentMsiPackageToVisible()
         {
             var folder = TestData.Get(@"TestData");

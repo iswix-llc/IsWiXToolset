@@ -12,6 +12,7 @@ namespace WixToolsetTest.CoreIntegration
     public class BundleExtractionFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanExtractBundleWithDetachedContainer()
         {
             var folder = TestData.Get(@"TestData");

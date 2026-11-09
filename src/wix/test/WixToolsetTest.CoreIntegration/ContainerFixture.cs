@@ -17,6 +17,7 @@ namespace WixToolsetTest.CoreIntegration
     public class ContainerFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildWithCustomAttachedContainer()
         {
             var folder = TestData.Get(@"TestData");
@@ -63,6 +64,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void HarvestedPayloadsArePutInCorrectContainer()
         {
             var folder = TestData.Get(@"TestData");
@@ -109,6 +111,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void HarvestedPayloadsArePutInCorrectPackage()
         {
             var folder = TestData.Get(@"TestData");
@@ -172,6 +175,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void LayoutPayloadIsPutInContainer()
         {
             var folder = TestData.Get(@"TestData");
@@ -218,6 +222,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void MultipleAttachedContainers()
         {
             var folder = TestData.Get(@"TestData");
@@ -267,6 +272,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PayloadIsNotPutInMultipleContainers()
         {
             var folder = TestData.Get(@"TestData");
@@ -314,6 +320,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesBAManifestWithLayoutOnlyPayloads()
         {
             var folder = TestData.Get(@"TestData");

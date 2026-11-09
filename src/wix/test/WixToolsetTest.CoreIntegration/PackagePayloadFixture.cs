@@ -13,6 +13,7 @@ namespace WixToolsetTest.CoreIntegration
     public class PackagePayloadFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanSpecifyMsiPackagePayloadInPayloadGroup()
         {
             var folder = TestData.Get(@"TestData");
@@ -81,6 +82,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanSpecifyExePackagePayloadInPayloadGroup()
         {
             var folder = TestData.Get(@"TestData");

@@ -180,7 +180,7 @@ namespace WixToolset.Core
 
                         section.AddSymbol(new WixBundlePayloadSymbol(sourceLineNumbers, id)
                         {
-                            Name = Path.Combine(Common.NormalizeSourcePath(recursiveDir), name),
+                            Name = recursiveDir.Length == 0 ? name : recursiveDir + "\\" + name, // payload names always use Windows separators
                             SourceFile = new IntermediateFieldPathValue { Path = file },
                             Compressed = null,
                             UnresolvedSourceFile = file, // duplicate of sourceFile but in a string column so it won't get resolved to a full path during binding.

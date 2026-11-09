@@ -21,6 +21,7 @@ namespace WixToolsetTest.CoreIntegration
     public class BundleFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildBundleWithBindVariableVersion()
         {
             var folder = TestData.Get(@"TestData");
@@ -49,6 +50,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildMultiFileBundle()
         {
             var folder = TestData.Get("TestData", "SimpleBundle");
@@ -78,6 +80,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildSimpleBundle()
         {
             var folder = TestData.Get(@"TestData", "SimpleBundle");
@@ -223,6 +226,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildX64Bundle()
         {
             var folder = TestData.Get("TestData", "SimpleBundle");
@@ -304,6 +308,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildSimpleBundleUsingExtensionBA()
         {
             var folder = TestData.Get("TestData", "SimpleBundle");
@@ -333,6 +338,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildSimpleBundleUsingInclude()
         {
             var folder = TestData.Get(@"TestData", "IncludePath");
@@ -371,6 +377,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildSingleExeBundle()
         {
             var folder = TestData.Get(@"TestData");
@@ -400,6 +407,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildSingleExeRemotePayloadBundle()
         {
             var folder = TestData.Get(@"TestData");
@@ -500,6 +508,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildBundleWithInvalidIcon()
         {
             var folder = TestData.Get(@"TestData");
@@ -523,7 +532,7 @@ namespace WixToolsetTest.CoreIntegration
                 var message = result.Messages.Where(m => m.Level == MessageLevel.Error).Select(m => m.ToString().Replace(folder, "<testdata>")).ToArray();
                 WixAssert.CompareLineByLine(new[]
                 {
-                    @"Failed to update resources in the bundle. Ensure the bundle icon file is an icon file at '<testdata>\.Data\burn.exe'. Detail: Failed to save resource. Error: 87"
+                    @"Failed to update resources in the bundle. Ensure the bundle icon file is an icon file at '<testdata>\.Data\burn.exe'. Detail: Failed to save resource. Error: 87".Replace('\\', Path.DirectorySeparatorChar)
                 }, message);
             }
         }
@@ -561,6 +570,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildUncompressedBundle()
         {
             var folder = TestData.Get(@"TestData") + Path.DirectorySeparatorChar;
@@ -600,7 +610,7 @@ namespace WixToolsetTest.CoreIntegration
                     "CopiedOutput\tbin\\test.txt",
                     "Input\tSimpleBundle\\data\\fakeba.dll",
                     "Input\tSimpleBundle\\data\\MsiPackage\\test.txt"
-                }, trackedLines);
+                }.Select(line => line.Replace('\\', Path.DirectorySeparatorChar)).ToArray(), trackedLines);
             }
         }
 
@@ -678,6 +688,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildWithDuplicatePayloadNamesThatAreIdentical()
         {
             var folder = TestData.Get(@"TestData");
@@ -766,6 +777,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildWithSubfolderContainer()
         {
             var folder = TestData.Get(@"TestData");
@@ -883,6 +895,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildBundleWithMsiPackageWithoutComponents()
         {
             var folder = TestData.Get("TestData", "BundleWithComponentlessPackage");
