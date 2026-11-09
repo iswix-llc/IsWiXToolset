@@ -37,7 +37,7 @@ namespace WixToolsetTest.BootstrapperApplications
                     Path.Combine(bundleSourceFolder, "DisplayInternalUIConditionBundle.wxs"),
                     "-ext", TestData.Get(@"WixToolset.BootstrapperApplications.wixext.dll"),
                     "-intermediateFolder", intermediateFolder,
-                    "-bindpath", Path.Combine(bundleSourceFolder, "data"),
+                    "-bindpath", Path.Combine(bundleSourceFolder, "Data"),
                     "-bindpath", dataFolder,
                     "-o", bundleFile,
                 });
@@ -78,7 +78,7 @@ namespace WixToolsetTest.BootstrapperApplications
                     Path.Combine(bundleSourceFolder, "DisplayFilesInUseDialogConditionBundle.wxs"),
                     "-ext", TestData.Get(@"WixToolset.BootstrapperApplications.wixext.dll"),
                     "-intermediateFolder", intermediateFolder,
-                    "-bindpath", Path.Combine(bundleSourceFolder, "data"),
+                    "-bindpath", Path.Combine(bundleSourceFolder, "Data"),
                     "-bindpath", dataFolder,
                     "-o", bundleFile,
                 });
@@ -119,7 +119,7 @@ namespace WixToolsetTest.BootstrapperApplications
                     Path.Combine(bundleSourceFolder, "BootstrapperApplicationId.wxs"),
                     "-ext", TestData.Get(@"WixToolset.BootstrapperApplications.wixext.dll"),
                     "-intermediateFolder", intermediateFolder,
-                    "-bindpath", Path.Combine(bundleSourceFolder, "data"),
+                    "-bindpath", Path.Combine(bundleSourceFolder, "Data"),
                     "-bindpath", dataFolder,
                     "-o", bundleFile,
                 });
