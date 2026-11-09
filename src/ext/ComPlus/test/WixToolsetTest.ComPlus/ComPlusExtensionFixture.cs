@@ -15,6 +15,7 @@ namespace WixToolsetTest.ComPlus
     public class ComPlusExtensionFixture
     {
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingComPlusPartition()
         {
             var folder = TestData.Get("TestData", "UsingComPlusPartition");

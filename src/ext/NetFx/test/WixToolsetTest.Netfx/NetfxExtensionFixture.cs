@@ -127,6 +127,7 @@ namespace WixToolsetTest.Netfx
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingNativeImage()
         {
             var folder = TestData.Get("TestData", "UsingNativeImage");
@@ -146,6 +147,7 @@ namespace WixToolsetTest.Netfx
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingNativeImageX64()
         {
             var folder = TestData.Get("TestData", "UsingNativeImage");
@@ -165,6 +167,7 @@ namespace WixToolsetTest.Netfx
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingNativeImageARM64()
         {
             var folder = TestData.Get("TestData", "UsingNativeImage");
@@ -184,6 +187,7 @@ namespace WixToolsetTest.Netfx
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingDotNetCompatibilityCheck()
         {
             var folder = TestData.Get("TestData", "UsingDotNetCompatibilityCheck");

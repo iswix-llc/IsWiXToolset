@@ -15,6 +15,7 @@ namespace WixToolsetTest.Http
     public class HttpExtensionFixture
     {
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingSsl()
         {
             var folder = TestData.Get("TestData", "Ssl");
@@ -35,6 +36,7 @@ namespace WixToolsetTest.Http
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingUrlReservation()
         {
             var folder = TestData.Get("TestData", "UsingUrlReservation");

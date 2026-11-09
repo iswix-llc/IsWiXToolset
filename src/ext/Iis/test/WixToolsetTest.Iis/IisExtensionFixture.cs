@@ -16,6 +16,7 @@ namespace WixToolsetTest.Iis
     public class IisExtensionFixture
     {
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingIIs()
         {
             var folder = TestData.Get("TestData", "UsingIis");

@@ -16,6 +16,7 @@ namespace WixToolsetTest.Dependency
     public class DependencyExtensionFixture
     {
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingProvides()
         {
             var folder = TestData.Get("TestData", "UsingProvides");

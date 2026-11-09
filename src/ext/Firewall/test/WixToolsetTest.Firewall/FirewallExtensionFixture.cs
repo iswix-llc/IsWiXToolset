@@ -20,6 +20,7 @@ namespace WixToolsetTest.Firewall
     public class FirewallExtensionFixture
     {
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingFirewall()
         {
             var folder = TestData.Get("TestData", "UsingFirewall");
@@ -59,6 +60,7 @@ namespace WixToolsetTest.Firewall
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingFirewallARM64()
         {
             var folder = TestData.Get("TestData", "UsingFirewall");
@@ -98,6 +100,7 @@ namespace WixToolsetTest.Firewall
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildWithProperties()
         {
             var folder = TestData.Get("TestData", "UsingProperties");
@@ -119,6 +122,7 @@ namespace WixToolsetTest.Firewall
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildWithPropertiesUsingFirewallARM64()
         {
             var folder = TestData.Get("TestData", "UsingProperties");

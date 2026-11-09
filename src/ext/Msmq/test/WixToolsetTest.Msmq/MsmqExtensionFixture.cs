@@ -19,6 +19,7 @@ namespace WixToolsetTest.Msmq
     public class MsmqExtensionFixture
     {
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingMessageQueue()
         {
             var folder = TestData.Get("TestData", "UsingMessageQueue");
