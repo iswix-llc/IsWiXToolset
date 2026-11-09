@@ -290,7 +290,7 @@ namespace WixToolsetTest.BootstrapperApplications
             {
                 var baseFolder = fs.GetFolder();
                 var bundleFile = Path.Combine(baseFolder, "bin", "test.exe");
-                var bundleSourceFolder = TestData.Get(@"TestData\Dncba");
+                var bundleSourceFolder = TestData.Get("TestData", "Dncba");
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
 
                 var compileResult = WixRunner.Execute(new[]

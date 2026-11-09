@@ -749,7 +749,7 @@ namespace WixToolset.Core
 
             if (compilerPayload.Id == null)
             {
-                compilerPayload.Id = exePayloadRefId ?? this.Core.CreateIdentifier("ba", compilerPayload.Name, compilerPayload.SourceFile);
+                compilerPayload.Id = exePayloadRefId ?? this.Core.CreateIdentifier("ba", compilerPayload.Name, Common.ToWindowsSourcePath(compilerPayload.SourceFile));
             }
 
             if (String.IsNullOrEmpty(compilerPayload.SourceFile) && String.IsNullOrEmpty(compilerPayload.Name))

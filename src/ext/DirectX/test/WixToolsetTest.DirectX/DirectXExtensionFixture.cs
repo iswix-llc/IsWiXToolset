@@ -17,7 +17,7 @@ namespace WixToolsetTest.DirectX
         [TestMethod]
         public void CanBuildUsingPixelShaderVersion()
         {
-            var folder = TestData.Get(@"TestData\UsingPixelShaderVersion");
+            var folder = TestData.Get("TestData", "UsingPixelShaderVersion");
             var build = new Builder(folder, typeof(DirectXExtensionFactory), new[] { folder });
 
             var results = build.BuildAndQuery(Build, "CustomAction", "Binary");

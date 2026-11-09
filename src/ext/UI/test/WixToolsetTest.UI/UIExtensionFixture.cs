@@ -235,10 +235,10 @@ namespace WixToolsetTest.UI
                     "-ext", Path.GetFullPath(typeof(UIExtensionFactory).Assembly.Location),
                     "-bindpath", bindFolder,
                     "-intermediateFolder", intermediateFolder,
-                    "-o", Path.Combine(intermediateFolder, @"bin\test.msi")
+                    "-o", Path.Combine(intermediateFolder, "bin", "test.msi")
                 });
 
-                var wid = WindowsInstallerData.Load(Path.Combine(intermediateFolder, @"bin\test.wixpdb"));
+                var wid = WindowsInstallerData.Load(Path.Combine(intermediateFolder, "bin", "test.wixpdb"));
                 var dialogTable = wid.Tables["Dialog"];
                 var dialogRow = dialogTable.Rows.Single(r => r.GetPrimaryKey() == "WelcomeEulaDlg");
             }

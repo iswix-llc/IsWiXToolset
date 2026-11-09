@@ -284,7 +284,7 @@ namespace WixToolset.Core
         {
             if (this.Id == null)
             {
-                this.Id = this.Core.CreateIdentifier(prefix, parentId, this.SourceFile?.ToUpperInvariant() ?? this.Name?.ToUpperInvariant());
+                this.Id = this.Core.CreateIdentifier(prefix, parentId, Common.ToWindowsSourcePath(this.SourceFile)?.ToUpperInvariant() ?? this.Name?.ToUpperInvariant());
             }
         }
 

@@ -37,7 +37,7 @@ namespace WixToolsetTest.Http
         [TestMethod]
         public void CanBuildUsingUrlReservation()
         {
-            var folder = TestData.Get(@"TestData\UsingUrlReservation");
+            var folder = TestData.Get("TestData", "UsingUrlReservation");
             var build = new Builder(folder, typeof(HttpExtensionFactory), new[] { folder });
 
             var results = build.BuildAndQuery(Build, "CustomAction", "Wix4HttpUrlAce", "Wix4HttpUrlReservation");

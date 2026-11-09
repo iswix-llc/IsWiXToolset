@@ -21,7 +21,7 @@ namespace WixToolsetTest.Util
         [TestMethod]
         public void CanBuildUsingFileShare()
         {
-            var folder = TestData.Get(@"TestData\UsingFileShare");
+            var folder = TestData.Get("TestData", "UsingFileShare");
             var build = new Builder(folder, typeof(UtilExtensionFactory), new[] { folder });
 
             var results = build.BuildAndQuery(Build, "Binary", "CustomAction", "Wix4FileShare", "Wix4FileSharePermissions");
@@ -42,7 +42,7 @@ namespace WixToolsetTest.Util
         [TestMethod]
         public void CanBuildUsingFileShareX64()
         {
-            var folder = TestData.Get(@"TestData\UsingFileShare");
+            var folder = TestData.Get("TestData", "UsingFileShare");
             var build = new Builder(folder, typeof(UtilExtensionFactory), new[] { folder });
 
             var results = build.BuildAndQuery(BuildX64, "Binary", "CustomAction", "Wix4FileShare", "Wix4FileSharePermissions");
@@ -86,7 +86,7 @@ namespace WixToolsetTest.Util
         [TestMethod]
         public void CanBuildCloseApplication()
         {
-            var folder = TestData.Get(@"TestData\CloseApplication");
+            var folder = TestData.Get("TestData", "CloseApplication");
             var build = new Builder(folder, typeof(UtilExtensionFactory), new[] { folder });
 
             var results = build.BuildAndQuery(BuildARM64, "Binary", "CustomAction", "Wix4CloseApplication");
@@ -103,7 +103,7 @@ namespace WixToolsetTest.Util
         [TestMethod]
         public void CanBuildInternetShortcutInProduct()
         {
-            var folder = TestData.Get(@"TestData\InternetShortcut");
+            var folder = TestData.Get("TestData", "InternetShortcut");
             var build = new Builder(folder, typeof(UtilExtensionFactory), new[] { folder });
 
             var results = build.BuildAndQuery(BuildX64, "Binary", "CustomAction", "RemoveFile", "Wix4InternetShortcut");
@@ -123,7 +123,7 @@ namespace WixToolsetTest.Util
         [TestMethod]
         public void CanBuildInternetShortcutInMergeModule()
         {
-            var folder = TestData.Get(@"TestData\InternetShortcutModule");
+            var folder = TestData.Get("TestData", "InternetShortcutModule");
             var build = new Builder(folder, typeof(UtilExtensionFactory), new[] { folder }, "test.msm");
 
             var results = build.BuildAndQuery(BuildX64, "Binary", "CustomAction", "RemoveFile", "Wix4InternetShortcut");
@@ -143,7 +143,7 @@ namespace WixToolsetTest.Util
         [TestMethod]
         public void CanBuildWithPermissionEx()
         {
-            var folder = TestData.Get(@"TestData\PermissionEx");
+            var folder = TestData.Get("TestData", "PermissionEx");
             var build = new Builder(folder, typeof(UtilExtensionFactory), new[] { folder });
 
             var results = build.BuildAndQuery(BuildX64, "Wix4SecureObject");
@@ -175,7 +175,7 @@ namespace WixToolsetTest.Util
         [TestMethod]
         public void CanBuildRemoveFolderExInMergeModule()
         {
-            var folder = TestData.Get(@"TestData\RemoveFolderEx");
+            var folder = TestData.Get("TestData", "RemoveFolderEx");
             var build = new Builder(folder, typeof(UtilExtensionFactory), new[] { folder }, "test.msm");
 
             var results = build.BuildAndQuery(BuildX64, "Binary", "CustomAction", "RemoveFile", "Wix4RemoveFolderEx");
@@ -190,7 +190,7 @@ namespace WixToolsetTest.Util
         [TestMethod]
         public void CanBuildRemoveFolderExInPackage()
         {
-            var folder = TestData.Get(@"TestData\RemoveFolderExPackage");
+            var folder = TestData.Get("TestData", "RemoveFolderExPackage");
             var build = new Builder(folder, typeof(UtilExtensionFactory), new[] { folder });
 
             var results = build.BuildAndQuery(BuildX64, "Binary", "CustomAction", "RemoveFile", "Wix4RemoveFolderEx");
@@ -222,7 +222,7 @@ namespace WixToolsetTest.Util
         [TestMethod]
         public void CanBuildWithEventManifest()
         {
-            var folder = TestData.Get(@"TestData\EventManifest");
+            var folder = TestData.Get("TestData", "EventManifest");
             var build = new Builder(folder, typeof(UtilExtensionFactory), new[] { folder });
 
             var results = build.BuildAndQuery(BuildARM64, "Binary", "CustomAction", "Wix4EventManifest", "Wix4XmlFile");
@@ -247,7 +247,7 @@ namespace WixToolsetTest.Util
         [TestMethod]
         public void CanBuildWithQueries()
         {
-            var folder = TestData.Get(@"TestData\Queries");
+            var folder = TestData.Get("TestData", "Queries");
             var build = new Builder(folder, typeof(UtilExtensionFactory), new[] { folder });
 
             var results = build.BuildAndQuery(BuildARM64, "Binary", "CustomAction");
@@ -266,7 +266,7 @@ namespace WixToolsetTest.Util
         [TestMethod]
         public void CanBuildAndDecompiileQueries()
         {
-            var folder = TestData.Get(@"TestData\Queries");
+            var folder = TestData.Get("TestData", "Queries");
             var build = new Builder(folder, typeof(UtilExtensionFactory), new[] { folder });
             var output = Path.Combine(folder, "decompile.xml");
 
@@ -345,7 +345,7 @@ namespace WixToolsetTest.Util
         [TestMethod]
         public void CanBuildBundleWithSearches()
         {
-            var folder = TestData.Get(@"TestData\BundleWithSearches");
+            var folder = TestData.Get("TestData", "BundleWithSearches");
             var rootFolder = TestData.Get();
             var wixext = Path.Combine(rootFolder, "WixToolset.Util.wixext.dll");
 
@@ -353,7 +353,7 @@ namespace WixToolsetTest.Util
             {
                 var baseFolder = fs.GetFolder();
                 var intermediateFolder = Path.Combine(baseFolder, "obj");
-                var bundlePath = Path.Combine(baseFolder, @"bin\test.exe");
+                var bundlePath = Path.Combine(baseFolder, "bin", "test.exe");
                 var baFolderPath = Path.Combine(baseFolder, "ba");
                 var extractFolderPath = Path.Combine(baseFolder, "extract");
 
@@ -371,7 +371,7 @@ namespace WixToolsetTest.Util
                 result.AssertSuccess();
 
                 Assert.IsTrue(File.Exists(bundlePath));
-                Assert.IsTrue(File.Exists(Path.Combine(baseFolder, @"bin\test.wixpdb")));
+                Assert.IsTrue(File.Exists(Path.Combine(baseFolder, "bin", "test.wixpdb")));
 
                 var extractResult = BundleExtractor.ExtractBAContainer(null, bundlePath, baFolderPath, extractFolderPath);
                 extractResult.AssertSuccess();
@@ -401,7 +401,7 @@ namespace WixToolsetTest.Util
         [TestMethod]
         public void CanCreateUserGroupWithComment()
         {
-            var folder = TestData.Get(@"TestData\CreateGroup");
+            var folder = TestData.Get("TestData", "CreateGroup");
             var build = new Builder(folder, typeof(UtilExtensionFactory), new[] { folder });
 
             var results = build.BuildAndQuery(BuildX64, "Binary", "CustomAction", "Wix4Group", "Wix6Group");
@@ -557,7 +557,7 @@ namespace WixToolsetTest.Util
         [TestMethod]
         public void CanCreateUserAccountWithComment()
         {
-            var folder = TestData.Get(@"TestData\CreateUser");
+            var folder = TestData.Get("TestData", "CreateUser");
             var build = new Builder(folder, typeof(UtilExtensionFactory), new[] { folder });
 
             var results = build.BuildAndQuery(Build, "Wix4User");
