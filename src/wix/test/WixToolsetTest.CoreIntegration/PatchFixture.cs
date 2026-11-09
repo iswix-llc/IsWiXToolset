@@ -55,6 +55,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildSimplePatchUsingWixpdbs()
         {
             var folder = TestData.Get(@"TestData", "PatchSingle");
@@ -82,6 +83,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildSimplePatchWithNewFileAndFilteringUsingWixpdbs()
         {
             var folder = TestData.Get(@"TestData", "PatchWithAddedFile");
@@ -109,6 +111,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildSimplePatchWithFileChangesUsingMsi()
         {
             var sourceFolder = TestData.Get(@"TestData", "PatchWithFileChangesUsingMsi");
@@ -138,6 +141,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildSimplePatchWithFileChangesUsingWixpdb()
         {
             var sourceFolder = TestData.Get(@"TestData", "PatchWithFileChanges");
@@ -167,6 +171,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildSimplePatchWithFileChangesUsingWixpdbAndAlternativeUpdatedSourceFolder()
         {
             var sourceFolder = TestData.Get(@"TestData", "PatchWithFileChanges");
@@ -227,6 +232,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildSimplePatchWithNoFileChanges()
         {
             var folder = TestData.Get(@"TestData", "PatchNoFileChanges");
@@ -252,6 +258,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildSimplePatchWithSoftwareTag()
         {
             var folder = TestData.Get(@"TestData", "PatchWithSoftwareTag");
@@ -282,7 +289,7 @@ namespace WixToolsetTest.CoreIntegration
 
                 var contents = file.OpenText().ReadToEnd();
                 contents = Regex.Replace(contents, @"msi\:package/[A-Z0-9\-]+", "msi:package/G-U-I-D");
-                WixAssert.StringEqual(String.Join(Environment.NewLine, new[]
+                WixAssert.StringEqual(String.Join("\r\n", new[]
                 {
                     "<?xml version='1.0' encoding='utf-8'?>",
                     "<SoftwareIdentity tagId='msi:package/G-U-I-D' name='~Test Package' version='1.0.1' versionScheme='multipartnumeric' xmlns='http://standards.iso.org/iso/19770/-2/2015/schema.xsd'>",
@@ -294,6 +301,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildSimplePatchWithBaselineIdTooLong()
         {
             var folder = TestData.Get(@"TestData", "PatchBaselineIdTooLong");
@@ -316,6 +324,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildPatchFromProductWithFilesFromWixlib()
         {
             var sourceFolder = TestData.Get(@"TestData", "PatchFromWixlib");
@@ -337,6 +346,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildPatchFromProductWithAddedRemoveFileRows()
         {
             var sourceFolder = TestData.Get(@"TestData", "PatchWithRemovedRemoveFileRows");
@@ -671,16 +681,8 @@ namespace WixToolsetTest.CoreIntegration
 
         private static XDocument GetExtractPatchXml(string path)
         {
-            var buffer = new StringBuilder(65535);
-            var size = buffer.Capacity;
-
-            var er = MsiExtractPatchXMLData(path, 0, buffer, ref size);
-            if (er != 0)
-            {
-                throw new Win32Exception(er);
-            }
-
-            return XDocument.Parse(buffer.ToString());
+            // Uses msi.dll on Windows and the managed implementation elsewhere (or with WIX_MANAGED_MSI=1).
+            return XDocument.Parse(WixToolset.Core.Native.Msi.Installer.ExtractPatchXml(path));
         }
 
         private static void VerifyPatchTargetCodesInBurnManifest(string pdbPath, string[] expected)
@@ -696,9 +698,6 @@ namespace WixToolsetTest.CoreIntegration
                 WixAssert.CompareLineByLine(expected, patchTargetCodes);
             }
         }
-
-        [DllImport("msi.dll", EntryPoint = "MsiExtractPatchXMLDataW", CharSet = CharSet.Unicode, ExactSpelling = true)]
-        private static extern int MsiExtractPatchXMLData(string szPatchPath, int dwReserved, StringBuilder szXMLData, ref int pcchXMLData);
 
         [DllImport("msi.dll", EntryPoint = "MsiApplyPatchW", CharSet = CharSet.Unicode, ExactSpelling = true)]
         private static extern int MsiApplyPatch(string szPatchPackage, string szInstallPackage, int eInstallType, string szCommandLine);

@@ -31,12 +31,16 @@ namespace WixToolset.Core.Native.Managed
             try
             {
                 var patchCode = String.Empty;
+                var patchMinMsiVersion = 0;
+                var transformMinMsiVersion = 0;
                 var targets = new List<XElement>();
+                var targetCodes = new List<string>();
 
                 using (var summary = new Lib.SummaryInfo(patchPath, false))
                 {
                     var revision = summary.RevisionNumber ?? String.Empty;
                     patchCode = revision.Length >= 38 ? revision.Substring(0, 38) : revision;
+                    patchMinMsiVersion = summary.PageCount;
                 }
 
                 using (var db = new Lib.Database(patchPath, Lib.DatabaseOpenMode.ReadOnly | Lib.DatabaseOpenMode.PatchFile))
@@ -63,7 +67,15 @@ namespace WixToolset.Core.Native.Managed
 
                             using (var info = new Lib.SummaryInfo(transformPath, false))
                             {
-                                targets.Add(CreateTargetProduct(info));
+                                transformMinMsiVersion = Math.Max(transformMinMsiVersion, info.PageCount);
+                                var target = CreateTargetProduct(info);
+                                targets.Add(target);
+
+                                var targetCode = target.Element(PatchNamespace + "TargetProductCode").Value;
+                                if (!targetCodes.Contains(targetCode))
+                                {
+                                    targetCodes.Add(targetCode);
+                                }
                             }
                         }
                     }
@@ -71,8 +83,29 @@ namespace WixToolset.Core.Native.Managed
 
                 var root = new XElement(PatchNamespace + "MsiPatch",
                     new XAttribute("SchemaVersion", "1.0.0.0"),
-                    new XAttribute("PatchGUID", patchCode),
-                    targets);
+                    new XAttribute("PatchGUID", patchCode));
+
+                // Patch packages carry no page count of their own. msi.dll reports the highest transform
+                // requirement as a major version (observed: transforms requiring 500 give MinMsiVersion="5").
+                if (patchMinMsiVersion <= 0 && transformMinMsiVersion >= 100)
+                {
+                    patchMinMsiVersion = transformMinMsiVersion / 100;
+                }
+
+                if (patchMinMsiVersion > 0)
+                {
+                    root.Add(new XAttribute("MinMsiVersion", patchMinMsiVersion));
+                }
+
+                root.Add(targets);
+
+                // msi.dll also lists each distinct target product code directly under the root.
+                foreach (var code in targetCodes)
+                {
+                    root.Add(new XElement(PatchNamespace + "TargetProductCode", code));
+                }
+
+                root.Add(ReadSequenceData(patchPath));
 
                 return new XDocument(root).ToString(SaveOptions.DisableFormatting);
             }
@@ -101,7 +134,6 @@ namespace WixToolset.Core.Native.Managed
 
             // Template: <platform>;<language>
             var template = (info.Template ?? String.Empty).Split(';');
-            var platform = template.Length > 0 ? template[0] : String.Empty;
             var language = template.Length > 1 ? template[1] : String.Empty;
 
             // Character count: validation flags in the high word, error conditions in the low word.
@@ -113,17 +145,71 @@ namespace WixToolset.Core.Native.Managed
                 filter = (validations & ValidateMinorVersion) != 0 ? "MajorMinor" : (validations & ValidateMajorVersion) != 0 ? "Major" : "MajorMinorUpdate";
             }
 
-            return new XElement(PatchNamespace + "TargetProduct",
+            var product = new XElement(PatchNamespace + "TargetProduct");
+
+            if (info.PageCount > 0)
+            {
+                product.Add(new XAttribute("MinMsiVersion", info.PageCount));
+            }
+
+            product.Add(
                 new XElement(PatchNamespace + "TargetProductCode", new XAttribute("Validate", Flag(validations, ValidateProduct)), targetCode),
                 new XElement(PatchNamespace + "TargetVersion",
                     new XAttribute("Validate", Flag(validations, ValidateMajorVersion | ValidateMinorVersion | ValidateUpdateVersion)),
                     new XAttribute("ComparisonType", "Equal"),
                     new XAttribute("ComparisonFilter", filter),
                     targetVersion),
-                new XElement(PatchNamespace + "UpdatedVersion", updatedVersion),
-                new XElement(PatchNamespace + "UpgradeCode", new XAttribute("Validate", Flag(validations, ValidateUpgradeCode)), upgradeCode),
-                new XElement(PatchNamespace + "Platform", platform),
-                new XElement(PatchNamespace + "Language", new XAttribute("Validate", Flag(validations, ValidateLanguage)), language));
+                new XElement(PatchNamespace + "TargetLanguage", new XAttribute("Validate", Flag(validations, ValidateLanguage)), language),
+                new XElement(PatchNamespace + "UpdatedLanguages", language),
+                new XElement(PatchNamespace + "UpgradeCode", new XAttribute("Validate", Flag(validations, ValidateUpgradeCode)), upgradeCode));
+
+            // msi.dll leaves out UpdatedVersion when the patch does not change the version.
+            if (!String.Equals(updatedVersion, targetVersion, StringComparison.Ordinal))
+            {
+                product.Element(PatchNamespace + "TargetVersion").AddAfterSelf(new XElement(PatchNamespace + "UpdatedVersion", updatedVersion));
+            }
+
+            return product;
+        }
+
+        private static List<XElement> ReadSequenceData(string patchPath)
+        {
+            var result = new List<XElement>();
+
+            try
+            {
+                using (var db = new Lib.Database(patchPath, Lib.DatabaseOpenMode.ReadOnly | Lib.DatabaseOpenMode.PatchFile))
+                using (var view = db.OpenView("SELECT `PatchFamily`, `ProductCode`, `Sequence`, `Attributes` FROM `MsiPatchSequence`"))
+                {
+                    view.Execute();
+
+                    Lib.Record record;
+                    while ((record = view.Fetch()) != null)
+                    {
+                        using (record)
+                        {
+                            var data = new XElement(PatchNamespace + "SequenceData",
+                                new XElement(PatchNamespace + "PatchFamily", record.GetString(1)));
+
+                            if (!record.IsNull(2) && !String.IsNullOrEmpty(record.GetString(2)))
+                            {
+                                data.Add(new XElement(PatchNamespace + "ProductCode", record.GetString(2)));
+                            }
+
+                            data.Add(new XElement(PatchNamespace + "Sequence", record.GetString(3)));
+                            data.Add(new XElement(PatchNamespace + "Attributes", record.IsNull(4) ? 0 : record.GetInteger(4)));
+
+                            result.Add(data);
+                        }
+                    }
+                }
+            }
+            catch (Lib.InstallerException)
+            {
+                // The patch has no MsiPatchSequence table.
+            }
+
+            return result;
         }
 
         private static string Flag(int validations, int mask)
