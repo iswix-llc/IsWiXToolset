@@ -219,6 +219,7 @@ namespace WixToolsetTest.UI
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingWixUIMinimalAndReadPdb()
         {
             var folder = TestData.Get(@"TestData", "WixUI_Minimal");
@@ -369,6 +370,7 @@ namespace WixToolsetTest.UI
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CannotBuildWithV3LikeUIRef()
         {
             var folder = TestData.Get(@"TestData", "InvalidUIRef");

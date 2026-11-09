@@ -17,6 +17,7 @@ namespace WixToolsetTest.Netfx
     public class NetfxExtensionFixture
     {
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingLatestDotNetCorePackages()
         {
             using (var fs = new DisposableFileSystem())
@@ -44,6 +45,7 @@ namespace WixToolsetTest.Netfx
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingLatestDotNetCorePackages_X64()
         {
             using (var fs = new DisposableFileSystem())
@@ -70,6 +72,7 @@ namespace WixToolsetTest.Netfx
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingNetFx481Packages()
         {
             using (var fs = new DisposableFileSystem())
@@ -96,6 +99,7 @@ namespace WixToolsetTest.Netfx
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingNetFxSearches()
         {
             using (var fs = new DisposableFileSystem())

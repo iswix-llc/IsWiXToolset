@@ -13,6 +13,7 @@ namespace WixToolsetTest.BootstrapperApplications
     public class InternalUIBAFixture
     {
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingWixIuiBa()
         {
             using (var fs = new DisposableFileSystem())
@@ -52,6 +53,7 @@ namespace WixToolsetTest.BootstrapperApplications
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingWixIuiBaWithUrlPrereqPackage()
         {
             using (var fs = new DisposableFileSystem())
@@ -97,6 +99,7 @@ namespace WixToolsetTest.BootstrapperApplications
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingWixIuiBaWithImplicitPrimaryPackage()
         {
             using (var fs = new DisposableFileSystem())
@@ -142,6 +145,7 @@ namespace WixToolsetTest.BootstrapperApplications
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingWixIuiBaWithWarnings()
         {
             using (var fs = new DisposableFileSystem())
@@ -197,6 +201,7 @@ namespace WixToolsetTest.BootstrapperApplications
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingWixIuiBaAndForcedCachePrimaryPackage()
         {
             using (var fs = new DisposableFileSystem())
@@ -263,6 +268,7 @@ namespace WixToolsetTest.BootstrapperApplications
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CannotBuildUsingWixIuiBaWithAllPrereqPackages()
         {
             using (var fs = new DisposableFileSystem())
@@ -292,6 +298,7 @@ namespace WixToolsetTest.BootstrapperApplications
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CannotBuildUsingWixIuiBaWithImplicitNonMsiPrimaryPackage()
         {
             using (var fs = new DisposableFileSystem())
@@ -321,6 +328,7 @@ namespace WixToolsetTest.BootstrapperApplications
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CannotBuildUsingWixIuiBaWithImplicitPrimaryPackageEnableFeatureSelection()
         {
             using (var fs = new DisposableFileSystem())
@@ -350,6 +358,7 @@ namespace WixToolsetTest.BootstrapperApplications
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CannotBuildUsingWixIuiBaWithMultipleNonPermanentNonPrimaryPackages()
         {
             using (var fs = new DisposableFileSystem())
@@ -380,6 +389,7 @@ namespace WixToolsetTest.BootstrapperApplications
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CannotBuildUsingWixIuiBaWithMultiplePrimaryPackagesOfSameType()
         {
             using (var fs = new DisposableFileSystem())
@@ -410,6 +420,7 @@ namespace WixToolsetTest.BootstrapperApplications
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CannotBuildUsingWixIuiBaWithNoDefaultPrimaryPackage()
         {
             using (var fs = new DisposableFileSystem())
@@ -439,6 +450,7 @@ namespace WixToolsetTest.BootstrapperApplications
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CannotBuildUsingWixIuiBaWithNonMsiPrimaryPackage()
         {
             using (var fs = new DisposableFileSystem())
@@ -468,6 +480,7 @@ namespace WixToolsetTest.BootstrapperApplications
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CannotBuildUsingWixIuiBaWithNonPermanentPrereqPackage()
         {
             using (var fs = new DisposableFileSystem())
@@ -497,6 +510,7 @@ namespace WixToolsetTest.BootstrapperApplications
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CannotBuildUsingWixIuiBaWithPermanentPrimaryPackage()
         {
             using (var fs = new DisposableFileSystem())
@@ -527,6 +541,7 @@ namespace WixToolsetTest.BootstrapperApplications
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CannotBuildUsingWixIuiBaWithPrimaryPackageEnableFeatureSelection()
         {
             using (var fs = new DisposableFileSystem())
@@ -557,6 +572,7 @@ namespace WixToolsetTest.BootstrapperApplications
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CannotBuildUsingWixIuiBaWithPrimaryPrereqPackage()
         {
             using (var fs = new DisposableFileSystem())

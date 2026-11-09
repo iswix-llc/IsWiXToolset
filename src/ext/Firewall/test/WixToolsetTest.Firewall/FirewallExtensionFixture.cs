@@ -140,6 +140,7 @@ namespace WixToolsetTest.Firewall
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanRoundtripFirewallExceptions()
         {
             var folder = TestData.Get(@"TestData", "UsingFirewall");
@@ -188,6 +189,7 @@ namespace WixToolsetTest.Firewall
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanRoundtripFirewallExceptionsWithProperties()
         {
             var folder = TestData.Get(@"TestData", "UsingProperties");
@@ -219,6 +221,7 @@ namespace WixToolsetTest.Firewall
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void RoundtripAttributesAreCorrectForApp()
         {
             var actual = BuildAndDecompileAndBuild("http://wixtoolset.org/schemas/v4/wxs/firewall", "ExampleApp");
@@ -237,6 +240,7 @@ namespace WixToolsetTest.Firewall
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void RoundtripAttributesAreCorrectForPort()
         {
             var actual = BuildAndDecompileAndBuild("http://wixtoolset.org/schemas/v4/wxs/firewall", "ExamplePort");
@@ -255,6 +259,7 @@ namespace WixToolsetTest.Firewall
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void RoundtripAttributesAreCorrectForDNSScope()
         {
             var actual = BuildAndDecompileAndBuild("http://wixtoolset.org/schemas/v4/wxs/firewall", "ExampleDNSScope");
@@ -271,6 +276,7 @@ namespace WixToolsetTest.Firewall
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void RoundtripAttributesAreCorrectForDHCPScope()
         {
             var actual = BuildAndDecompileAndBuild("http://wixtoolset.org/schemas/v4/wxs/firewall", "ExampleDHCPScope");
@@ -288,6 +294,7 @@ namespace WixToolsetTest.Firewall
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void RoundtripAttributesAreCorrectForWINSScope()
         {
             var actual = BuildAndDecompileAndBuild("http://wixtoolset.org/schemas/v4/wxs/firewall", "ExampleWINSScope");
@@ -305,6 +312,7 @@ namespace WixToolsetTest.Firewall
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void RoundtripAttributesAreCorrectForDefaultGatewayScope()
         {
             var actual = BuildAndDecompileAndBuild("http://wixtoolset.org/schemas/v4/wxs/firewall", "ExampleDefaultGatewayScope");
@@ -322,6 +330,7 @@ namespace WixToolsetTest.Firewall
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void RoundtripAttributesAreCorrectForINetFwRule3Values()
         {
             var actual = BuildAndDecompileAndBuild("http://wixtoolset.org/schemas/v4/wxs/firewall", "INetFwRule3 values");
@@ -342,6 +351,7 @@ namespace WixToolsetTest.Firewall
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void RoundtripAttributesAreCorrectForINetFwRule3Properties()
         {
             var actual = BuildAndDecompileAndBuild("http://wixtoolset.org/schemas/v4/wxs/firewall", "INetFwRule3 properties");
@@ -362,6 +372,7 @@ namespace WixToolsetTest.Firewall
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void RoundtripAttributesAreCorrectForGroupingValue()
         {
             var actual = BuildAndDecompileAndBuild("http://wixtoolset.org/schemas/v4/wxs/firewall", "GroupingExample1");
@@ -377,6 +388,7 @@ namespace WixToolsetTest.Firewall
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void RoundtripAttributesAreCorrectForGroupingProperty()
         {
             var actual = BuildAndDecompileAndBuild("http://wixtoolset.org/schemas/v4/wxs/firewall", "GroupingExample2");
@@ -393,6 +405,7 @@ namespace WixToolsetTest.Firewall
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void RoundtripAttributesAreCorrectForIcmpValue()
         {
             var actual = BuildAndDecompileAndBuild("http://wixtoolset.org/schemas/v4/wxs/firewall", "ICMPExample1");
@@ -408,6 +421,7 @@ namespace WixToolsetTest.Firewall
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void RoundtripAttributesAreCorrectForIcmpProperty()
         {
             var actual = BuildAndDecompileAndBuild("http://wixtoolset.org/schemas/v4/wxs/firewall", "ICMPExample2");
@@ -423,6 +437,7 @@ namespace WixToolsetTest.Firewall
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void RoundtripAttributesAreCorrectForLocalScopeValue()
         {
             var actual = BuildAndDecompileAndBuild("http://wixtoolset.org/schemas/v4/wxs/firewall", "LocalScopeExample1");
@@ -438,6 +453,7 @@ namespace WixToolsetTest.Firewall
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void RoundtripAttributesAreCorrectForLocalScopeProperty()
         {
             var actual = BuildAndDecompileAndBuild("http://wixtoolset.org/schemas/v4/wxs/firewall", "LocalScopeExample2");
@@ -453,6 +469,7 @@ namespace WixToolsetTest.Firewall
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void RoundtripAttributesAreCorrectForRemotePorts()
         {
             var actual = BuildAndDecompileAndBuild("http://wixtoolset.org/schemas/v4/wxs/firewall", "RemotePortExample1");
@@ -469,6 +486,7 @@ namespace WixToolsetTest.Firewall
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void RoundtripAttributesAreCorrectForRemotePortsProperty()
         {
             var actual = BuildAndDecompileAndBuild("http://wixtoolset.org/schemas/v4/wxs/firewall", "RemotePortExample2");
@@ -485,6 +503,7 @@ namespace WixToolsetTest.Firewall
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void RoundtripAttributesAreCorrectWhenPropertiesAreUsed()
         {
             var actual = BuildAndDecompileAndBuild("http://wixtoolset.org/schemas/v4/wxs/firewall", "[NAME]", "UsingProperties");
@@ -536,6 +555,7 @@ namespace WixToolsetTest.Firewall
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void RoundtripAttributesAreCorrectWhenNestedPropertiesAreUsed()
         {
             var actual = BuildAndDecompileAndBuild("http://wixtoolset.org/schemas/v4/wxs/firewall", "Single Nested properties", "UsingProperties");
@@ -569,6 +589,7 @@ namespace WixToolsetTest.Firewall
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void RoundtripAttributesAreCorrectWhenMultipleNestedPropertiesAreUsed()
         {
             var actual = BuildAndDecompileAndBuild("http://wixtoolset.org/schemas/v4/wxs/firewall", "Multiple Nested properties", "UsingProperties");
@@ -627,6 +648,7 @@ namespace WixToolsetTest.Firewall
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanDecompileWix4FirewallPackage()
         {
             var folder = TestData.Get("TestData", "DecompileWix4Firewall");

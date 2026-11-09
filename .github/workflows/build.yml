@@ -95,6 +95,16 @@ jobs:
           retention-days: 1
           if-no-files-found: error
 
+      - name: Save extension test binaries for the Linux job
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-test-inputs-ext
+          path: build/*.wixext/Release/net8.0/
+          include-hidden-files: true
+          retention-days: 1
+          if-no-files-found: error
+
       - name: Validate test results
         shell: cmd
         run: 7z a build\testresults.zip @src\testresultfilelist.txt
@@ -170,6 +180,26 @@ jobs:
           --results-directory linux-results
           --logger "trx;LogFileName=linux-crossplatform-native.trx"
           --logger "console;verbosity=normal"
+
+      - name: Download extension test binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-test-inputs-ext
+          path: linux-tests-ext
+
+      # The extension tests are MSTest.Sdk executables (Microsoft.Testing.Platform), not VSTest assemblies,
+      # so they are run directly. Only tests tagged TestCategory=CrossPlatform run; the others still need
+      # msi.dll to read the built package back.
+      - name: Run cross-platform extension tests
+        run: |
+          status=0
+          for d in linux-tests-ext/*.wixext/Release/net8.0/WixToolsetTest.*.dll; do
+            echo "=== $d"
+            dotnet "$d" --filter "TestCategory=CrossPlatform" --results-directory linux-results --report-trx --report-trx-filename "linux-ext-$(basename "$d" .dll).trx" || rc=$?
+            # Exit code 8 means no test in this project matched the filter (nothing is tagged there yet).
+            if [ "${rc:-0}" -ne 0 ] && [ "$rc" -ne 8 ]; then status=$rc; fi; rc=0
+          done
+          exit $status
 
       - name: Save Linux test results
         if: ${{ !cancelled() }}

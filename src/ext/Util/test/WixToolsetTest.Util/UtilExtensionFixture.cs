@@ -61,6 +61,7 @@ namespace WixToolsetTest.Util
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanRoundtripFileShare()
         {
             var folder = TestData.Get(@"TestData", "UsingFileShare");
@@ -264,6 +265,7 @@ namespace WixToolsetTest.Util
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildAndDecompiileQueries()
         {
             var folder = TestData.Get("TestData", "Queries");
@@ -306,6 +308,7 @@ namespace WixToolsetTest.Util
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanRoundtripXmlConfig()
         {
             var folder = TestData.Get(@"TestData", "XmlConfig");
@@ -343,6 +346,7 @@ namespace WixToolsetTest.Util
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildBundleWithSearches()
         {
             var folder = TestData.Get("TestData", "BundleWithSearches");
@@ -631,6 +635,7 @@ namespace WixToolsetTest.Util
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CannotBuildBundleWithSearchesUsingBuiltinVariableNames()
         {
             var folder = TestData.Get("TestData", "BundleWithSearches");

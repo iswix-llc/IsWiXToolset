@@ -14,6 +14,7 @@ namespace WixToolsetTest.PowerShell
     public class PowerShellExtensionFixture
     {
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CantBuildUsingTypesFileWithoutSnapIn()
         {
             var folder = TestData.Get("TestData", "TypesFile");

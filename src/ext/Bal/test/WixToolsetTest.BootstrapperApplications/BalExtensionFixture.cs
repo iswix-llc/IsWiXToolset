@@ -18,6 +18,7 @@ namespace WixToolsetTest.BootstrapperApplications
     public class BalExtensionFixture
     {
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingDisplayInternalUICondition()
         {
             using (var fs = new DisposableFileSystem())
@@ -58,6 +59,7 @@ namespace WixToolsetTest.BootstrapperApplications
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingDisplayFilesInUseDialogCondition()
         {
             using (var fs = new DisposableFileSystem())
@@ -98,6 +100,7 @@ namespace WixToolsetTest.BootstrapperApplications
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingBootstrapperApplicationId()
         {
             using (var fs = new DisposableFileSystem())
@@ -141,6 +144,7 @@ namespace WixToolsetTest.BootstrapperApplications
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingOverridable()
         {
             using (var fs = new DisposableFileSystem())
@@ -184,6 +188,7 @@ namespace WixToolsetTest.BootstrapperApplications
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingWixStdBa()
         {
             using (var fs = new DisposableFileSystem())
@@ -252,6 +257,7 @@ namespace WixToolsetTest.BootstrapperApplications
         //}
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CannotBuildUsingMBAWithNoPrereqs()
         {
             using (var fs = new DisposableFileSystem())
@@ -284,6 +290,7 @@ namespace WixToolsetTest.BootstrapperApplications
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CannotBuildUsingDncbaMissingBAFactoryPayload()
         {
             using (var fs = new DisposableFileSystem())
@@ -315,6 +322,7 @@ namespace WixToolsetTest.BootstrapperApplications
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CannotBuildUsingOverridableWrongCase()
         {
             using (var fs = new DisposableFileSystem())
