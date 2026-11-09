@@ -22,7 +22,7 @@ IsWiX.Toolset is a build of the [WiX Toolset](https://wixtoolset.org/) compiled 
 
 - It is a build of the WiX Toolset from source. Package IDs use the `IsWiX.WixToolSet.` prefix; assembly names and namespaces are unchanged.
 - It is not an official WiX Toolset release, and it is not affiliated with or endorsed by the WiX Toolset project.
-- It is not a place for active development. We do not intend to do active development in this repository.
+- It is a place for active development. Please migrate [wixtoolset/issues](https://github.com/wixtoolset/issues/issues/) to here if you'd like them considered.  Everything done here is still done under the MS-RL license and anyone including the wixtoolset team is welcome to use the improvements made here.
 
 ## Contributing and getting help
 
