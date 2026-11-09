@@ -27,9 +27,17 @@ env:
 
 jobs:
   build:
-    name: Build and test
+    # Every job does the whole build, then runs a single suite of the slow end-to-end tests (WixE2ESuite,
+    # see src/test/test.cmd). The three suites take about 18 (burn), 12 (msi) and 1 (rest) minutes, so
+    # running them side by side makes the run roughly as long as the build plus the burn suite. The "rest"
+    # job also produces everything that is only needed once: packages and the inputs for the Linux job.
+    name: Build and test (${{ matrix.suite }})
     runs-on: windows-2022 # WiX v7 builds with VS2022 (v143 toolset).
     timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [rest, burn, msi]
     env:
       # Never an official WiX build. Kept set (to "false") because some tests, such as the Firewall
       # extension's, turn on MSI validation whenever this variable is present.
@@ -57,10 +65,11 @@ jobs:
         run: ./src/build_official.cmd
         env:
           RuntimeTestsEnabled: true
+          WixE2ESuite: ${{ matrix.suite }}
 
       # The Linux job below runs the cross-platform integration tests against this build's output.
       - name: Save test binaries for the Linux job
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && matrix.suite == 'rest' }}
         uses: actions/upload-artifact@v4
         with:
           name: linux-test-inputs
@@ -73,7 +82,7 @@ jobs:
       # Linux and macOS). The tests then read the packages back with the real msi.dll, so this also proves the
       # managed output is accepted by Windows Installer.
       - name: Test cross-platform tests with managed backends
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && matrix.suite == 'rest' }}
         shell: cmd
         env:
           WIX_MANAGED_MSI: 1
@@ -86,7 +95,7 @@ jobs:
           --logger "console;verbosity=normal"
 
       - name: Save Core.Native test binaries for the Linux job
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && matrix.suite == 'rest' }}
         uses: actions/upload-artifact@v4
         with:
           name: linux-test-inputs-native
@@ -96,7 +105,7 @@ jobs:
           if-no-files-found: error
 
       - name: Save extension test binaries for the Linux job
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && matrix.suite == 'rest' }}
         uses: actions/upload-artifact@v4
         with:
           name: linux-test-inputs-ext
@@ -111,6 +120,7 @@ jobs:
 
       # Unsigned development build of the packages, for trying out a commit.
       - name: Save build
+        if: ${{ matrix.suite == 'rest' }}
         uses: actions/upload-artifact@v4
         with:
           name: artifacts
@@ -136,7 +146,7 @@ jobs:
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: logs_${{ github.run_id }}
+          name: logs_${{ github.run_id }}_${{ matrix.suite }}
           path: build/logs/
 
   test-linux:

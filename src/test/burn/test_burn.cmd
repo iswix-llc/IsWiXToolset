@@ -21,6 +21,7 @@ msbuild -Restore TestData6\TestData6.proj -p:Configuration=%_C% -tl -nologo -m -
 mt.exe -manifest "WixToolsetTest.BurnE2E\testhost.longpathaware.manifest" -updateresource:"%_B%\net8.0-windows\testhost.exe"
 
 @if not "%RuntimeTestsEnabled%"=="true" goto :LExit
+@if not "%WixE2ESuite%"=="" if /i not "%WixE2ESuite%"=="burn" goto :LExit
 
 dotnet test -c %_C% WixToolsetTest.BurnE2E --nologo --no-build -l "trx;LogFileName=%_L%\TestResults\WixToolsetTest.BurnE2E.trx" || exit /b
 
