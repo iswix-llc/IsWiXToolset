@@ -150,6 +150,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanGetRemoteBundlePayloadWithCertificate()
         {
             var folder = TestData.Get(@"TestData");
@@ -328,6 +329,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanGetRemoteMsuPayloadWithCertificate()
         {
             var folder = TestData.Get(@"TestData");
@@ -403,6 +405,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanGetRemotePayloadWithCertificate()
         {
             var folder = TestData.Get(@"TestData");

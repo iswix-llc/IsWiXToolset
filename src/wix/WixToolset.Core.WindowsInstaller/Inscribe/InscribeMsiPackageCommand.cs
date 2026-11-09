@@ -8,6 +8,7 @@ namespace WixToolset.Core.WindowsInstaller.Inscribe
     using System.IO;
     using System.Runtime.InteropServices;
     using System.Security.Cryptography.X509Certificates;
+    using WixToolset.Core.Native;
     using WixToolset.Core.Native.Msi;
     using WixToolset.Core.WindowsInstaller.Bind;
     using WixToolset.Data;
@@ -182,8 +183,24 @@ namespace WixToolset.Core.WindowsInstaller.Inscribe
                         try
                         {
                             // Get the certificate from the cab
-                            var signedFileCert = X509Certificate.CreateFromSignedFile(cabPath);
-                            cert2 = new X509Certificate2(signedFileCert);
+                            if (AuthenticodeSignature.UseManagedReader)
+                            {
+                                var rawCertificate = AuthenticodeSignature.ReadSignerCertificate(cabPath);
+
+                                // If the file has no cert, continue, but flag that we found at least one so we can later give a warning
+                                if (rawCertificate == null)
+                                {
+                                    foundUnsignedExternals = true;
+                                    continue;
+                                }
+
+                                cert2 = new X509Certificate2(rawCertificate);
+                            }
+                            else
+                            {
+                                var signedFileCert = X509Certificate.CreateFromSignedFile(cabPath);
+                                cert2 = new X509Certificate2(signedFileCert);
+                            }
                         }
                         catch (System.Security.Cryptography.CryptographicException e)
                         {
