@@ -425,6 +425,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotBuildPatchWithMissingBaseline()
         {
             var sourceFolder = TestData.Get(@"TestData", "PatchWithMissingBaseline");
@@ -441,7 +442,7 @@ namespace WixToolsetTest.CoreIntegration
                 var messages = result.Messages.Select(m => m.ToString().Replace(tempFolderPatch, "<tempFolderPatch>").Replace(templateBaselineFolder, "<templateBaselineFolder>").Replace(templateUpdateFolder, "<templateUpdateFolder>")).ToArray();
                 WixAssert.CompareLineByLine(new[]
                 {
-                    @"Cannot find the WixPatchBaseline file 'Missing.wixpdb'. The following paths were checked: Missing.wixpdb, <tempFolderPatch>\bin\Missing.wixpdb, <templateBaselineFolder>\Missing.wixpdb, <templateUpdateFolder>\Missing.wixpdb",
+                    "Cannot find the WixPatchBaseline file 'Missing.wixpdb'. The following paths were checked: Missing.wixpdb, <tempFolderPatch>/bin/Missing.wixpdb, <templateBaselineFolder>/Missing.wixpdb, <templateUpdateFolder>/Missing.wixpdb".Replace('/', Path.DirectorySeparatorChar),
                 }, messages);
             }
         }
