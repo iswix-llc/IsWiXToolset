@@ -15,6 +15,7 @@ namespace WixToolsetTest.DirectX
     public class DirectXExtensionFixture
     {
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingPixelShaderVersion()
         {
             var folder = TestData.Get("TestData", "UsingPixelShaderVersion");

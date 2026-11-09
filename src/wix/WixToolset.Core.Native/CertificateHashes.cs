@@ -7,6 +7,8 @@ namespace WixToolset.Core.Native
     using System.ComponentModel;
     using System.Globalization;
     using System.Linq;
+    using System.Security.Cryptography;
+    using WixToolset.Core.Native.Managed;
 
     /// <summary>
     /// Read certificates' public key and thumbprint hashes.
@@ -50,6 +52,11 @@ namespace WixToolset.Core.Native
         /// <returns>Certificate hashes for the provided paths.</returns>
         public static IReadOnlyList<CertificateHashes> Read(IEnumerable<string> paths)
         {
+            if (ManagedBackend.Enabled)
+            {
+                return ReadManaged(paths);
+            }
+
             var result = new List<CertificateHashes>();
 
             var wixnative = new WixNativeExe("certhashes");
@@ -78,6 +85,43 @@ namespace WixToolset.Core.Native
             }
 
             return result;
+        }
+
+        private static IReadOnlyList<CertificateHashes> ReadManaged(IEnumerable<string> paths)
+        {
+            var result = new List<CertificateHashes>();
+
+            foreach (var path in paths)
+            {
+                try
+                {
+                    var signer = ManagedAuthenticode.ReadSignerCertificate(path);
+
+                    // Like wixnative, treat a file with no signature as success without certificate hashes.
+                    if (signer == null)
+                    {
+                        result.Add(new CertificateHashes(path, String.Empty, String.Empty, null));
+                    }
+                    else
+                    {
+                        result.Add(new CertificateHashes(path, Sha1Hex(signer.SubjectPublicKeyInfo), Sha1Hex(signer.RawData), null));
+                    }
+                }
+                catch (Exception e)
+                {
+                    result.Add(new CertificateHashes(path, String.Empty, String.Empty, e));
+                }
+            }
+
+            return result;
+        }
+
+        private static string Sha1Hex(byte[] data)
+        {
+            using (var sha1 = SHA1.Create())
+            {
+                return BitConverter.ToString(sha1.ComputeHash(data)).Replace("-", String.Empty);
+            }
         }
     }
 }

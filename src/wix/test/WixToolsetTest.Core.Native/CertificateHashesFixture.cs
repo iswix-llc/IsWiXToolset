@@ -10,9 +10,10 @@ namespace WixToolsetTest.CoreNative
     public class CertificateHashesFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanGetHashesFromSignedFile()
         {
-            var cabFile = TestData.Get(@"TestData\test.cab");
+            var cabFile = TestData.Get("TestData", "test.cab");
 
             var hashes = CertificateHashes.Read(new[] { cabFile });
 
@@ -24,9 +25,10 @@ namespace WixToolsetTest.CoreNative
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CannotGetHashesFromUnsignedFile()
         {
-            var txtFile = TestData.Get(@"TestData\test.txt");
+            var txtFile = TestData.Get("TestData", "test.txt");
 
             var hashes = CertificateHashes.Read(new[] { txtFile });
 
@@ -36,10 +38,11 @@ namespace WixToolsetTest.CoreNative
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanGetMultipleHashes()
         {
-            var cabFile = TestData.Get(@"TestData\test.cab");
-            var txtFile = TestData.Get(@"TestData\test.txt");
+            var cabFile = TestData.Get("TestData", "test.cab");
+            var txtFile = TestData.Get("TestData", "test.txt");
 
             var hashes = CertificateHashes.Read(new[] { cabFile, txtFile });
 

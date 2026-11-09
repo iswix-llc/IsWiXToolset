@@ -10,6 +10,7 @@ namespace WixToolsetTest.CoreIntegration
     public class SigningFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanInscribeMsiWithSignedCabinet()
         {
             var folder = TestData.Get("TestData", "SingleFileCompressed");

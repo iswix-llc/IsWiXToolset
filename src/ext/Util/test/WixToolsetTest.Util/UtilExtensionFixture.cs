@@ -19,6 +19,7 @@ namespace WixToolsetTest.Util
     public class UtilExtensionFixture
     {
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingFileShare()
         {
             var folder = TestData.Get("TestData", "UsingFileShare");
@@ -40,6 +41,7 @@ namespace WixToolsetTest.Util
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingFileShareX64()
         {
             var folder = TestData.Get("TestData", "UsingFileShare");
@@ -85,6 +87,7 @@ namespace WixToolsetTest.Util
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildCloseApplication()
         {
             var folder = TestData.Get("TestData", "CloseApplication");
@@ -102,6 +105,7 @@ namespace WixToolsetTest.Util
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildInternetShortcutInProduct()
         {
             var folder = TestData.Get("TestData", "InternetShortcut");
@@ -122,6 +126,7 @@ namespace WixToolsetTest.Util
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildInternetShortcutInMergeModule()
         {
             var folder = TestData.Get("TestData", "InternetShortcutModule");
@@ -142,6 +147,7 @@ namespace WixToolsetTest.Util
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildWithPermissionEx()
         {
             var folder = TestData.Get("TestData", "PermissionEx");
@@ -159,6 +165,7 @@ namespace WixToolsetTest.Util
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildRemoveRegistryKeyExInMergeModule()
         {
             var folder = TestData.Get(@"TestData", "RemoveRegistryKeyEx");
@@ -174,6 +181,7 @@ namespace WixToolsetTest.Util
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildRemoveFolderExInMergeModule()
         {
             var folder = TestData.Get("TestData", "RemoveFolderEx");
@@ -189,6 +197,7 @@ namespace WixToolsetTest.Util
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildRemoveFolderExInPackage()
         {
             var folder = TestData.Get("TestData", "RemoveFolderExPackage");
@@ -204,6 +213,7 @@ namespace WixToolsetTest.Util
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildServiceConfig()
         {
             var folder = TestData.Get(@"TestData", "ServiceConfig");
@@ -221,6 +231,7 @@ namespace WixToolsetTest.Util
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildWithEventManifest()
         {
             var folder = TestData.Get("TestData", "EventManifest");
@@ -246,6 +257,7 @@ namespace WixToolsetTest.Util
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildWithQueries()
         {
             var folder = TestData.Get("TestData", "Queries");
@@ -292,6 +304,7 @@ namespace WixToolsetTest.Util
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildWithXmlConfig()
         {
             var folder = TestData.Get(@"TestData", "XmlConfig");
@@ -332,6 +345,7 @@ namespace WixToolsetTest.Util
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildModuleWithXmlConfig()
         {
             var folder = TestData.Get(@"TestData", "XmlConfigModule");
@@ -403,6 +417,7 @@ namespace WixToolsetTest.Util
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanCreateUserGroupWithComment()
         {
             var folder = TestData.Get("TestData", "CreateGroup");
@@ -559,6 +574,7 @@ namespace WixToolsetTest.Util
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanCreateUserAccountWithComment()
         {
             var folder = TestData.Get("TestData", "CreateUser");

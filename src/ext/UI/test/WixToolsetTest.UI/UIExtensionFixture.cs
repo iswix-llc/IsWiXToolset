@@ -18,6 +18,7 @@ namespace WixToolsetTest.UI
     public class UIExtensionFixture
     {
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingWixUIAdvanced()
         {
             var folder = TestData.Get(@"TestData", "WixUI_Advanced");
@@ -52,6 +53,7 @@ namespace WixToolsetTest.UI
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingWixUIAdvancedX64()
         {
             var folder = TestData.Get(@"TestData", "WixUI_Advanced");
@@ -81,6 +83,7 @@ namespace WixToolsetTest.UI
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingWixUIAdvancedARM64()
         {
             var folder = TestData.Get(@"TestData", "WixUI_Advanced");
@@ -110,6 +113,7 @@ namespace WixToolsetTest.UI
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingWixUIFeatureTree()
         {
             var folder = TestData.Get(@"TestData", "WixUI_FeatureTree");
@@ -141,6 +145,7 @@ namespace WixToolsetTest.UI
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildWithWixUIInstallDirWithCustomizedEula()
         {
             var folder = TestData.Get(@"TestData", "WixUI_InstallDir");
@@ -180,6 +185,7 @@ namespace WixToolsetTest.UI
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingWixUIMinimal()
         {
             var folder = TestData.Get(@"TestData", "WixUI_Minimal");
@@ -207,6 +213,7 @@ namespace WixToolsetTest.UI
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingWixUIMinimalInKazakh()
         {
             var folder = TestData.Get(@"TestData", "WixUI_Minimal");
@@ -246,6 +253,7 @@ namespace WixToolsetTest.UI
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingWixUIMondo()
         {
             var folder = TestData.Get(@"TestData", "WixUI_Mondo");
@@ -281,6 +289,7 @@ namespace WixToolsetTest.UI
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingWixUIMondoLocalized()
         {
             var folder = TestData.Get(@"TestData", "WixUI_Mondo");
@@ -295,6 +304,7 @@ namespace WixToolsetTest.UI
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildWithInstallDirAndRemovedDialog()
         {
             var folder = TestData.Get(@"TestData", "InstallDir_NoLicense");
@@ -336,6 +346,7 @@ namespace WixToolsetTest.UI
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildWithInstallDirAndAddedDialog()
         {
             var folder = TestData.Get(@"TestData", "InstallDir_SpecialDlg");

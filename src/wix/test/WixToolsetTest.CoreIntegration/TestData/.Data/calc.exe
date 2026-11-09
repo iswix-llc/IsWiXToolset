@@ -1,0 +1,1 @@
+Stand-in for calc.exe so the test does not depend on C:\Windows\system32.

@@ -1,0 +1,139 @@
+name: Build and test one suite
+
+# Called by build.yml. Does the whole build, then runs one suite of the slow end-to-end tests (WixE2ESuite,
+# see src/test/test.cmd): "burn" (BurnE2E), "msi" (MsiE2E) or "rest" (WixE2E). The "rest" run also produces
+# everything that is only needed once: the packages and the inputs for the Linux job.
+
+on:
+  workflow_call:
+    inputs:
+      suite:
+        description: The end-to-end suite to run (rest, burn or msi).
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  NUGET_XMLDOC_MODE: skip
+
+jobs:
+  build:
+    name: Build and test (${{ inputs.suite }})
+    runs-on: windows-2022 # WiX v7 builds with VS2022 (v143 toolset).
+    timeout-minutes: 300
+    env:
+      # Never an official WiX build. Kept set (to "false") because some tests, such as the Firewall
+      # extension's, turn on MSI validation whenever this variable is present.
+      WixOfficialBuild: false
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # SomeVer needs the tags and history to compute the version.
+
+      - name: Configure automated logging and crash dumps
+        shell: cmd
+        run: |
+          reg add HKLM\Software\Policies\Microsoft\Windows\Installer /t REG_SZ /v Logging /d voicewarmupx /f
+          reg add HKLM\Software\WOW6432Node\Policies\Microsoft\Windows\Installer /t REG_SZ /v Logging /d voicewarmupx /f
+          reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps" /t REG_EXPAND_SZ /v DumpFolder /d "%CD%\build\logs\crashdumps" /f
+          reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps" /t REG_DWORD /v DumpCount /d 10 /f
+          reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps" /t REG_DWORD /v DumpType /d 1 /f
+          reg add "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\Windows Error Reporting\LocalDumps" /t REG_EXPAND_SZ /v DumpFolder /d "%CD%\build\logs\crashdumps" /f
+          reg add "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\Windows Error Reporting\LocalDumps" /t REG_DWORD /v DumpCount /d 10 /f
+          reg add "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\Windows Error Reporting\LocalDumps" /t REG_DWORD /v DumpType /d 1
+
+      - name: Build and test
+        shell: cmd
+        run: ./src/build_official.cmd
+        env:
+          RuntimeTestsEnabled: true
+          WixE2ESuite: ${{ inputs.suite }}
+
+      # The Linux job below runs the cross-platform integration tests against this build's output.
+      - name: Save test binaries for the Linux job
+        if: ${{ !cancelled() && inputs.suite == 'rest' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-test-inputs
+          path: build/wix/Release/test/WixToolsetTest.CoreIntegration/net8.0/
+          include-hidden-files: true
+          retention-days: 1
+          if-no-files-found: error
+
+      # Second pass over the cross-platform tests with the managed MSI and cabinet backends (the ones used on
+      # Linux and macOS). The tests then read the packages back with the real msi.dll, so this also proves the
+      # managed output is accepted by Windows Installer.
+      - name: Test cross-platform tests with managed backends
+        if: ${{ !cancelled() && inputs.suite == 'rest' }}
+        shell: cmd
+        env:
+          WIX_MANAGED_MSI: 1
+          WIX_MANAGED_CAB: 1
+          WIX_MANAGED_RES: 1
+        run: >
+          dotnet test build\wix\Release\test\WixToolsetTest.CoreIntegration\net8.0\WixToolsetTest.CoreIntegration.dll
+          --filter "Platform=CrossPlatform"
+          --results-directory build\logs\managed-results
+          --logger "trx;LogFileName=windows-managed-crossplatform.trx"
+          --logger "console;verbosity=normal"
+
+      - name: Save Core.Native test binaries for the Linux job
+        if: ${{ !cancelled() && inputs.suite == 'rest' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-test-inputs-native
+          path: build/wix/Release/test/WixToolsetTest.Core.Native/net8.0/win-x64/
+          include-hidden-files: true
+          retention-days: 1
+          if-no-files-found: error
+
+      - name: Save extension test binaries for the Linux job
+        if: ${{ !cancelled() && inputs.suite == 'rest' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-test-inputs-ext
+          path: build/*.wixext/Release/net8.0/
+          include-hidden-files: true
+          retention-days: 1
+          if-no-files-found: error
+
+      - name: Validate test results
+        shell: cmd
+        run: 7z a build\testresults.zip @src\testresultfilelist.txt
+
+      # Unsigned development build of the packages, for trying out a commit.
+      - name: Save build
+        if: ${{ inputs.suite == 'rest' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts
+          path: build/artifacts/
+
+      - name: Collect integration test logs
+        if: ${{ !cancelled() }}
+        shell: cmd
+        run: 7z a "build\logs\test_burn_%GITHUB_RUN_ID%.zip" "%TEMP%\*.log" "%TEMP%\..\*.log"
+
+      - name: Export Application event log
+        if: ${{ !cancelled() }}
+        shell: cmd
+        run: wevtutil epl Application build\logs\Application.evtx /q:"Event/System/TimeCreated[timediff(@SystemTime) <= 86400000]"
+
+      - name: Export System event log
+        if: ${{ !cancelled() }}
+        shell: cmd
+        run: wevtutil epl System build\logs\System.evtx /q:"Event/System/TimeCreated[timediff(@SystemTime) <= 86400000]"
+
+      # Safe to upload: this job has no secrets and no id-token permission.
+      - name: Save logs
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs_${{ github.run_id }}_${{ inputs.suite }}
+          path: build/logs/

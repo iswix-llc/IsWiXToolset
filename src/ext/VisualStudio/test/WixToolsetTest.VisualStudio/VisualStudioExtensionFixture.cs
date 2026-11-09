@@ -15,6 +15,7 @@ namespace WixToolsetTest.VisualStudio
     public class VisualStudioExtensionFixture
     {
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingVsixPackage()
         {
             var folder = TestData.Get("TestData", "UsingVsixPackage");
@@ -41,6 +42,7 @@ namespace WixToolsetTest.VisualStudio
         }
 
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingVsixPackageOnArm64()
         {
             var folder = TestData.Get("TestData", "UsingVsixPackage");

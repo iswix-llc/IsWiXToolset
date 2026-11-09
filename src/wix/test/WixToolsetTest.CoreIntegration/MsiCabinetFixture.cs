@@ -112,6 +112,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildMultipleFilesCompressed()
         {
             var folder = TestData.Get("TestData", "MultiFileCompressed");

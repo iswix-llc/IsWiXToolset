@@ -14,6 +14,7 @@ namespace WixToolsetTest.CoreIntegration
     public class ModuleFixture
     {
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanBuildAndMergeModuleWithSubstitution()
         {
             var folder = TestData.Get(@"TestData", "Module");
@@ -107,6 +108,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void CanMergeModuleAndValidate()
         {
             var msmFolder = TestData.Get("TestData", "SimpleModule");

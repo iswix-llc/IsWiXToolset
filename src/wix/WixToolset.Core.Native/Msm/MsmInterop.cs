@@ -1,4 +1,4 @@
-// Copyright (c) .NET Foundation and contributors. All rights reserved. Licensed under the Microsoft Reciprocal License. See LICENSE.TXT file in the project root for full license information.
+﻿// Copyright (c) .NET Foundation and contributors. All rights reserved. Licensed under the Microsoft Reciprocal License. See LICENSE.TXT file in the project root for full license information.
 
 namespace WixToolset.Core.Native.Msm
 {
@@ -41,6 +41,18 @@ namespace WixToolset.Core.Native.Msm
         /// </summary>
         /// <returns>Merge interface.</returns>
         public static IMsmMerge2 GetMsmMerge()
+        {
+            return Managed.ManagedBackend.Enabled ? GetManagedMsmMerge() : GetNativeMsmMerge();
+        }
+
+        /// <summary>The managed merge module engine, which works on every platform.</summary>
+        public static IMsmMerge2 GetManagedMsmMerge()
+        {
+            return new ManagedMsmMerge();
+        }
+
+        /// <summary>mergemod.dll, which is Windows only.</summary>
+        public static IMsmMerge2 GetNativeMsmMerge()
         {
             var classFactory = (IClassFactory)MergeModGetClassObject(typeof(MsmMerge2).GUID, typeof(IClassFactory).GUID);
             return (IMsmMerge2)classFactory.CreateInstance(IntPtr.Zero, typeof(IMsmMerge2).GUID);

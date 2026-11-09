@@ -15,6 +15,7 @@ namespace WixToolsetTest.Sql
     public class SqlExtensionFixture
     {
         [TestMethod]
+        [TestCategory("CrossPlatform")]
         public void CanBuildUsingSqlStuff()
         {
             var folder = TestData.Get("TestData", "UsingSql");
