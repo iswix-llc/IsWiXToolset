@@ -193,6 +193,287 @@ namespace WixToolsetTest.CoreNative
             }
         }
 
+        [Fact]
+        [Trait("Platform", "CrossPlatform")]
+        public void ReportsAnActionWhoseBaseActionIsNotInTheModuleAsOrphaned()
+        {
+            using (var fs = new DisposableFileSystem())
+            {
+                var folder = fs.GetFolder(true);
+                var database = CreateDatabase(Path.Combine(folder, "base.msi"));
+                var module = CreateModule(Path.Combine(folder, "test.msm"), defaultActions: false, customize: db =>
+                {
+                    db.Execute("INSERT INTO `ModuleInstallExecuteSequence` (`Action`, `BaseAction`, `After`) VALUES ('Orphan." + ModuleGuid + "', 'NoSuchAction', 1)");
+                });
+
+                var merge = MsmInterop.GetManagedMsmMerge();
+                merge.OpenDatabase(database);
+                merge.OpenModule(module, 0);
+                merge.MergeEx("F", "INSTALLDIR", null);
+                Assert.Equal(1, merge.Errors.Count);
+                Assert.Equal(MsmErrorType.msmErrorResequenceMerge, merge.Errors[1].Type);
+                Assert.Equal("ModuleInstallExecuteSequence", merge.Errors[1].ModuleTable);
+                merge.CloseModule();
+                merge.CloseDatabase(true);
+
+                using (var db = new Lib.Database(database, Lib.DatabaseOpenMode.ReadOnly))
+                {
+                    Assert.Empty(Rows(db, "SELECT `Action` FROM `InstallExecuteSequence` WHERE `Action` = 'Orphan." + ModuleGuid + "'"));
+                }
+            }
+        }
+
+        [Fact]
+        [Trait("Platform", "CrossPlatform")]
+        public void MovesTheActionOnATakenSequenceNumberUpByTheStep()
+        {
+            // 800 is divisible by 100, so the action there moves to 900 (and nothing is reported).
+            using (var fs = new DisposableFileSystem())
+            {
+                var folder = fs.GetFolder(true);
+                var database = CreateDatabase(Path.Combine(folder, "base.msi"));
+                var module = CreateModule(Path.Combine(folder, "test.msm"), defaultActions: false, customize: db =>
+                {
+                    db.Execute("INSERT INTO `ModuleInstallExecuteSequence` (`Action`, `Sequence`) VALUES ('Early." + ModuleGuid + "', 800)");
+                });
+
+                MergeInto(database, module, "F", "INSTALLDIR", connect: false);
+
+                using (var db = new Lib.Database(database, Lib.DatabaseOpenMode.ReadOnly))
+                {
+                    Assert.Equal(new[]
+                    {
+                        "Early." + ModuleGuid + "|800",
+                        "CostInitialize|900",
+                        "CostFinalize|1000",
+                    }, Sorted(Rows(db, "SELECT `Action`, `Sequence` FROM `InstallExecuteSequence` WHERE `Sequence` > 1"), 1));
+                }
+            }
+        }
+
+        [Fact]
+        [Trait("Platform", "CrossPlatform")]
+        public void MovesEachActionTheMovedActionLandsOn()
+        {
+            using (var fs = new DisposableFileSystem())
+            {
+                var folder = fs.GetFolder(true);
+                var database = CreateDatabase(Path.Combine(folder, "base.msi"), customize: db =>
+                {
+                    db.Execute("INSERT INTO `InstallExecuteSequence` (`Action`, `Sequence`) VALUES ('Middle', 900)");
+                });
+                var module = CreateModule(Path.Combine(folder, "test.msm"), defaultActions: false, customize: db =>
+                {
+                    db.Execute("INSERT INTO `ModuleInstallExecuteSequence` (`Action`, `Sequence`) VALUES ('Early." + ModuleGuid + "', 800)");
+                });
+
+                MergeInto(database, module, "F", "INSTALLDIR", connect: false);
+
+                // CostInitialize moves from 800 to 900, which moves Middle to 1000, which moves CostFinalize to 1100.
+                using (var db = new Lib.Database(database, Lib.DatabaseOpenMode.ReadOnly))
+                {
+                    Assert.Equal(new[]
+                    {
+                        "Early." + ModuleGuid + "|800",
+                        "CostInitialize|900",
+                        "Middle|1000",
+                        "CostFinalize|1100",
+                    }, Sorted(Rows(db, "SELECT `Action`, `Sequence` FROM `InstallExecuteSequence` WHERE `Sequence` > 1"), 1));
+                }
+            }
+        }
+
+        [Fact]
+        [Trait("Platform", "CrossPlatform")]
+        public void OffsetsFileSequencesByTheHighestSequenceInTheDatabase()
+        {
+            using (var fs = new DisposableFileSystem())
+            {
+                var folder = fs.GetFolder(true);
+
+                // Media.LastSequence (10) is higher than any File.Sequence (3); the offset comes from the files.
+                var database = CreateDatabase(Path.Combine(folder, "base.msi"), customize: db =>
+                {
+                    db.Execute("CREATE TABLE `File` (`File` CHAR(72) NOT NULL, `Component_` CHAR(72) NOT NULL, `FileName` CHAR(255) NOT NULL LOCALIZABLE, `FileSize` LONG NOT NULL, `Version` CHAR(72), `Language` CHAR(20), `Attributes` INT, `Sequence` LONG NOT NULL PRIMARY KEY `File`)");
+                    db.Execute("CREATE TABLE `Media` (`DiskId` INT NOT NULL, `LastSequence` INT NOT NULL, `DiskPrompt` CHAR(64) LOCALIZABLE, `Cabinet` CHAR(255), `VolumeLabel` CHAR(32), `Source` CHAR(72) PRIMARY KEY `DiskId`)");
+                    db.Execute("INSERT INTO `File` (`File`, `Component_`, `FileName`, `FileSize`, `Attributes`, `Sequence`) VALUES ('Old1', 'OldC', 'o1.txt', 5, 0, 1)");
+                    db.Execute("INSERT INTO `File` (`File`, `Component_`, `FileName`, `FileSize`, `Attributes`, `Sequence`) VALUES ('Old2', 'OldC', 'o2.txt', 5, 0, 2)");
+                    db.Execute("INSERT INTO `File` (`File`, `Component_`, `FileName`, `FileSize`, `Attributes`, `Sequence`) VALUES ('Old3', 'OldC', 'o3.txt', 5, 0, 3)");
+                    db.Execute("INSERT INTO `Media` (`DiskId`, `LastSequence`, `Cabinet`) VALUES (1, 10, '#cab1.cab')");
+                });
+                var module = CreateModule(Path.Combine(folder, "test.msm"), defaultActions: false, customize: db =>
+                {
+                    db.Execute("CREATE TABLE `File` (`File` CHAR(72) NOT NULL, `Component_` CHAR(72) NOT NULL, `FileName` CHAR(255) NOT NULL LOCALIZABLE, `FileSize` LONG NOT NULL, `Version` CHAR(72), `Language` CHAR(20), `Attributes` INT, `Sequence` LONG NOT NULL PRIMARY KEY `File`)");
+                    db.Execute("INSERT INTO `File` (`File`, `Component_`, `FileName`, `FileSize`, `Attributes`, `Sequence`) VALUES ('F1." + ModuleGuid + "', 'Component1." + ModuleGuid + "', 'f1.txt', 10, 0, 1)");
+                    db.Execute("INSERT INTO `File` (`File`, `Component_`, `FileName`, `FileSize`, `Attributes`, `Sequence`) VALUES ('F2." + ModuleGuid + "', 'Component1." + ModuleGuid + "', 'f2.txt', 10, 0, 2)");
+                });
+
+                MergeInto(database, module, "F", "INSTALLDIR", connect: false);
+
+                using (var db = new Lib.Database(database, Lib.DatabaseOpenMode.ReadOnly))
+                {
+                    Assert.Equal(new[]
+                    {
+                        "Old1|1",
+                        "Old2|2",
+                        "Old3|3",
+                        "F1." + ModuleGuid + "|4",
+                        "F2." + ModuleGuid + "|5",
+                    }, Sorted(Rows(db, "SELECT `File`, `Sequence` FROM `File`"), 1));
+                }
+            }
+        }
+
+        [Fact]
+        [Trait("Platform", "CrossPlatform")]
+        public void SkipsAModuleThatExcludesAModuleAlreadyInTheDatabase()
+        {
+            using (var fs = new DisposableFileSystem())
+            {
+                var folder = fs.GetFolder(true);
+                var database = CreateDatabase(Path.Combine(folder, "base.msi"), customize: db => AddSignature(db, "Other.1", 0, "1.5.0.0"));
+                var module = CreateModule(Path.Combine(folder, "test.msm"), customize: db => AddExclusion(db, "Other.1", 0, null, null));
+
+                var errors = MergeCollectingErrors(database, module);
+                Assert.Equal(new[] { MsmErrorType.msmErrorExclusion }, errors);
+
+                using (var db = new Lib.Database(database, Lib.DatabaseOpenMode.ReadOnly))
+                {
+                    Assert.False(db.Tables.Contains("Component"));
+                    Assert.False(db.Tables.Contains("ModuleComponents"));
+                }
+            }
+        }
+
+        [Theory]
+        [Trait("Platform", "CrossPlatform")]
+        [InlineData("1.5.0.0", true)]
+        [InlineData("0.5.0.0", false)]
+        [InlineData("3.0.0.0", false)]
+        public void ExcludesOnlyVersionsInsideTheExcludedRange(string databaseVersion, bool excluded)
+        {
+            using (var fs = new DisposableFileSystem())
+            {
+                var folder = fs.GetFolder(true);
+                var database = CreateDatabase(Path.Combine(folder, "base.msi"), customize: db => AddSignature(db, "Other.1", 0, databaseVersion));
+                var module = CreateModule(Path.Combine(folder, "test.msm"), customize: db => AddExclusion(db, "Other.1", 0, "1.0.0.0", "2.0.0.0"));
+
+                var errors = MergeCollectingErrors(database, module);
+                Assert.Equal(excluded ? new[] { MsmErrorType.msmErrorExclusion } : new MsmErrorType[0], errors);
+            }
+        }
+
+        [Fact]
+        [Trait("Platform", "CrossPlatform")]
+        public void ReportsButStillMergesAModuleThatTheDatabaseExcludes()
+        {
+            using (var fs = new DisposableFileSystem())
+            {
+                var folder = fs.GetFolder(true);
+                var database = CreateDatabase(Path.Combine(folder, "base.msi"), customize: db =>
+                {
+                    db.Execute("CREATE TABLE `ModuleExclusion` (`ModuleID` CHAR(72) NOT NULL, `ModuleLanguage` INT NOT NULL, `ExcludedID` CHAR(72) NOT NULL, `ExcludedLanguage` INT NOT NULL, `ExcludedMinVersion` CHAR(32), `ExcludedMaxVersion` CHAR(32) PRIMARY KEY `ModuleID`, `ModuleLanguage`, `ExcludedID`, `ExcludedLanguage`)");
+                    db.Execute("INSERT INTO `ModuleExclusion` (`ModuleID`, `ModuleLanguage`, `ExcludedID`, `ExcludedLanguage`) VALUES ('Resident.1', 0, 'TestModule." + ModuleGuid + "', 0)");
+                });
+                var module = CreateModule(Path.Combine(folder, "test.msm"));
+
+                var errors = MergeCollectingErrors(database, module);
+                Assert.Equal(new[] { MsmErrorType.msmErrorExclusion }, errors);
+
+                using (var db = new Lib.Database(database, Lib.DatabaseOpenMode.ReadOnly))
+                {
+                    Assert.Equal(new[] { "Component1." + ModuleGuid }, Rows(db, "SELECT `Component` FROM `Component`"));
+                }
+            }
+        }
+
+        [Theory]
+        [Trait("Platform", "CrossPlatform")]
+        [InlineData("Intel;0", "x64;1033")]
+        [InlineData(";0", "x64;1033")]
+        [InlineData("Intel,x64;0", "x64;1033")]
+        [InlineData("x64;0", "x64;1033")]
+        [InlineData("Arm64;0", "Arm64;1033")]
+        [InlineData("Intel;0", "Intel;1033")]
+        public void MergesAModuleWhosePlatformFitsTheDatabase(string moduleTemplate, string databaseTemplate)
+        {
+            using (var fs = new DisposableFileSystem())
+            {
+                var folder = fs.GetFolder(true);
+                var database = CreateDatabase(Path.Combine(folder, "base.msi"), databaseTemplate);
+                var module = CreateModule(Path.Combine(folder, "test.msm"), moduleTemplate);
+
+                MergeInto(database, module, "F", "INSTALLDIR", connect: false);
+            }
+        }
+
+        [Theory]
+        [Trait("Platform", "CrossPlatform")]
+        [InlineData("x64;0", "Intel;1033")]
+        [InlineData("x64;0", ";1033")]
+        [InlineData("Intel64;0", "x64;1033")]
+        [InlineData("Arm64;0", "x64;1033")]
+        public void RejectsAModuleWhosePlatformDoesNotFitTheDatabase(string moduleTemplate, string databaseTemplate)
+        {
+            using (var fs = new DisposableFileSystem())
+            {
+                var folder = fs.GetFolder(true);
+                var database = CreateDatabase(Path.Combine(folder, "base.msi"), databaseTemplate);
+                var module = CreateModule(Path.Combine(folder, "test.msm"), moduleTemplate);
+
+                var merge = MsmInterop.GetManagedMsmMerge();
+                merge.OpenDatabase(database);
+                merge.OpenModule(module, 0);
+                Assert.ThrowsAny<System.Runtime.InteropServices.COMException>(() => merge.MergeEx("F", "INSTALLDIR", null));
+                Assert.Equal(MsmErrorType.msmErrorPlatformMismatch, merge.Errors[1].Type);
+                merge.CloseModule();
+                merge.CloseDatabase(false);
+            }
+        }
+
+        private static List<MsmErrorType> MergeCollectingErrors(string database, string module)
+        {
+            var merge = MsmInterop.GetManagedMsmMerge();
+            merge.OpenDatabase(database);
+            merge.OpenModule(module, 0);
+            merge.MergeEx("F", "INSTALLDIR", null);
+            var types = new List<MsmErrorType>();
+            for (var i = 1; i <= merge.Errors.Count; i++)
+            {
+                types.Add(merge.Errors[i].Type);
+            }
+
+            merge.CloseModule();
+            merge.CloseDatabase(true);
+            return types;
+        }
+
+        private static void AddSignature(Lib.Database db, string id, int language, string version)
+        {
+            db.Execute("CREATE TABLE `ModuleSignature` (`ModuleID` CHAR(72) NOT NULL, `Language` INT NOT NULL, `Version` CHAR(72) NOT NULL PRIMARY KEY `ModuleID`, `Language`)");
+            db.Execute("INSERT INTO `ModuleSignature` (`ModuleID`, `Language`, `Version`) VALUES ('" + id + "', " + language + ", '" + version + "')");
+        }
+
+        private static void AddExclusion(Lib.Database db, string excludedId, int excludedLanguage, string minimum, string maximum)
+        {
+            db.Execute("CREATE TABLE `ModuleExclusion` (`ModuleID` CHAR(72) NOT NULL, `ModuleLanguage` INT NOT NULL, `ExcludedID` CHAR(72) NOT NULL, `ExcludedLanguage` INT NOT NULL, `ExcludedMinVersion` CHAR(32), `ExcludedMaxVersion` CHAR(32) PRIMARY KEY `ModuleID`, `ModuleLanguage`, `ExcludedID`, `ExcludedLanguage`)");
+            var columns = "`ModuleID`, `ModuleLanguage`, `ExcludedID`, `ExcludedLanguage`";
+            var values = "'TestModule." + ModuleGuid + "', 0, '" + excludedId + "', " + excludedLanguage;
+            if (minimum != null)
+            {
+                columns += ", `ExcludedMinVersion`";
+                values += ", '" + minimum + "'";
+            }
+
+            if (maximum != null)
+            {
+                columns += ", `ExcludedMaxVersion`";
+                values += ", '" + maximum + "'";
+            }
+
+            db.Execute("INSERT INTO `ModuleExclusion` (" + columns + ") VALUES (" + values + ")");
+        }
+
         private static void MergeInto(string database, string module, string feature, string redirect, bool connect)
         {
             var merge = MsmInterop.GetManagedMsmMerge();
@@ -209,7 +490,7 @@ namespace WixToolsetTest.CoreNative
             merge.CloseDatabase(true);
         }
 
-        private static string CreateDatabase(string path)
+        private static string CreateDatabase(string path, string template = "Intel;1033", Action<Lib.Database> customize = null)
         {
             using (var db = new Lib.Database(path, Lib.DatabaseOpenMode.Create))
             {
@@ -227,13 +508,14 @@ namespace WixToolsetTest.CoreNative
                     db.Execute("INSERT INTO `" + table + "` (`Action`, `Sequence`) VALUES ('CostFinalize', 1000)");
                 }
 
+                customize?.Invoke(db);
                 db.Commit();
             }
 
             using (var summary = new Lib.SummaryInfo(path, true))
             {
                 summary.Title = "Installation Database";
-                summary.Template = "Intel;1033";
+                summary.Template = template;
                 summary.RevisionNumber = "{" + Guid.NewGuid().ToString().ToUpperInvariant() + "}";
                 summary.PageCount = 500;
                 summary.WordCount = 0;
@@ -244,7 +526,7 @@ namespace WixToolsetTest.CoreNative
         }
 
         // A module already in its modularized form, as the WiX compiler writes one.
-        private static string CreateModule(string path, string template = "Intel;0", bool nullFeature = false)
+        private static string CreateModule(string path, string template = "Intel;0", bool nullFeature = false, bool defaultActions = true, Action<Lib.Database> customize = null)
         {
             using (var db = new Lib.Database(path, Lib.DatabaseOpenMode.Create))
             {
@@ -269,15 +551,20 @@ namespace WixToolsetTest.CoreNative
 
                 db.Execute("INSERT INTO `ModuleSignature` (`ModuleID`, `Language`, `Version`) VALUES ('TestModule." + ModuleGuid + "', 0, '1.0.0.0')");
                 db.Execute("INSERT INTO `ModuleComponents` (`Component`, `ModuleID`, `Language`) VALUES ('Component1." + ModuleGuid + "', 'TestModule." + ModuleGuid + "', 0)");
-                // The module lists the base action with its sequence number; mergemod.dll reports a relative action whose base the module does not list as orphaned.
-                db.Execute("INSERT INTO `ModuleInstallExecuteSequence` (`Action`, `Sequence`) VALUES ('CostFinalize', 1000)");
-                db.Execute("INSERT INTO `ModuleInstallExecuteSequence` (`Action`, `BaseAction`, `After`, `Condition`) VALUES ('After." + ModuleGuid + "', 'CostFinalize', 1, 'NOT REMOVE')");
-                db.Execute("INSERT INTO `ModuleInstallExecuteSequence` (`Action`, `BaseAction`, `After`) VALUES ('Before." + ModuleGuid + "', 'CostFinalize', 0)");
-                db.Execute("INSERT INTO `ModuleInstallExecuteSequence` (`Action`, `BaseAction`, `After`) VALUES ('Second." + ModuleGuid + "', 'CostFinalize', 1)");
-                db.Execute("INSERT INTO `CustomAction` (`Action`, `Type`, `Source`, `Target`) VALUES ('After." + ModuleGuid + "', 51, 'SOMEPROP', 'value')");
-                db.Execute("INSERT INTO `CustomAction` (`Action`, `Type`, `Source`, `Target`) VALUES ('Before." + ModuleGuid + "', 51, 'OTHERPROP', 'value')");
-                db.Execute("INSERT INTO `CustomAction` (`Action`, `Type`, `Source`, `Target`) VALUES ('Second." + ModuleGuid + "', 51, 'THIRDPROP', 'value')");
 
+                if (defaultActions)
+                {
+                    // The module lists the base action with its sequence number; mergemod.dll reports a relative action whose base the module does not list as orphaned.
+                    db.Execute("INSERT INTO `ModuleInstallExecuteSequence` (`Action`, `Sequence`) VALUES ('CostFinalize', 1000)");
+                    db.Execute("INSERT INTO `ModuleInstallExecuteSequence` (`Action`, `BaseAction`, `After`, `Condition`) VALUES ('After." + ModuleGuid + "', 'CostFinalize', 1, 'NOT REMOVE')");
+                    db.Execute("INSERT INTO `ModuleInstallExecuteSequence` (`Action`, `BaseAction`, `After`) VALUES ('Before." + ModuleGuid + "', 'CostFinalize', 0)");
+                    db.Execute("INSERT INTO `ModuleInstallExecuteSequence` (`Action`, `BaseAction`, `After`) VALUES ('Second." + ModuleGuid + "', 'CostFinalize', 1)");
+                    db.Execute("INSERT INTO `CustomAction` (`Action`, `Type`, `Source`, `Target`) VALUES ('After." + ModuleGuid + "', 51, 'SOMEPROP', 'value')");
+                    db.Execute("INSERT INTO `CustomAction` (`Action`, `Type`, `Source`, `Target`) VALUES ('Before." + ModuleGuid + "', 51, 'OTHERPROP', 'value')");
+                    db.Execute("INSERT INTO `CustomAction` (`Action`, `Type`, `Source`, `Target`) VALUES ('Second." + ModuleGuid + "', 51, 'THIRDPROP', 'value')");
+                }
+
+                customize?.Invoke(db);
                 db.Commit();
             }
 
