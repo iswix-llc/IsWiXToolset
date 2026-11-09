@@ -56,6 +56,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesBAManifestWithPackageInformation()
         {
             var folder = TestData.Get(@"TestData");
@@ -95,12 +96,13 @@ namespace WixToolsetTest.CoreIntegration
                 {
                     "<WixPackageProperties Package='burn.exe' Vital='yes' DisplayName='Windows Installer XML Toolset' Description='WiX Toolset Bootstrapper' DownloadSize='*' PackageSize='*' InstalledSize='*' PackageType='Exe' Permanent='yes' LogPathVariable='WixBundleLog_burn.exe' RollbackLogPathVariable='WixBundleRollbackLog_burn.exe' Compressed='yes' Version='*' RepairCondition='RepairRedists' Cache='keep' />",
                     "<WixPackageProperties Package='RemotePayloadExe' Vital='yes' DisplayName='Override RemotePayload display name' Description='Override RemotePayload description' DownloadSize='*' PackageSize='*' InstalledSize='*' PackageType='Exe' Permanent='yes' LogPathVariable='WixBundleLog_RemotePayloadExe' RollbackLogPathVariable='WixBundleRollbackLog_RemotePayloadExe' Compressed='no' Version='*' Cache='keep' />",
-                    "<WixPackageProperties Package='calc.exe' Vital='yes' DisplayName='Override harvested display name' Description='Override harvested description' DownloadSize='*' PackageSize='*' InstalledSize='*' PackageType='Exe' Permanent='yes' LogPathVariable='WixBundleLog_calc.exe' RollbackLogPathVariable='WixBundleRollbackLog_calc.exe' Compressed='yes' Version='*' Cache='keep' />",
+                    "<WixPackageProperties Package='calc.exe' Vital='yes' DisplayName='Override harvested display name' Description='Override harvested description' DownloadSize='*' PackageSize='*' InstalledSize='*' PackageType='Exe' Permanent='yes' LogPathVariable='WixBundleLog_calc.exe' RollbackLogPathVariable='WixBundleRollbackLog_calc.exe' Compressed='yes' Cache='keep' />",
                 }, packageElements);
             }
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesBAManifestWithPayloadInformation()
         {
             var folder = TestData.Get(@"TestData");
@@ -349,6 +351,7 @@ namespace WixToolsetTest.CoreIntegration
         }
 
         [Fact]
+        [Trait("Platform", "CrossPlatform")]
         public void PopulatesManifestWithExePackages()
         {
             var folder = TestData.Get(@"TestData");
