@@ -246,7 +246,7 @@ namespace WixToolset.Core
                             directoryPortion = ResolveDirectoryIgnoringCase(directoryPortion);
 
                             var matcher = new Regex("^" + Regex.Escape(filePortion).Replace(@"\*", ".*").Replace(@"\?", ".") + "$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
-                            foundFiles = Directory.EnumerateFiles(directoryPortion, "*", searchOption).Where(f => matcher.IsMatch(Path.GetFileName(f)));
+                            foundFiles = EnumerateFilesInWindowsOrder(directoryPortion, recursive).Where(f => matcher.IsMatch(Path.GetFileName(f)));
                         }
 
                         var recursiveDirOffset = directoryPortion.Length + 1;
@@ -270,6 +270,28 @@ namespace WixToolset.Core
             }
 
             return files;
+        }
+
+        // NTFS lists names in order and a recursive enumeration there gives each folder's files and then its subfolders, one
+        // subfolder at a time. Other file systems list entries in whatever order they keep them, which changes the order of the
+        // Directory and File tables, so reproduce the Windows order everywhere.
+        private static IEnumerable<string> EnumerateFilesInWindowsOrder(string folder, bool recursive)
+        {
+            foreach (var file in Directory.EnumerateFiles(folder, "*", SearchOption.TopDirectoryOnly).OrderBy(f => Path.GetFileName(f), StringComparer.OrdinalIgnoreCase))
+            {
+                yield return file;
+            }
+
+            if (recursive)
+            {
+                foreach (var subfolder in Directory.EnumerateDirectories(folder).OrderBy(f => Path.GetFileName(f), StringComparer.OrdinalIgnoreCase))
+                {
+                    foreach (var file in EnumerateFilesInWindowsOrder(subfolder, recursive))
+                    {
+                        yield return file;
+                    }
+                }
+            }
         }
 
         private static string ResolveDirectoryIgnoringCase(string directory)
