@@ -103,6 +103,11 @@ namespace WixToolset.Data
             return Message(sourceLineNumbers, Ids.WindowsInstallerFileTooLarge, "The Windows Installer does not support {0} files larger than 2GB in size. Reduce the size or number of files embedded in '{1}' or the installation will likely fail with an unexpected error.", fileDescription, path);
         }
 
+        public static Message ValidationNotPerformed()
+        {
+            return Message(null, Ids.ValidationNotPerformed, "ICE validation was not performed: it requires the Windows Installer engine, which the managed backend does not provide. Run 'wix msi validate' on Windows, or set SuppressValidation=true to hide this warning.");
+        }
+
         private static Message Message(SourceLineNumber sourceLineNumber, Ids id, string format, params object[] args)
         {
             return new Message(sourceLineNumber, MessageLevel.Warning, (int)id, format, args);
@@ -120,6 +125,7 @@ namespace WixToolset.Data
             InvalidMsiProductVersion = 1148,
             SymbolNotTranslatedToOutput = 1150,
             WindowsInstallerFileTooLarge = 1158,
+            ValidationNotPerformed = 1159,
         }
     }
 }
