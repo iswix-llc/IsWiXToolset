@@ -62,6 +62,8 @@ namespace WixToolset.Core.Native
             // ICE validation runs the Windows Installer engine (CustomActions in a CUB), which the managed engine does not provide.
             if (Managed.ManagedBackend.Enabled)
             {
+                // Say so, because a build that quietly skips validation looks as if it passed.
+                this.Callback.WriteMessage(WarningMessages.ValidationNotPerformed());
                 return;
             }
 

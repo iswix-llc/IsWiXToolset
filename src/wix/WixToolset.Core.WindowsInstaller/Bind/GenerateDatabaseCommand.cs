@@ -212,6 +212,8 @@ namespace WixToolset.Core.WindowsInstaller.Bind
                         var trackIdt = this.BackendHelper.TrackFile(command.IdtPath, TrackedFileType.Temporary);
                         this.GeneratedTemporaryFiles.Add(trackIdt);
 
+                        this.KeepIdt(command.IdtPath, importTable.Name);
+
                         db.Import(command.IdtPath);
                     }
                     catch (WixInvalidIdtException)
@@ -377,6 +379,24 @@ namespace WixToolset.Core.WindowsInstaller.Bind
             }
         }
 
+        private int keptIdtCount;
+
+        /// <summary>
+        /// Diagnostic aid: when the WIX_KEEP_IDTS environment variable names a folder, copies each IDT file there before it is
+        /// imported, numbered in import order, so the exact input given to the database can be replayed.
+        /// </summary>
+        private void KeepIdt(string idtPath, string tableName)
+        {
+            var folder = Environment.GetEnvironmentVariable("WIX_KEEP_IDTS");
+            if (String.IsNullOrEmpty(folder))
+            {
+                return;
+            }
+
+            Directory.CreateDirectory(folder);
+            File.Copy(idtPath, Path.Combine(folder, String.Format("{0:D3}_{1}.idt", ++this.keptIdtCount, tableName)), true);
+        }
+
         private void SetDatabaseCodepage(Database db, int codepage, string idtFolder)
         {
             // Write out the _ForceCodepage IDT file.
@@ -391,6 +411,8 @@ namespace WixToolset.Core.WindowsInstaller.Bind
 
             var trackIdt = this.BackendHelper.TrackFile(idtPath, TrackedFileType.Temporary);
             this.GeneratedTemporaryFiles.Add(trackIdt);
+
+            this.KeepIdt(idtPath, "_ForceCodepage");
 
             // Try to import the table into the MSI.
             try
