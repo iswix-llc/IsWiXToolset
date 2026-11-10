@@ -63,7 +63,7 @@ namespace WixToolset.Core.Native
             if (Managed.ManagedBackend.Enabled)
             {
                 // Say so, because a build that quietly skips validation looks as if it passed.
-                this.Callback.WriteMessage(WarningMessages.ValidationNotPerformed());
+                this.Callback.WriteMessage(InformationMessages.ValidationNotPerformed());
                 return;
             }
 

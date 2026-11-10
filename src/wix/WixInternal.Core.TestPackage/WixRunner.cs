@@ -2,9 +2,7 @@
 
 namespace WixInternal.Core.TestPackage
 {
-    using System;
     using System.Collections.Generic;
-    using System.Runtime.InteropServices;
     using System.Threading;
     using System.Threading.Tasks;
     using WixToolset.Core;
@@ -87,12 +85,6 @@ namespace WixInternal.Core.TestPackage
                 arguments.Add("wix" + SomeVerInfo.Major);
             }
 
-            // The managed MSI backend cannot run ICE validation and says so with a warning, which warnings-as-errors would fail every test on.
-            if (ManagedBackendIsOn() && !arguments.Contains("-sw1164"))
-            {
-                arguments.Add("-sw1164");
-            }
-
             if (warningsAsErrors)
             {
                 arguments.Add("-wx");
@@ -101,18 +93,6 @@ namespace WixInternal.Core.TestPackage
             var commandLine = coreProvider.GetService<ICommandLine>();
             var command = commandLine.CreateCommand(arguments.ToArray());
             return command?.ExecuteAsync(CancellationToken.None) ?? Task.FromResult(1);
-        }
-
-        // The same rule WixToolset.Core.Native uses: WIX_MANAGED_MSI decides, otherwise the managed engine is the default off Windows.
-        private static bool ManagedBackendIsOn()
-        {
-            var value = Environment.GetEnvironmentVariable("WIX_MANAGED_MSI")?.Trim();
-            if (!String.IsNullOrEmpty(value))
-            {
-                return value == "1" || String.Equals(value, "true", StringComparison.OrdinalIgnoreCase);
-            }
-
-            return !RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
         }
     }
 }
