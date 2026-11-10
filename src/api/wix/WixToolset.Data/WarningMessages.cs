@@ -125,7 +125,7 @@ namespace WixToolset.Data
             InvalidMsiProductVersion = 1148,
             SymbolNotTranslatedToOutput = 1150,
             WindowsInstallerFileTooLarge = 1158,
-            ValidationNotPerformed = 1159,
+            ValidationNotPerformed = 1164,
         }
     }
 }

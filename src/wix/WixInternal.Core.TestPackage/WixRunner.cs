@@ -88,9 +88,9 @@ namespace WixInternal.Core.TestPackage
             }
 
             // The managed MSI backend cannot run ICE validation and says so with a warning, which warnings-as-errors would fail every test on.
-            if (ManagedBackendIsOn() && !arguments.Contains("-sw1159"))
+            if (ManagedBackendIsOn() && !arguments.Contains("-sw1164"))
             {
-                arguments.Add("-sw1159");
+                arguments.Add("-sw1164");
             }
 
             if (warningsAsErrors)
