@@ -499,14 +499,14 @@ namespace WixToolset.Core.Native.Managed
             const int ReadOnly = 0x1;
             const int Hidden = 0x2;
             const int System = 0x4;
-            const int Archive = 0x20;
 
+            // The native cabinet code leaves the archive bit out of the file entries, so neither does this.
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                return (ushort)((int)info.Attributes & (ReadOnly | Hidden | System | Archive));
+                return (ushort)((int)info.Attributes & (ReadOnly | Hidden | System));
             }
 
-            return (ushort)(Archive | (info.IsReadOnly ? ReadOnly : 0));
+            return (ushort)(info.IsReadOnly ? ReadOnly : 0);
         }
 
         // Writes one CFDATA block.
@@ -571,7 +571,7 @@ namespace WixToolset.Core.Native.Managed
                     return result;
                 }
 
-                result.Lzx = new LzxEncoder(windowBits);
+                result.Lzx = new LzxEncoder(windowBits, level == CompressionLevel.High);
                 result.TypeCompress = (ushort)(3 | (windowBits << 8));
                 return result;
             }
